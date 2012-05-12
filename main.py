@@ -4,6 +4,7 @@
 import pygtk
 pygtk.require("2.0")
 import gtk
+import time
 
 class MainWindow(gtk.Window):
     """Fenêtre principale"""
@@ -13,7 +14,7 @@ class MainWindow(gtk.Window):
         gtk.Window.__init__(self,gtk.WINDOW_TOPLEVEL)
         self.set_title("TriViSiJu")
         self.set_default_size(800,600)
-        #window.fullscreen()
+        #self.fullscreen()
         self.set_position(gtk.WIN_POS_CENTER)
         self.connect("destroy", gtk.main_quit)
 
