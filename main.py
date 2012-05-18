@@ -4,7 +4,7 @@
 import pygtk
 pygtk.require("2.0")
 import gtk
-import time
+from modules import *
 
 class MainWindow(gtk.Window):
     """Fenêtre principale"""
@@ -27,8 +27,9 @@ class MainWindow(gtk.Window):
         text1.set_use_markup(True)
         text2 = gtk.Label("<b>Panneau bas gauche</b>\nVidéo Satellite/Sonde ou Modélisation 3D Ariane")
         text2.set_use_markup(True)
-        text3 = gtk.Label("<b>Compte à rebours</b>")
-        text3.set_use_markup(True)
+
+        countdown = countdownBox()
+
         text4 = gtk.Label("<b>Texte crypté</b>")
         text4.set_use_markup(True)
         text5 = gtk.Label("<b>Prompt</b>")
@@ -42,7 +43,7 @@ class MainWindow(gtk.Window):
         leftBox.pack_start(gtk.HSeparator(),True,True)
         leftBox.pack_start(text2,True,True)
 
-        centerBox.pack_start(text3,True,True)
+        centerBox.pack_start(countdown,True,True)
         centerBox.pack_start(gtk.HSeparator(),True,True)
         centerBox.pack_start(text4,True,True)
         centerBox.pack_start(gtk.HSeparator(),True,True)
