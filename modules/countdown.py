@@ -11,9 +11,10 @@ import gobject
 import ImageFile
 import Image
 
-class countdownBox(gtk.HBox):
+class countdownBox(gtk.VBox):
     def __init__(self):
-        gtk.HBox.__init__(self)
+        gtk.VBox.__init__(self)
+        hbox = gtk.HBox()
 
         self.img_10h = gtk.Image()       
         self.img_h = gtk.Image()
@@ -48,24 +49,39 @@ class countdownBox(gtk.HBox):
         self.img_10cs.set_from_file(self.folder[0]+self.digits[0])
         self.img_cs.set_from_file(self.folder[0]+self.digits[0])
 
-        self.pack_start(self.img_10h,False,False)
-        self.pack_start(self.img_h,False,False)
-        self.pack_start(self.img_col1,False,False)
-        self.pack_start(self.img_10m,False,False)
-        self.pack_start(self.img_m,False,False)
-        self.pack_start(self.img_col2,False,False)
-        self.pack_start(self.img_10s,False,False)
-        self.pack_start(self.img_s,False,False)
-        self.pack_start(self.img_col3,False,False)
-        self.pack_start(self.img_10cs,False,False)
-        self.pack_start(self.img_cs,False,False)
+        hbox.pack_start(self.img_10h,False,False)
+        hbox.pack_start(self.img_h,False,False)
+        hbox.pack_start(self.img_col1,False,False)
+        hbox.pack_start(self.img_10m,False,False)
+        hbox.pack_start(self.img_m,False,False)
+        hbox.pack_start(self.img_col2,False,False)
+        hbox.pack_start(self.img_10s,False,False)
+        hbox.pack_start(self.img_s,False,False)
+        hbox.pack_start(self.img_col3,False,False)
+        hbox.pack_start(self.img_10cs,False,False)
+        hbox.pack_start(self.img_cs,False,False)
 
-        self.h = 0
-        self.m = 0
-        self.s = 20
-        self.cs = 0
+        self.button = gtk.Button("Stop")
+        self.button.connect("clicked",self.toggle)
 
+        self.pack_start(hbox)
+        self.pack_start(self.button,False,False)
+
+    def start(self,h=0,m=0,s=20,cs=0):
+        self.h = h
+        self.m = m
+        self.s = s
+        self.cs = cs
         self.timer = gobject.timeout_add(10, self.on_timeout)
+
+    def toggle(self,widget):
+        if self.timer is None:
+            self.timer = gobject.timeout_add(10, self.on_timeout)
+            self.button.set_label("Stop")
+        else:
+            gobject.source_remove(self.timer)
+            self.timer = None
+            self.button.set_label("Resume")
 
     def on_timeout(self, *args):
         # Décrémentation
