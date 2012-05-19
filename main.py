@@ -29,7 +29,8 @@ class MainWindow(gtk.Window):
         text2.set_use_markup(True)
 
         countdown = countdownBox()
-        countdown.start()
+        countdown.showControl()
+        #countdown.start()
 
 
         text4 = gtk.Label("<b>Texte crypté</b>")
