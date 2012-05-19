@@ -5,10 +5,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 import gtk.glade
-import time
-import cStringIO
 import gobject
-import ImageFile
 import Image
 
 class countdownBox(gtk.VBox):
@@ -16,6 +13,7 @@ class countdownBox(gtk.VBox):
         gtk.VBox.__init__(self)
         hbox = gtk.HBox()
 
+        # Initialisation des variables
         self.path_to_images = path_to_images
         self.h_start = h
         self.m_start = m
@@ -26,6 +24,7 @@ class countdownBox(gtk.VBox):
         self.s = s
         self.cs = cs
 
+        # Création des conteneurs d'images
         self.img_10h = gtk.Image()       
         self.img_h = gtk.Image()
         self.img_col1 = gtk.Image()
@@ -38,13 +37,18 @@ class countdownBox(gtk.VBox):
         self.img_10cs = gtk.Image()
         self.img_cs = gtk.Image()
 
+        # État de l'horloge (0 et 1 = décroissant, 2 = croissant)
+        # Permet également le changement de couleur de l'horloge
         self.way = 0
 
+        # Chemins des différentes images
         self.folder = [self.path_to_images+"orange_",self.path_to_images+"red_",self.path_to_images+"green_"]
         self.digits = ["0.png","1.png","2.png","3.png","4.png","5.png","6.png","7.png","8.png","9.png"]
 
+        # Affichage des chiffres
         self.writeDigits()
 
+        # Insertion des chiffres dans le block hbox
         hbox.pack_start(self.img_10h,False,False)
         hbox.pack_start(self.img_h,False,False)
         hbox.pack_start(self.img_col1,False,False)
@@ -57,8 +61,10 @@ class countdownBox(gtk.VBox):
         hbox.pack_start(self.img_10cs,False,False)
         hbox.pack_start(self.img_cs,False,False)
 
+        # Insertion des chiffres dans le block mère
         self.pack_start(hbox)
         self.timer = None
+        self.playPause = None
 
     def showControl(self):
         """
@@ -66,23 +72,26 @@ class countdownBox(gtk.VBox):
         TODO: possibilité de déporter dans un autre panneau
         """
 
+        # Création du bouton Play/Pause...
         self.playPause = gtk.Image()
         self.playPause.set_from_file(self.path_to_images+"play.png")
         self.playPause.show()
-        self.button = gtk.Button()
-        self.button.add(self.playPause)
-        self.button.connect("clicked",self.toggle)
+        button = gtk.Button()
+        button.add(self.playPause)
+        button.connect("clicked",self.toggle)
 
+        # ... et du bouton Reset
         image = gtk.Image()
         image.set_from_file(self.path_to_images+"back.png")
         image.show()
-        self.back_button = gtk.Button()
-        self.back_button.add(image)
-        self.back_button.connect("clicked",self.reset)
+        back_button = gtk.Button()
+        back_button.add(image)
+        back_button.connect("clicked",self.reset)
 
+        # Insertion
         hbox2 = gtk.HBox()
-        hbox2.pack_start(self.button,False,False)
-        hbox2.pack_start(self.back_button,False,False)
+        hbox2.pack_start(button,False,False)
+        hbox2.pack_start(back_button,False,False)
 
         self.add(hbox2)
 
@@ -98,17 +107,28 @@ class countdownBox(gtk.VBox):
         self.way = 0
         self.writeDigits()
 
+    def start(self):
+        if self.timer is None:
+            # Initialisation du timer
+            self.timer = gobject.timeout_add(10, self.on_timeout)
+            if self.playPause:
+                self.playPause.set_from_file(self.path_to_images+"pause.png")
+
+    def pause(self):
+        if self.timer:
+            gobject.source_remove(self.timer)
+            self.timer = None
+            if self.playPause:
+                self.playPause.set_from_file(self.path_to_images+"play.png")
+
     def toggle(self,widget=None):
         """
         Play/Pause
         """
         if self.timer is None:
-            self.timer = gobject.timeout_add(10, self.on_timeout)
-            self.playPause.set_from_file(self.path_to_images+"pause.png")
+            self.start()
         else:
-            gobject.source_remove(self.timer)
-            self.timer = None
-            self.playPause.set_from_file(self.path_to_images+"play.png")
+            self.pause()
 
     def on_timeout(self, *args):
         # Décrémentation
@@ -139,6 +159,7 @@ class countdownBox(gtk.VBox):
                         self.m = 0
                         if self.h == 24:
                             self.h = 0
+        # Changement de couleur pour H-10 sec.
         if self.h == 0 and self.m == 0 and self.s == 10 and self.cs == 0 and self.way == 0:
             self.way = 1
         
@@ -150,25 +171,27 @@ class countdownBox(gtk.VBox):
         """
         Méthode de modification de l'affichage des digits
         """
-        tenh_ = self.h/10
-        h_ = self.h%10
-        tenm_ = self.m/10
-        m_ = self.m%10
-        tens_ = self.s/10
-        s_ = self.s%10
-        tencs_ = self.cs/10
-        cs_ = self.cs%10
-        self.img_10h.set_from_file(self.folder[self.way]+self.digits[tenh_])
-        self.img_h.set_from_file(self.folder[self.way]+self.digits[h_])
+        # Isolation des différents chiffres
+        tenh = self.h/10
+        h = self.h%10
+        tenm = self.m/10
+        m = self.m%10
+        tens = self.s/10
+        s = self.s%10
+        tencs = self.cs/10
+        cs = self.cs%10
+        # Changement d'image
+        self.img_10h.set_from_file(self.folder[self.way]+self.digits[tenh])
+        self.img_h.set_from_file(self.folder[self.way]+self.digits[h])
         self.img_col1.set_from_file(self.folder[self.way]+"column.png")
-        self.img_10m.set_from_file(self.folder[self.way]+self.digits[tenm_])
-        self.img_m.set_from_file(self.folder[self.way]+self.digits[m_])
+        self.img_10m.set_from_file(self.folder[self.way]+self.digits[tenm])
+        self.img_m.set_from_file(self.folder[self.way]+self.digits[m])
         self.img_col2.set_from_file(self.folder[self.way]+"column.png")
-        self.img_10s.set_from_file(self.folder[self.way]+self.digits[tens_])
-        self.img_s.set_from_file(self.folder[self.way]+self.digits[s_])
+        self.img_10s.set_from_file(self.folder[self.way]+self.digits[tens])
+        self.img_s.set_from_file(self.folder[self.way]+self.digits[s])
         self.img_col3.set_from_file(self.folder[self.way]+"column.png")
-        self.img_10cs.set_from_file(self.folder[self.way]+self.digits[tencs_])
-        self.img_cs.set_from_file(self.folder[self.way]+self.digits[cs_])
+        self.img_10cs.set_from_file(self.folder[self.way]+self.digits[tencs])
+        self.img_cs.set_from_file(self.folder[self.way]+self.digits[cs])
 
 if __name__ == "__main__":
     gobject.threads_init()
