@@ -9,20 +9,12 @@ import gobject
 import Image
 
 class countdownBox(gtk.VBox):
-    def __init__(self,path_to_images="images/",h=0,m=0,s=20,cs=0):
+    def __init__(self,path_to_images="images/"):
         gtk.VBox.__init__(self)
         hbox = gtk.HBox()
 
         # Initialisation des variables
         self.path_to_images = path_to_images
-        self.h_start = h
-        self.m_start = m
-        self.s_start = s
-        self.cs_start = cs
-        self.h = h
-        self.m = m
-        self.s = s
-        self.cs = cs
 
         # Création des conteneurs d'images
         self.img_10h = gtk.Image()       
@@ -46,7 +38,7 @@ class countdownBox(gtk.VBox):
         self.digits = ["0.png","1.png","2.png","3.png","4.png","5.png","6.png","7.png","8.png","9.png"]
 
         # Affichage des chiffres
-        self.writeDigits()
+        self.setStartTime()
 
         # Insertion des chiffres dans le block hbox
         hbox.pack_start(self.img_10h,False,False)
@@ -65,6 +57,17 @@ class countdownBox(gtk.VBox):
         self.pack_start(hbox)
         self.timer = None
         self.playPause = None
+
+    def setStartTime(self,h=0,m=0,s=20,cs=0):
+        self.h_start = h
+        self.m_start = m
+        self.s_start = s
+        self.cs_start = cs
+        self.h = h
+        self.m = m
+        self.s = s
+        self.cs = cs
+        self.writeDigits()
 
     def showControl(self):
         """

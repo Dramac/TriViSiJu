@@ -41,9 +41,10 @@ class MainWindow(gtk.Window):
         rightBox = gtk.VBox(homogeneous=False,spacing=0)
 
         ## Compte à rebours
-        countdown = countdownBox()
-        countdown.showControl()
-        #countdown.start()
+        self.countdown = countdownBox()
+        self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
+        self.countdown.showControl()
+        #self.countdown.start()
 
         ## Textes provisoires
         #REMtext1 = gtk.Label("<b>Panneau haut gauche</b>\nVidéo Ariane V sur le pas de tir")
@@ -69,7 +70,7 @@ class MainWindow(gtk.Window):
         leftBox.pack_start(gtk.HSeparator(),True,True)
         leftBox.pack_start(text2,True,True)
         #centerBox
-        centerBox.pack_start(countdown,True,True)
+        centerBox.pack_start(self.countdown,True,True)
         centerBox.pack_start(gtk.HSeparator(),True,True)
         centerBox.pack_start(text4,True,True)
         centerBox.pack_start(gtk.HSeparator(),True,True)
@@ -97,7 +98,7 @@ class MainWindow(gtk.Window):
         
         ## Connexion de destroy à la fonction quit
         self.connect("destroy", lambda w: self.quit())
-        
+
     def quit(self, *parent):
         """ Fonction quitter
         
