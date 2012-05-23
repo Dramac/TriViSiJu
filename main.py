@@ -5,6 +5,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 from modules import *
+import time
 
 class MainWindow(gtk.Window):
     """ Fenêtre principale
@@ -46,8 +47,8 @@ class MainWindow(gtk.Window):
         #countdown.start()
 
         ## Textes provisoires
-        text1 = gtk.Label("<b>Panneau haut gauche</b>\nVidéo Ariane V sur le pas de tir")
-        text1.set_use_markup(True)
+        #REMtext1 = gtk.Label("<b>Panneau haut gauche</b>\nVidéo Ariane V sur le pas de tir")
+        #REMtext1.set_use_markup(True)
         text2 = gtk.Label("<b>Panneau bas gauche</b>\nVidéo Satellite/Sonde ou Modélisation 3D Ariane")
         text2.set_use_markup(True)
         text4 = gtk.Label("<b>Texte crypté</b>")
@@ -58,10 +59,14 @@ class MainWindow(gtk.Window):
         text6.set_use_markup(True)
         text7 = gtk.Label("<b>Panneau bas droite</b>\nListe des équipes")
         text7.set_use_markup(True)
+        
+        ## Charge la classe Player
+        self.screen1 = PlayerFrame(self, 1, quitB=False)
 
         ## Affichage des textes provisoires
         #leftBox
-        leftBox.pack_start(text1,True,True,0)
+        #REMleftBox.pack_start(text1,True,True,0)
+        leftBox.pack_start(self.screen1,True,True,0)
         leftBox.pack_start(gtk.HSeparator(),True,True)
         leftBox.pack_start(text2,True,True)
         #centerBox
@@ -87,6 +92,24 @@ class MainWindow(gtk.Window):
         
         ## Affichage général
         self.show_all()
+        
+        ## Envoie de l'id à mplayer après l'avoir afficher
+        self.screen1.Screen.setwid(long(self.screen1.Screen.get_id()))
+        
+        ## Connexion de destroy à la fonction quit
+        self.connect("destroy", lambda w: self.quit())
+        
+    def quit(self, *parent):
+        """ Fonction quitter
+        
+        Tue proprement l'application root
+        """
+        ## Envoir le signal à mplayer
+        self.screen1.Screen.quit()
+        ## Attend que mplayer se soit éteint
+        time.sleep(0.1)
+        ## Tue l'application root
+        gtk.main_quit()
 
 if __name__=="__main__":
     MainWindow()
