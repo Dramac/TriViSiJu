@@ -19,7 +19,6 @@ class MainWindow(gtk.Window):
         self.set_default_size(800,600)
         #self.fullscreen()
         self.set_position(gtk.WIN_POS_CENTER)
-        self.connect("destroy", gtk.main_quit)
 
         ## Création de 4 boîtes
         # \-rootBox
@@ -41,7 +40,7 @@ class MainWindow(gtk.Window):
         centerBox = gtk.VBox(homogeneous=False,spacing=0)
         rightBox = gtk.VBox(homogeneous=False,spacing=0)
 
-        ## Compte ) rebours
+        ## Compte à rebours
         countdown = countdownBox()
         countdown.showControl()
         #countdown.start()
@@ -93,7 +92,7 @@ class MainWindow(gtk.Window):
         ## Affichage général
         self.show_all()
         
-        ## Envoie de l'id à mplayer après l'avoir afficher
+        ## Envoie de l'id à mplayer après l'avoir affiché
         self.screen1.Screen.setwid(long(self.screen1.Screen.get_id()))
         
         ## Connexion de destroy à la fonction quit
