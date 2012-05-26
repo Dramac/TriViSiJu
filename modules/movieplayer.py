@@ -6,6 +6,7 @@ pygtk.require('2.0')
 import gtk
 import os
 import time
+import subprocess
 
 ## Variable utilisée pour stocker le fichier FIFO (pipe, voir Player)
 PIPE_PATH = '/tmp/mplayer'
@@ -21,6 +22,13 @@ class Player(gtk.Socket):
 
 		Il est nécessaire de lui donner un 'id' de façon à faire un tunnel (pipe) entre le GUI et mplayer
         """
+        # on teste la présence de mplayer sur la machine
+        try:
+            subprocess.check_call(['which','mplayer'])
+        except:
+            print 'mplayer n\'est pas installé sur cette machine.'
+            exit(1)
+
         ## Init gtk.Socket instance
         gtk.Socket.__init__(self)
 
