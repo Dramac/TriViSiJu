@@ -141,7 +141,7 @@ if __name__=="__main__":
     ## Descrition
     description = """ Application Grand Jeu : TriViSiJu
     
-    Développé pour le Festival Astro Jeuve de Fleurance 2012
+    Développé pour le Festival AstroJeune 2012
     """
     class Arg(object):
         """ Permet de renvoyer les arguments du parser sans utiliser de liste
