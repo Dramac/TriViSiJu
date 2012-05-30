@@ -49,8 +49,8 @@ class MainWindow(gtk.Window):
         ## Textes provisoires
         #REMtext1 = gtk.Label("<b>Panneau haut gauche</b>\nVidéo Ariane V sur le pas de tir")
         #REMtext1.set_use_markup(True)
-        text2 = gtk.Label("<b>Panneau bas gauche</b>\nVidéo Satellite/Sonde ou Modélisation 3D Ariane")
-        text2.set_use_markup(True)
+        #REMtext2 = gtk.Label("<b>Panneau bas gauche</b>\nVidéo Satellite/Sonde ou Modélisation 3D Ariane")
+        #REMtext2.set_use_markup(True)
         text4 = gtk.Label("<b>Texte crypté</b>")
         text4.set_use_markup(True)
         text5 = gtk.Label("<b>Prompt</b>")
@@ -62,13 +62,15 @@ class MainWindow(gtk.Window):
         
         ## Charge la classe Player
         self.screen1 = PlayerFrame(self, 1, quitB=False)
+        self.screen2 = PlayerFrame(self, 2, quitB=False)
 
         ## Affichage des textes provisoires
         #leftBox
         #REMleftBox.pack_start(text1,True,True,0)
         leftBox.pack_start(self.screen1,True,True,0)
         leftBox.pack_start(gtk.HSeparator(),True,True)
-        leftBox.pack_start(text2,True,True)
+        #REMleftBox.pack_start(text2,True,True)
+        leftBox.pack_start(self.screen2,True,True,0)
         #centerBox
         centerBox.pack_start(self.countdown,True,True)
         centerBox.pack_start(gtk.HSeparator(),True,True)
@@ -95,6 +97,7 @@ class MainWindow(gtk.Window):
         
         ## Envoie de l'id à mplayer après l'avoir affiché
         self.screen1.Screen.setwid(long(self.screen1.Screen.get_id()))
+        self.screen2.Screen.setwid(long(self.screen2.Screen.get_id()))
         
         ## Connexion de destroy à la fonction quit
         self.connect("destroy", lambda w: self.quit())
@@ -106,6 +109,7 @@ class MainWindow(gtk.Window):
         """
         ## Envoir le signal à mplayer
         self.screen1.Screen.quit()
+        self.screen2.Screen.quit()
         ## Attend que mplayer se soit éteint
         time.sleep(0.1)
         ## Tue l'application root
