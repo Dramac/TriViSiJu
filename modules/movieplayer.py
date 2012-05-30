@@ -104,20 +104,23 @@ class PlayerFrame(gtk.Table):
     """ Génère une Frame contenant le lecteur, les bouttons de contrôle et tout ce qui va avec.
     """
 
-    def __init__(self, root, id, quitB=True):
+    def __init__(self, root, id, quitb=True, forcebutton=False):
         """ Initialise la classe
 
-        root  : Fenêtre principale (Besoin de quitter l'application proprement avec la fonction Root.quit())
-        id    : Entier utiliser pour faire le tunnel entre mplayer et la classe Player
-        quitB : Booléen. Si True (Défaut), affiche le boutton quitter
+        root        : Fenêtre principale (Besoin de quitter l'application proprement avec la fonction Root.quit())
+        id          : Entier utiliser pour faire le tunnel entre mplayer et la classe Player
+        quitb       : Booléen. Si True (Défaut), affiche le boutton quitter /!\ forcebutton doit être True
+        forcebutton : Booléen. Si True, force l'affichage des boutton (lectue, avance et recule) (défaut False)
         """
         ## Root
         self.root = root
         ## Création d'une table
-        if quitB:
+        if quitb and forcebutton:
             gtk.Table.__init__(self, rows=2, columns=4)
-        else:
+        elif forcebutton and not quitb:
             gtk.Table.__init__(self, rows=2, columns=3)
+        elif not forcebutton and not quitb:
+            gtk.Table.__init__(self, rows=1, columns=1)
         self.set_col_spacings(10)
         self.set_row_spacings(10)
 
@@ -126,26 +129,28 @@ class PlayerFrame(gtk.Table):
         self.Screen.set_size_request(100, 100)
         self.attach(self.Screen, 0, 5, 0, 1, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, xpadding=5, ypadding=5)
 
-        # Boutton Ouvrir
-        BttOpen = gtk.Button(stock=("gtk-open"))
-        BttOpen.connect("clicked", self.open)
-        self.attach(BttOpen, 0, 1, 1, 2)
+        if forcebutton:
+            # Boutton Ouvrir
+            BttOpen = gtk.Button(stock=("gtk-open"))
+            BttOpen.connect("clicked", self.open)
+            self.attach(BttOpen, 0, 1, 1, 2)
 
-        # Boutton avancer
-        BttFw = gtk.Button(label="Avancer")
-        BttFw.connect("clicked", self.Screen.forward)
-        self.attach(BttFw, 2, 3, 1, 2)
+            # Boutton avancer
+            BttFw = gtk.Button(label="Avancer")
+            BttFw.connect("clicked", self.Screen.forward)
+            self.attach(BttFw, 2, 3, 1, 2)
 
-        # Boutton reculer
-        BttBw = gtk.Button(label="Reculer")
-        BttBw.connect("clicked", self.Screen.backward)
-        self.attach(BttBw, 1, 2, 1, 2)
+            # Boutton reculer
+            BttBw = gtk.Button(label="Reculer")
+            BttBw.connect("clicked", self.Screen.backward)
+            self.attach(BttBw, 1, 2, 1, 2)
 
-        # Boutton quitter
-        if quitB:
-            Bttquit = gtk.Button(stock=('gtk-quit'))
-            Bttquit.connect("clicked", lambda w: self.quit(self.root))
-            self.attach(Bttquit, 3, 4, 1, 2)
+            # Boutton quitter
+            if quitb:
+                Bttquit = gtk.Button(stock=('gtk-quit'))
+                Bttquit.connect("clicked", lambda w: self.quit(self.root))
+                self.attach(Bttquit, 3, 4, 1, 2)
+            
 
     def quit(self, root):
         """ Fonction quitter (utilisation de root.quit())

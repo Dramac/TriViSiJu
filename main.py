@@ -5,19 +5,24 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 from modules import *
+from fonction import conf2dict, str2bool
 import time
+import os
+import ConfigParser
+import argparse
+import sys
 
 class MainWindow(gtk.Window):
     """ Fenêtre principale
     """
 
-    def __init__(self):
+    def __init__(self, **kwarg):
         """ Constructeur de la fenêtre principale
         """
+        ## Initialise la fenêtre
         gtk.Window.__init__(self,gtk.WINDOW_TOPLEVEL)
         self.set_title("TriViSiJu")
         self.set_default_size(800,600)
-        #self.fullscreen()
         self.set_position(gtk.WIN_POS_CENTER)
 
         ## Création de 4 boîtes
@@ -61,8 +66,8 @@ class MainWindow(gtk.Window):
         text7.set_use_markup(True)
         
         ## Charge la classe Player
-        self.screen1 = PlayerFrame(self, 1, quitB=False)
-        self.screen2 = PlayerFrame(self, 2, quitB=False)
+        self.screen1 = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'])
+        self.screen2 = PlayerFrame(self, 2, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'])
 
         ## Affichage des textes provisoires
         #leftBox
@@ -99,9 +104,26 @@ class MainWindow(gtk.Window):
         self.screen1.Screen.setwid(long(self.screen1.Screen.get_id()))
         self.screen2.Screen.setwid(long(self.screen2.Screen.get_id()))
         
+        ## Charge la/les vidéo(s)
+        self.loadmovie(kwarg['videopath1'], 1)
+        self.loadmovie(kwarg['videopath2'], 2)
+        
         ## Connexion de destroy à la fonction quit
         self.connect("destroy", lambda w: self.quit())
 
+    def loadmovie(self, videoPath, id):
+        """ Charge la video si elle existe
+        """
+        ## Test videoPath
+        if os.path.isfile(videoPath):
+            exec("self.screen%s.Screen.loadfile('%s')"%(id, videoPath.replace(' ', '\ ')))
+
+    def fullscreen(self):
+        """ Met en plein écran
+        """
+        ##TODO: connecter cette fonction à un racourcis clavier ou un menu
+        self.fullscreen()
+        
     def quit(self, *parent):
         """ Fonction quitter
         
@@ -116,5 +138,42 @@ class MainWindow(gtk.Window):
         gtk.main_quit()
 
 if __name__=="__main__":
-    MainWindow()
+    ## Descrition
+    description = """ Application Grand Jeu : TriViSiJu
+    
+    Développé pour le Festival Astro Jeuve de Fleurance 2012
+    """
+    class Arg(object):
+        """ Permet de renvoyer les arguments du parser sans utiliser de liste
+        Voir http://docs.python.org/library/argparse.html#argparse.Namespace
+        """
+        pass
+    
+    ## Parse  les arguments
+    args = Arg() # Conteneur pour les arguments
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('-c', '--config', metavar='FILE', type=str,\
+                        default=os.path.join(os.getcwd(), 'TriViSiJurc'), action='store',\
+                        help="Fichier de configuration")
+    parser.add_argument('-s', '--section', metavar='STRING', type=str,\
+                        default='Default', action='store',\
+                        help="Section de paramètres à charger")
+    parser.parse_args(sys.argv[1:], namespace=args) # Parse les arguments dans la classe conteneur
+    
+    ## Charge les paramètres
+    if args.config != None and os.path.isfile(args.config):
+        config = ConfigParser.RawConfigParser()
+        config.read(args.config)
+        if 'section' in dir(args) and config.has_section(args.section):
+            kwarg = conf2dict(config.items(args.section))
+        else:
+            kwarg = conf2dict(config.items('Default'))
+    
+    ## Convertit les string True/False en booléen
+    for key, val in kwarg.iteritems():
+        if val in ['True', 'False', 'true', 'false']:
+            kwarg[key] = str2bool(val)
+    
+    ## arg et kwarg
+    MainWindow(**kwarg)
     gtk.main()

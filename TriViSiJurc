@@ -1,0 +1,36 @@
+#!/bin/env python
+# *-* coding:utf-8 *-*
+
+; Fichier de paramètres de TriViSiJu
+; 
+; Les lignes commençant par '#' ou ';' ne sont pas prises en compte.
+; 
+; Les paramètres sont sous la forme : 
+;     nom: valeur
+
+[Default]
+# Configuration par defaut
+; Debugage
+forcebutton: True
+quitb: False
+; Videos
+videopath1:
+videopath2:
+
+[Debug]
+# Configuration pour le debugage
+; Application
+forcebutton: True
+quitb: True
+; Videos
+videopath1:
+videopath2:
+
+[User]
+# Configuration de l'utilisateur
+; Application
+forcebutton: False
+quitb: False
+; Videos
+videopath1:
+videopath2:
