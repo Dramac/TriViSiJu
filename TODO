@@ -1,0 +1,22 @@
+# TODO
+
+## Countdown
+ * Possibilité de déporter les contrôles dans un autre widget
+
+## Main
+ * Connecter la fonction fullscreen à un raccourci clavier et/ou une commande dans le prompt
+
+## Movieplayer
+ * Améliorer le test d'existance de fichier FIFO
+ * Créer un type d'erreur pour loadfile
+ * Ajouter un bouton pause
+
+## Scrolltext
+ * Ajouter des paramètres (vitesse de défilement par exemple)
+ * Ajouter une fonction de cryptage
+ * Ajouter une focntion de décryptage
+ * Intégrer ce module dans main.py
+
+
+
+
