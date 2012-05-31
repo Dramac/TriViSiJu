@@ -167,7 +167,9 @@ if __name__=="__main__":
         if 'section' in dir(args) and config.has_section(args.section):
             kwarg = conf2dict(config.items(args.section))
         else:
+            print "ATTENTION : la secion '%s' n'existe pas dans le fichier de configuration '%s'"%(args.section, args.config)
             kwarg = conf2dict(config.items('Default'))
+
     
     ## Convertit les string True/False en booléen
     for key, val in kwarg.iteritems():
