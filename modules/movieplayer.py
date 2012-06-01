@@ -23,7 +23,7 @@ class Player(gtk.Socket):
 
 		Il est nécessaire de lui donner un 'id' de façon à faire un tunnel (pipe) entre le GUI et mplayer
         """
-        # on teste la présence de mplayer sur la machine
+        ## Teste de la présence de mplayer sur la machine
         try:
             subprocess.check_call(['which','mplayer'])
         except:
@@ -75,6 +75,7 @@ class Player(gtk.Socket):
     def pause(self, parent):
         """ Envoie la commande pause à mplayer
         """
+        ## Envoie pause à mplayer (si en pause reprend la lecture)
         self.cmdplayer("pause")
 
     def forward(self, parent):
@@ -113,9 +114,9 @@ class PlayerFrame(gtk.Table):
         self.root = root
         ## Création d'une table
         if quitb and forcebutton:
-            gtk.Table.__init__(self, rows=2, columns=4)
+            gtk.Table.__init__(self, rows=2, columns=5)
         elif forcebutton and not quitb:
-            gtk.Table.__init__(self, rows=2, columns=3)
+            gtk.Table.__init__(self, rows=2, columns=4)
         elif not forcebutton and not quitb:
             gtk.Table.__init__(self, rows=1, columns=1)
         self.set_col_spacings(10)
@@ -131,22 +132,27 @@ class PlayerFrame(gtk.Table):
             BttOpen = gtk.Button(stock=("gtk-open"))
             BttOpen.connect("clicked", self.open)
             self.attach(BttOpen, 0, 1, 1, 2)
+            
+            # Boutton Pause
+            BttPause = gtk.Button(stock=("gtk-media-pause"))
+            BttPause.connect("clicked", self.Screen.pause)
+            self.attach(BttPause, 1, 2, 1, 2)
 
             # Boutton avancer
-            BttFw = gtk.Button(label="Avancer")
+            BttFw = gtk.Button(stock=("gtk-media-forward"))
             BttFw.connect("clicked", self.Screen.forward)
-            self.attach(BttFw, 2, 3, 1, 2)
+            self.attach(BttFw, 3, 4, 1, 2)
 
             # Boutton reculer
-            BttBw = gtk.Button(label="Reculer")
+            BttBw = gtk.Button(stock=("gtk-media-rewind"))
             BttBw.connect("clicked", self.Screen.backward)
-            self.attach(BttBw, 1, 2, 1, 2)
+            self.attach(BttBw, 2, 3, 1, 2)
 
             # Boutton quitter
             if quitb:
                 Bttquit = gtk.Button(stock=('gtk-quit'))
                 Bttquit.connect("clicked", lambda w: self.quit(self.root))
-                self.attach(Bttquit, 3, 4, 1, 2)
+                self.attach(Bttquit, 4, 5, 1, 2)
             
 
     def quit(self, root):
