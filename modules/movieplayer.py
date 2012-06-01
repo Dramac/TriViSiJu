@@ -7,9 +7,10 @@ import gtk
 import os
 import time
 import subprocess
+import tempfile
 
 ## Variable utilisée pour stocker le fichier FIFO (pipe, voir Player)
-PIPE_PATH = '/tmp/mplayer'
+PIPE_PATH = '/tmp'
 
 class Player(gtk.Socket):
     """ Interface entre mplayer et le script principal
@@ -33,14 +34,8 @@ class Player(gtk.Socket):
         gtk.Socket.__init__(self)
 
         ## Créé un fichier FIFO pour le tunnel (pipe)
-        self.pipe = PIPE_PATH + str(id)
-        # Si fichier existe -> suppression
-        ##TODO: Trouver un meilleur moyen de tester si le fichier FIFO existe 
-        try:
-            os.unlink(self.pipe)
-        except:
-            pass
-        # Créé le fichier FIFO
+        self.pipe = tempfile.mktemp(suffix='video'+str(id), prefix='pipe', dir=PIPE_PATH)
+        # Créer le fichier FIFO
         os.mkfifo(self.pipe)
         os.chmod(self.pipe, 0666)
 
@@ -99,6 +94,8 @@ class Player(gtk.Socket):
         self.cmdplayer("quit")
         ## Déclare mplayer comme non actif
         self.start = False
+        ## Supprime le fichier FIFO
+        os.remove(self.pipe)
 
 class PlayerFrame(gtk.Table):
     """ Génère une Frame contenant le lecteur, les bouttons de contrôle et tout ce qui va avec.
