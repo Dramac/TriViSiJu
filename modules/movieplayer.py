@@ -77,6 +77,11 @@ class Player(gtk.Socket):
         """
         ## Envoie pause à mplayer (si en pause reprend la lecture)
         self.cmdplayer("pause")
+        ## Change le 'stock' du boutton play/pause
+        if parent.get_label() == "gtk-media-pause":
+            parent.set_label("gtk-media-play")
+        elif parent.get_label() == "gtk-media-play":
+            parent.set_label("gtk-media-pause")
 
     def forward(self, parent):
         """ Envoie la commande avancer de +10 0 (seek +10 0) à mplayer
