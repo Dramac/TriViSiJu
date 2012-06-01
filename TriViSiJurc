@@ -1,36 +1,41 @@
 #!/bin/env python
 # *-* coding:utf-8 *-*
 
+######################################
 ; Fichier de paramètres de TriViSiJu
-; 
-; Les lignes commençant par '#' ou ';' ne sont pas prises en compte.
 ; 
 ; Les paramètres sont sous la forme : 
 ;     nom: valeur
+; Une section est définie par des crochets: [Nom de la section]
+; Les lignes commençant par '#' et ';' sont des commentaires et ne sont pas pris en compte.
+######################################
 
 [Default]
-# Configuration par defaut
-; Debugage
-forcebutton: True
-quitb: False
-; Videos
-videopath1:
-videopath2:
+# """ Configuration par defaut """
+; - Application ----#
+forcebutton: True   # Affiche les bouttons de controle des videos
+quitb: False        # Si forcebutton=True, affiche le boutton quitter
+; - Videos ---------#
+videopath1:         # Video panel gauche-haut
+videopath2:         # Video panel gauche-bas
+# """ FIN SECTION """
 
 [Debug]
-# Configuration pour le debugage
-; Application
+# """ Configuration pour le debugage """
+; - Application -
 forcebutton: True
 quitb: True
-; Videos
+; - Videos -
 videopath1:
 videopath2:
+# """ FIN SECTION """
 
 [User]
-# Configuration de l'utilisateur
-; Application
+# """ Configuration de l'utilisateur """
+; - Application -
 forcebutton: False
 quitb: False
-; Videos
+; - Videos -
 videopath1:
 videopath2:
+# """ FIN SECTION """
