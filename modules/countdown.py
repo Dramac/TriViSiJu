@@ -76,24 +76,16 @@ class countdownBox(gtk.VBox):
         """
 
         # Création du bouton Play/Pause...
-        self.playPause = gtk.Image()
-        self.playPause.set_from_file(self.path_to_images+"play.png")
-        self.playPause.show()
-        button = gtk.Button()
-        button.add(self.playPause)
-        button.connect("clicked",self.toggle)
+        self.button = gtk.Button(stock=("gtk-media-play"))
+        self.button.connect("clicked",self.toggle)
 
         # ... et du bouton Reset
-        image = gtk.Image()
-        image.set_from_file(self.path_to_images+"back.png")
-        image.show()
-        back_button = gtk.Button()
-        back_button.add(image)
+        back_button = gtk.Button(stock=("gtk-goto-first"))
         back_button.connect("clicked",self.reset)
 
         # Insertion
         hbox2 = gtk.HBox()
-        hbox2.pack_start(button,False,False)
+        hbox2.pack_start(self.button,False,False)
         hbox2.pack_start(back_button,False,False)
 
         self.add(hbox2)
@@ -109,21 +101,27 @@ class countdownBox(gtk.VBox):
         
         self.way = 0
         self.writeDigits()
+        
+    def buttonToggle(self):
+        """ Toggle le gtk.Stock du boutton play/pause
+        """
+        if self.button.get_label() == "gtk-media-play":
+            self.button.set_label("gtk-media-pause")
+        elif self.button.get_label() == "gtk-media-pause":
+            self.button.set_label("gtk-media-play")
 
     def start(self):
         if self.timer is None:
             # Initialisation du timer
             self.timer = gobject.timeout_add(10, self.on_timeout)
-            if self.playPause:
-                self.playPause.set_from_file(self.path_to_images+"pause.png")
+            self.buttonToggle()
 
     def pause(self):
         if self.timer:
             gobject.source_remove(self.timer)
             self.timer = None
-            if self.playPause:
-                self.playPause.set_from_file(self.path_to_images+"play.png")
-
+            self.buttonToggle()
+            
     def toggle(self,widget=None):
         """
         Play/Pause
