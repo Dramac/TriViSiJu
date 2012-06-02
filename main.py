@@ -48,7 +48,8 @@ class MainWindow(gtk.Window):
         ## Compte à rebours
         self.countdown = countdownBox()
         self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
-        self.countdown.showControl()
+        if kwarg['forcebutton']:
+            self.countdown.showControl()
         #self.countdown.start()
 
         ## Textes provisoires
