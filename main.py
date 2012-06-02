@@ -162,7 +162,7 @@ if __name__=="__main__":
     args = Arg() # Conteneur pour les arguments
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('-c', '--config', metavar='FILE', type=str,\
-                        default=os.path.join(os.getcwd(), 'TriViSiJurc'), action='store',\
+                        default=os.path.join(os.getcwd(), 'TriViSiJu.cfg'), action='store',\
                         help="Fichier de configuration")
     parser.add_argument('-s', '--section', metavar='STRING', type=str,\
                         default='Default', action='store',\
