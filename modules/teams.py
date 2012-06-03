@@ -4,6 +4,7 @@
 import pygtk
 pygtk.require("2.0")
 import gtk
+import pickle
 
 class TeamError(Exception):
     """Exception levée lors de la mauvaise manipulation d'équipe"""
@@ -25,53 +26,73 @@ class team():
         return "Équipe {}".format(self.nom)
 
 class teamBox(gtk.Label):
-    def __init__(self):
+    def __init__(self,fichier="teams.dat"):
         gtk.Label.__init__(self)
         self.set_text("Vide")
         self.team_list = []
+        self.fichier = fichier
 
     def addTeam(self,name):
+        """Ajouter une équipe à la liste"""
         newTeam = team(name)
         self.team_list.append(newTeam)
+        self.printTeams()
 
-    def printTeam(self):
+    def addPasswd(self,team_name,passwd):
+        try:
+            team = self.selectTeam(team_name)
+            team.passwd = passwd
+        except TeamError as err:
+            print err
+        self.printTeams()
+
+    def printTeams(self):
+        """Affichage des équipes dans le panneau"""
         if len(self.team_list):
-            self.set_alignment(0,0)
-            self.set_use_markup(True)
-            self.set_padding(5,5)
+            self.set_alignment(0,0)     # Alignement à gauche
+            self.set_use_markup(True)   # Mise en forme Markup
+            self.set_padding(5,5)       # Marge de 5px avec les bords
+
+            ## Mise en forme de la sortie
             tmp = ""
             for team in self.team_list:
-                tmp += "<b>"+team.nom+":</b> "+team.passwd+"\n"
+                tmp += "<b>"+team.nom+":</b>\t\t "+team.passwd+"\n"
             self.set_text(tmp)
             self.set_use_markup(True)
 
-    def selectTeam(self,team):
-        filter = lambda x: x.nom == team
-        for i in self.team_list:
-            if filter(i):
-                return i 
-        raise TeamError(team,"Cette équipe n'existe pas")
+    def selectTeam(self,team_name):
+        """Sélecteur d'équipe pour modification"""
+        filter = lambda x: x.nom == team_name # Création du filtre
+        for team in self.team_list:
+            if filter(team):
+                return team
+        raise TeamError(team_name,"Cette équipe n'existe pas")
 
-    def addPasswd(self,team,passwd):
-        try:
-            team_to_modify = self.selectTeam(team)
-            team_to_modify.passwd = passwd
-        except TeamError as err:
-            print err
+    def save(self):
+        """Sauvegarde des équipes créées"""
+        with open(self.fichier,'w') as fichier:
+            pickle.Pickler(fichier).dump(self.team_list)
+
+    def load(self):
+        """Chargement des équipes sauvées"""
+        with open(self.fichier,'r') as fichier:
+            self.team_list = pickle.Unpickler(fichier).load()
+        self.printTeams()
 
 if __name__ == "__main__":
+    # Fenêtre de test et d'exemple
     rootWindow = gtk.Window()
     rootWindow.set_default_size(300,400)
     rootWindow.set_position(gtk.WIN_POS_CENTER)
     rootWindow.connect("destroy",gtk.main_quit)
 
     teams = teamBox()
-
-    teams.addTeam("blabla")
-    teams.addTeam("blublu")
-    teams.addPasswd("blibli","aaa") # Ne marche pas (équipe inexistante)
-    teams.addPasswd("blublu","aaa") # Modification effective du passwd de l'équipe
-    teams.printTeam()
+    teams.addTeam("SpaceX")
+    teams.addTeam("ESA")
+    teams.addTeam("NASA")
+    teams.addTeam("JAXA")
+    teams.addPasswd("ESA","123456")
+    teams.save()
 
     rootWindow.add(teams)
 

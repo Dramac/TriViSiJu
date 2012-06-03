@@ -45,6 +45,11 @@ class MainWindow(gtk.Window):
         centerBox = gtk.VBox(homogeneous=False,spacing=0)
         rightBox = gtk.VBox(homogeneous=False,spacing=0)
 
+        # Vidéos
+        ## Charge la classe Player
+        self.screen1 = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'])
+        self.screen2 = PlayerFrame(self, 2, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'])
+
         ## Compte à rebours
         self.countdown = countdownBox()
         self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
@@ -52,14 +57,11 @@ class MainWindow(gtk.Window):
             self.countdown.showControl()
         #self.countdown.start()
 
-        ## Textes provisoires
-        #REMtext1 = gtk.Label("<b>Panneau haut gauche</b>\nVidéo Ariane V sur le pas de tir")
-        #REMtext1.set_use_markup(True)
-        #REMtext2 = gtk.Label("<b>Panneau bas gauche</b>\nVidéo Satellite/Sonde ou Modélisation 3D Ariane")
-        #REMtext2.set_use_markup(True)
+        ## Texte crypté
         text4 = gtk.Label("<b>Texte crypté</b>")
         text4.set_use_markup(True)
 
+        ## Prompt
         self.prompt = gtk.Entry()
         self.prompt.set_text(">")
         self.prompt_result = gtk.TextView()
@@ -69,21 +71,24 @@ class MainWindow(gtk.Window):
         promptBox.pack_start(self.prompt,expand=False,fill=True)
         promptBox.pack_start(self.prompt_result,expand=True,fill=True)
 
+        ## Caractéristiques techniques
         text6 = gtk.Label("<b>Panneau haut droite</b>\nCaractéristiques techniques")
         text6.set_use_markup(True)
-        text7 = gtk.Label("<b>Panneau bas droite</b>\nListe des équipes")
-        text7.set_use_markup(True)
-        
-        ## Charge la classe Player
-        self.screen1 = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'])
-        self.screen2 = PlayerFrame(self, 2, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'])
 
+        ## Liste des équipes
+        self.teamBox = teamBox()
+        #self.teamBox.addTeam("SpaceX")
+        #self.teamBox.addTeam("ESA")
+        #self.teamBox.addTeam("NASA")
+        #self.teamBox.addTeam("JAXA")
+        #self.teamBox.addPasswd("ESA","123456")
+        #self.teamBox.save()
+        self.teamBox.load()
+        
         ## Affichage des textes provisoires
         #leftBox
-        #REMleftBox.pack_start(text1,True,True,0)
         leftBox.pack_start(self.screen1,True,True,0)
         leftBox.pack_start(gtk.HSeparator(),True,True)
-        #REMleftBox.pack_start(text2,True,True)
         leftBox.pack_start(self.screen2,True,True,0)
         #centerBox
         centerBox.pack_start(self.countdown,True,True)
@@ -94,7 +99,7 @@ class MainWindow(gtk.Window):
         #rightBox
         rightBox.pack_start(text6,True,True)
         rightBox.pack_start(gtk.HSeparator(),True,True)
-        rightBox.pack_start(text7,True,True)
+        rightBox.pack_start(self.teamBox,True,True)
 
         ## Ajout des sous-boîtes (leftBox, centerBox, rightBox) dans rootBox
         rootBox.pack_start(leftBox,True,True,0)
