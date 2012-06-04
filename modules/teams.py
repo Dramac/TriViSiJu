@@ -5,6 +5,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 import pickle
+import os
 
 class TeamError(Exception):
     """Exception levée lors de la mauvaise manipulation d'équipe"""
@@ -26,7 +27,7 @@ class team():
         return "Équipe {}".format(self.nom)
 
 class teamBox(gtk.Label):
-    def __init__(self,fichier="teams.dat"):
+    def __init__(self,fichier=os.path.join(os.path.dirname(__file__), "teams.dat")):
         gtk.Label.__init__(self)
         self.set_text("Vide")
         self.team_list = []
