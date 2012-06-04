@@ -62,14 +62,7 @@ class MainWindow(gtk.Window):
         text4.set_use_markup(True)
 
         ## Prompt
-        self.prompt = gtk.Entry()
-        self.prompt.set_text(">")
-        self.prompt_result = gtk.TextView()
-        self.prompt_result.set_editable(False)
-
-        promptBox = gtk.VBox()
-        promptBox.pack_start(self.prompt,expand=False,fill=True)
-        promptBox.pack_start(self.prompt_result,expand=True,fill=True)
+        self.prompt = promptBox()
 
         ## Caractéristiques techniques
         text6 = gtk.Label("<b>Panneau haut droite</b>\nCaractéristiques techniques")
@@ -95,7 +88,7 @@ class MainWindow(gtk.Window):
         centerBox.pack_start(gtk.HSeparator(),True,True)
         centerBox.pack_start(text4,True,True)
         centerBox.pack_start(gtk.HSeparator(),True,True)
-        centerBox.pack_start(promptBox,True,True)
+        centerBox.pack_start(self.prompt,True,True)
         #rightBox
         rightBox.pack_start(text6,True,True)
         rightBox.pack_start(gtk.HSeparator(),True,True)
