@@ -83,7 +83,7 @@ class MainWindow(gtk.Window):
         #self.teamBox.addTeam("JAXA")
         #self.teamBox.addPasswd("ESA","123456")
         #self.teamBox.save()
-        self.teamBox.load()
+        #self.teamBox.load()
         
         ## Affichage des textes provisoires
         #leftBox
