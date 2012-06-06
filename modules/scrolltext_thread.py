@@ -11,71 +11,99 @@ import threading
 
 class ScrollBuffer(threading.Thread):
     """ Classe :threading.Thread
-    Permet de mettre à jour le buffer
+
+    Permet une gestion plus fine de gtk.TextBuffer
+
+    - root      : Classe gtk.ScrolledWindow parente (permet le 'défilement')
+    - buffer    : Classe gtk.TextBuffer
+    - lines     : List de lines à faire défiler. (defaut: [""])
+    - n         : Entier à partir duquel on lit la list 'lines'. (defaut: 0)
+    - speed     : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
     """
-    def __init__(self, root, buffer, continuer=True, lines=[""], n=0):
+
+    def __init__(self, root, buffer, lines=[""], n=0, speed=0.1):
         """ Initialise la classe
         """
+        ## Permet de remplacer les méthodes de la classe parente (ici threading.Thread qui contient une méthode run)
         super(ScrollBuffer, self).__init__()
+
         ## Charge les variables
         self.root = root
         self.buffer = buffer
-        self.continuer = continuer
+        self.continuer = True # Variable contrôlant le thread (si False, sort de la boucle infinie)
         self.lines = lines
         self.n = n
+        self.speed = speed
         self.line = self.lines[self.n]
 
-    def update_buffer(self, text):
+    def update_buffer(self, texte):
         """ Met à jour le buffer
+
+        - texte : Texte à mettre dans le buffer (remplace l'ancien texte)
         """
+        ## Met à jour le buffer
+        self.buffer.set_text(texte)
+
+        ## Fait défiler le text
+        adj = self.root.get_vadjustment()
+        adj.set_value( adj.upper - adj.page_size )
+        
+        ## Retourne False pour gobject (???)
         return False
 
     def run(self):
-        """ Lance le Thread
+        """ Lance le Thread (ré-écriture de la méthode inhérente à threading.Thread)
         """
-        print "run"
+        ## Boucle 'infinie'
         while self.continuer:
-            # Met à jour le buffer
-            self.buffer.set_text(self.line)
             ## Met à jour le buffer
             gobject.idle_add(self.update_buffer, self.line)
             
-            # Fait défiler le texte
-            adj = self.root.get_vadjustment()
-            adj.set_value( adj.upper - adj.page_size )
-            
-             #Incrémente n (lecteur de ligne dans le fichier)
+            ## Incrémente n (lecteur de ligne dans le fichier)
             self.n = self.n + 1
             if self.n >= len(self.lines):
                 self.n = 0
-                self.line = "\n".join(self.line.split('\n')[-100:]) ## Pour le moment il reste un saut quand le bufer a plus de 100 linges
+                ## Pour le moment il reste un saut quand le bufer a plus de 100 linges
+                self.line = "\n".join(self.line.split('\n')[-100:])
             
-            # Ajout de la ligne suivante
+            ## Ajout de la ligne suivante
             self.line = self.line + self.lines[self.n]
             
-            # Attend avant la ligne suivante
-            time.sleep(0.1)
+            ## Attend avant la ligne suivante
+            time.sleep(self.speed)
+
+    def set_speed(self, speed):
+        """ Change la vitesse de défilement
+
+        - speed : Délai entre l'affichage de chaque ligne en seconde
+        """
+        self.speed = speed
 
     def quit(self):
+        """ Quitte proprement le thread
+        """
+        ## Permet de sortir de la boucle while infinie
         self.continuer = False
+
+        ## Renvoie self.n afin de recommencer au même endroit
         return self.n
 
 
 class ScrollText(gtk.ScrolledWindow):
     """ Classe permettant de faire défiler du text indéfiniment
     """
-    def __init__(self, filename=__file__):
+    def __init__(self, filename=__file__, speed=0.1):
         """ Initialisation de la classe
         
-        root     : Conteneur
-        filename : Fichier à faire défiler (defaut le code lui même)
+        - root     : Conteneur
+        - filename : Fichier à faire défiler (defaut le code lui même)
+        - speed     : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
         """
         ## Initialisation des variables
-        self.continuer = True
-        self.filename = filename
-        print filename
-        self.launch = False
-        self.buffertext = 0
+        self.filename = filename    # Fichier à faire défiler
+        self.launch = False         # Permet de contrôler si le texte défile
+        self.buffertext = 0         # Position de lecture lors de l'arrêt du défilement
+        self.speed = speed          # Vitesse de défilement
 
         ## Initialisation de gtk.ScrolledWindow
         gtk.ScrolledWindow.__init__(self)
@@ -107,10 +135,12 @@ class ScrollText(gtk.ScrolledWindow):
         return lines
 
     def scroll(self, *parent):
+        """ Fait défiler le text
+        """
         if not self.launch:
             lines = self.loadfile()
             ## init ScrollBuffer
-            self.scroll_buffer = ScrollBuffer(self, self.buffer, continuer=self.continuer, lines=lines, n=self.buffertext)
+            self.scroll_buffer = ScrollBuffer(self, self.buffer, lines=lines, n=self.buffertext, speed=self.speed)
             self.scroll_buffer.start()
             self.launch = True
         else:
@@ -118,6 +148,13 @@ class ScrollText(gtk.ScrolledWindow):
             self.launch = False
             print self.buffertext
         
+    def set_speed(self, speed):
+        """ Change la vitesse de défilement
+
+        - speed : Délai entre l'affichage de chaque ligne en seconde
+        """
+        self.speed = speed
+        self.scroll_buffer.set_speed(self.speed)
 
 class RootWindows():
     """ Fenêtre principale pour tester ScrollText
