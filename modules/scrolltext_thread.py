@@ -95,9 +95,8 @@ class ScrollText(gtk.ScrolledWindow):
     def __init__(self, filename=__file__, speed=0.1):
         """ Initialisation de la classe
         
-        - root     : Conteneur
         - filename : Fichier à faire défiler (defaut le code lui même)
-        - speed     : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
+        - speed    : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
         """
         ## Initialisation des variables
         self.filename = filename    # Fichier à faire défiler
@@ -162,13 +161,81 @@ class ScrollText(gtk.ScrolledWindow):
         self.speed = speed
         self.scroll_buffer.set_speed(self.speed)
 
+class ScrollTextBox(gtk.VBox):
+    """ Conteneur pour la classe ScrollText (gtk.VBox)
+        
+    - filename : Fichier à faire défiler (defaut le code lui même)
+    - speed    : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
+    """
+
+    def __init__(self, filename=__file__, speed=0.1, forcebutton=True):
+        """ Initialisation de la classe
+        """
+        ## Inititalisation de la class gtk.VBox (conteneur)
+        gtk.VBox.__init__(self)
+
+        ## Affichage optionnel des bouttons
+        if forcebutton:
+            ## HBox avec le boutton de chargement
+            load = gtk.Button(stock=("gtk-media-play"))
+            self.pack_start(load, True, True, 0)
+
+            ## Label
+            label = gtk.Label("Vitesse en ms")
+            self.pack_start(label, True, True, 0)
+            
+            ## Ajustement
+            adj = gtk.Adjustment(1.00, 0.01, 10.0, 0.01, 0.1, 1.0)
+            
+            ## HScale
+            hscale = gtk.HScale(adj)
+            hscale.set_digits(2)                # Change la précision (defaut: 1)
+            hscale.set_value_pos(gtk.POS_RIGHT) # Change la posisition de la valeur (POS_RIGHT, POS_TOP, POS_BOTTOM, POS_LEFT)
+            self.pack_start(hscale, True, True, 0)
+        
+        ## Charge ScrollText
+        self.scrolltext = ScrollText()
+        self.pack_start(self.scrolltext, True, True, 0)
+
+        ## Connexion
+        if forcebutton:
+            ## Défilement Start/stop
+            load.connect("clicked", self.scrolltext.scroll)
+            ## Récupération de la vitesse
+            adj.connect("value_changed", lambda w: self.update(hscale))
+
+    def update(self, hscale):
+        """ Met à jour la valeur de la vitesse gràce à HScale barre
+
+        - hscale : gtk.HScale instance
+        """
+        self.set_speed(hscale.get_value()/10.)
+
+    def set_speed(self, speed):
+        """ Change la vitesse de défilement (pourra être connectée au shell)
+
+        - speed : Délai entre l'affichage de chaque ligne en seconde
+        """
+        self.scrolltext.set_speed(speed)
+        
+
+    def quit(self, *parent):
+        """ Quitte proprement
+        """
+        ## Arrêt du défilement et du thread associé
+        if self.scrolltext.launch:
+            self.scrolltext.scroll_buffer.quit()
+ 
+
 class RootWindows():
     """ Fenêtre principale pour tester ScrollText
     """
     def __init__(self):
         """ Initialise la fenêtre et chareg ScrollText
         """
+        ## Charge gobject
         gobject.threads_init()
+
         ## Créer la fenêtre principale
         self.root = gtk.Window()
         self.root.set_title(__file__)
@@ -176,52 +243,22 @@ class RootWindows():
         self.root.set_position(gtk.WIN_POS_CENTER)
         self.root.connect("destroy", self.quit)
         
-        ## VBox avec ScrollText
-        vbox = gtk.VBox()
-
-        ## HBox avec le boutton de chargement
-        load = gtk.Button(stock=("gtk-media-play"))
-        vbox.pack_start(load, True, True, 0)
-
-        ## Changement de la vitesse
-        # Label
-        label = gtk.Label("Vitesse en ms")
-        vbox.pack_start(label, True, True, 0)
-        # Ajustement
-        adj = gtk.Adjustment(1.00, 0.01, 10.0, 0.01, 0.1, 1.0)
-        # HScale
-        hscale = gtk.HScale(adj)
-        hscale.set_digits(2)                # Change la précision (defaut: 1)
-        hscale.set_value_pos(gtk.POS_RIGHT) # Change la posisition de la valeur (POS_RIGHT, POS_TOP, POS_BOTTOM, POS_LEFT)
-        vbox.pack_start(hscale, True, True, 0)
-
-        # Charge ScrollText
-        self.scrolltext = ScrollText()
-        load.connect("clicked", self.scrolltext.scroll)
-        vbox.pack_start(self.scrolltext, True, True, 0)
-        
-        ## Récupération de la vitesse
-        adj.connect("value_changed", lambda w: self.update(hscale))
+        ## ScrollTextBox
+        self.scrolltextbox = ScrollTextBox()
         
         ## On attache le tout à root
-        self.root.add(vbox)
+        self.root.add(self.scrolltextbox)
         
         ## On affiche tout
         self.root.show_all()
 
-    def update(self, hscale):
-        """ Met à jour la valeur de la vitesse
-
-        - hscale : gtk.HScale instance
-        """
-        self.scrolltext.set_speed(hscale.get_value()/10.)
-    
+       
     def quit(self, *parent):
         """ Fonction qui permet de quitter proprement
         """
-        ## Si le text defile, on l'arrête
-        if self.scrolltext.launch: 
-            self.scrolltext.scroll_buffer.quit()
+        ## Ferme ScrollTextBox
+        self.scrolltextbox.quit()
+
         ## On quitte l'application
         gtk.main_quit()
         
