@@ -34,7 +34,10 @@ class ScrollBuffer(threading.Thread):
         self.lines = lines
         self.n = n
         self.speed = speed
-        self.line = self.lines[self.n]
+        if self.n <= len(self.lines):
+            self.line = self.lines[self.n]
+        else:
+            self.line = ""
 
     def update_buffer(self, texte):
         """ Met à jour le buffer
@@ -161,6 +164,12 @@ class ScrollText(gtk.ScrolledWindow):
         self.speed = speed
         self.scroll_buffer.set_speed(self.speed)
 
+    def quit(self):
+        """ Quitte proprement
+        """
+        if self.launch:
+            self.scroll()
+
 class ScrollTextBox(gtk.VBox):
     """ Conteneur pour la classe ScrollText (gtk.VBox)
         
@@ -180,10 +189,16 @@ class ScrollTextBox(gtk.VBox):
             load = gtk.Button(stock=("gtk-media-play"))
             self.pack_start(load, True, True, 0)
 
+            ## HBox (Label+HScale | Boutton)
+            hbox = gtk.HBox()
+
+            ## VBox (Label - HScale)
+            vbox = gtk.VBox()
+
             ## Label
             label = gtk.Label("Vitesse en ms")
-            self.pack_start(label, True, True, 0)
-            
+            vbox.pack_start(label, True, True, 0)
+
             ## Ajustement
             adj = gtk.Adjustment(1.00, 0.01, 10.0, 0.01, 0.1, 1.0)
             
@@ -191,7 +206,17 @@ class ScrollTextBox(gtk.VBox):
             hscale = gtk.HScale(adj)
             hscale.set_digits(2)                # Change la précision (defaut: 1)
             hscale.set_value_pos(gtk.POS_RIGHT) # Change la posisition de la valeur (POS_RIGHT, POS_TOP, POS_BOTTOM, POS_LEFT)
-            self.pack_start(hscale, True, True, 0)
+            vbox.pack_start(hscale, True, True, 0)
+
+            ## Pack vbox
+            hbox.pack_start(vbox, True, True, 0)
+
+            ## Boutton ouvrir
+            boutton = gtk.Button(stock=("gtk-open"))
+            hbox.pack_start(boutton, True, True, 0)
+
+            ## Pack hbox
+            self.pack_start(hbox, True, True, 0)
         
         ## Charge ScrollText
         self.scrolltext = ScrollText()
@@ -200,9 +225,27 @@ class ScrollTextBox(gtk.VBox):
         ## Connexion
         if forcebutton:
             ## Défilement Start/stop
-            load.connect("clicked", self.scrolltext.scroll)
+            load.connect("clicked", self.scroll)
             ## Récupération de la vitesse
             adj.connect("value_changed", lambda w: self.update(hscale))
+            ## Ouvrir un nouveau fichier
+            boutton.connect("clicked", self.open)
+
+    def scroll(self, *parent):
+        """ Lance le défilement
+        """
+        self.scrolltext.scroll()
+
+    def open(self, parent):
+        """ Ouvrir un fichier grâce à un explorateur de fichier
+        """
+        dialog = gtk.FileChooserDialog("Choisit un fichier", gtk.Window(), gtk.FILE_CHOOSER_ACTION_OPEN,
+                                       (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        dialog.connect("destroy", lambda w: dialog.destroy())
+        statut = dialog.run()
+        if statut == gtk.RESPONSE_OK:
+            self.set_filename(dialog.get_filename().replace(' ', '\ '))
+        dialog.destroy()
 
     def update(self, hscale):
         """ Met à jour la valeur de la vitesse gràce à HScale barre
@@ -217,14 +260,23 @@ class ScrollTextBox(gtk.VBox):
         - speed : Délai entre l'affichage de chaque ligne en seconde
         """
         self.scrolltext.set_speed(speed)
-        
+
+    def set_filename(self, filename):
+        """ Permet de changer le fichier à faire défiler
+
+        - filename : Nom du fichier à lire
+        """
+        ## Arrêt du défilement s'il est lancé
+        self.quit()
+        self.scrolltext.filename = filename
+        self.buffertext = 0
+        self.scroll()
 
     def quit(self, *parent):
         """ Quitte proprement
         """
         ## Arrêt du défilement et du thread associé
-        if self.scrolltext.launch:
-            self.scrolltext.scroll_buffer.quit()
+        self.scrolltext.quit()
  
 
 class RootWindows():
