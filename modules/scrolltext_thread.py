@@ -123,6 +123,9 @@ class ScrollText(gtk.ScrolledWindow):
         ## Ajout de TextView à ScrolledWindow
         self.add(self.textview)
 
+        ## Init ScrollBuffer
+        self.scroll_buffer = ScrollBuffer(self, self.buffer) # Necessaire pour pouvoir connecter la fonction set_speed
+
         
     def loadfile(self, *parent):
         """ Charge un fichier et fait défiler son contenu
@@ -139,14 +142,17 @@ class ScrollText(gtk.ScrolledWindow):
         """
         if not self.launch:
             lines = self.loadfile()
-            ## init ScrollBuffer
+            ## Reset ScrollBuffer
             self.scroll_buffer = ScrollBuffer(self, self.buffer, lines=lines, n=self.buffertext, speed=self.speed)
+            ## Charge les lignes à faire défiler
+            self.scroll_buffer.lines = lines
+            ## Lance le défilement
             self.scroll_buffer.start()
             self.launch = True
         else:
+            ## Stop le défilement et du coup le thread et récupère le numéro de ligne actuel
             self.buffertext = self.scroll_buffer.quit()
             self.launch = False
-            print self.buffertext
         
     def set_speed(self, speed):
         """ Change la vitesse de défilement
@@ -176,17 +182,39 @@ class RootWindows():
         ## HBox avec le boutton de chargement
         load = gtk.Button(stock=("gtk-media-play"))
         vbox.pack_start(load, True, True, 0)
-        
+
+        ## Changement de la vitesse
+        # Label
+        label = gtk.Label("Vitesse en ms")
+        vbox.pack_start(label, True, True, 0)
+        # Ajustement
+        adj = gtk.Adjustment(1.00, 0.01, 10.0, 0.01, 0.1, 1.0)
+        # HScale
+        hscale = gtk.HScale(adj)
+        hscale.set_digits(2)                # Change la précision (defaut: 1)
+        hscale.set_value_pos(gtk.POS_RIGHT) # Change la posisition de la valeur (POS_RIGHT, POS_TOP, POS_BOTTOM, POS_LEFT)
+        vbox.pack_start(hscale, True, True, 0)
+
         # Charge ScrollText
         self.scrolltext = ScrollText()
         load.connect("clicked", self.scrolltext.scroll)
         vbox.pack_start(self.scrolltext, True, True, 0)
+        
+        ## Récupération de la vitesse
+        adj.connect("value_changed", lambda w: self.update(hscale))
         
         ## On attache le tout à root
         self.root.add(vbox)
         
         ## On affiche tout
         self.root.show_all()
+
+    def update(self, hscale):
+        """ Met à jour la valeur de la vitesse
+
+        - hscale : gtk.HScale instance
+        """
+        self.scrolltext.set_speed(hscale.get_value()/10.)
     
     def quit(self, *parent):
         """ Fonction qui permet de quitter proprement
