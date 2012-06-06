@@ -96,9 +96,12 @@ class teamBox(gtk.Label):
 
     def load(self):
         """Chargement des équipes sauvées"""
-        with open(self.fichier,'r') as fichier:
-            self.team_list = pickle.Unpickler(fichier).load()
-        self.printTeams()
+        if os.path.exists(self.fichier):
+            with open(self.fichier,'r') as fichier:
+                self.team_list = pickle.Unpickler(fichier).load()
+            self.printTeams()
+        else:
+            print "Teams : Fichier d'équipes inexistant ("+self.fichier+")."
 
 if __name__ == "__main__":
     # Fenêtre de test et d'exemple
