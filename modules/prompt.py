@@ -34,10 +34,25 @@ class promptBox(gtk.VBox):
         self.entry.set_text(">")
         self.result = gtk.TextView()
         self.result.set_editable(False)
+        self.result.set_cursor_visible(False)
+
+        resultWindow = gtk.ScrolledWindow()
+        resultWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        resultWindow.add(self.result)
 
         # Insertion des widgets dans la boîte
         self.pack_start(self.entry,expand=False,fill=True)
-        self.pack_start(self.result,expand=True,fill=True)
+        self.pack_start(resultWindow,expand=True,fill=True)
+
+        # Buffer du textView
+        self.buffer = self.result.get_buffer()
+
+        # Connexion des signaux
+        self.entry.connect("activate",self.parseEntry)
+
+    def parseEntry(self, entry):
+        self.buffer.insert(self.buffer.get_end_iter(), entry.get_text() + "\n")
+        self.result.scroll_to_iter(self.buffer.get_end_iter(), 0)
 
 if __name__ == "__main__":
     a = gtk.Window()
