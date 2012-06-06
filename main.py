@@ -58,8 +58,7 @@ class MainWindow(gtk.Window):
         #self.countdown.start()
 
         ## Texte crypté
-        text4 = gtk.Label("<b>Texte crypté</b>")
-        text4.set_use_markup(True)
+        self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'])
 
         ## Prompt
         self.prompt = promptBox()
@@ -86,7 +85,7 @@ class MainWindow(gtk.Window):
         #centerBox
         centerBox.pack_start(self.countdown,True,True)
         centerBox.pack_start(gtk.HSeparator(),True,True)
-        centerBox.pack_start(text4,True,True)
+        centerBox.pack_start(self.scrolltextbox,True,True)
         centerBox.pack_start(gtk.HSeparator(),True,True)
         centerBox.pack_start(self.prompt,True,True)
         #rightBox
@@ -136,9 +135,11 @@ class MainWindow(gtk.Window):
         
         Tue proprement l'application root
         """
-        ## Envoir le signal à mplayer
+        ## Envoie le signal à mplayer
         self.screen1.Screen.quit()
         self.screen2.Screen.quit()
+        ## Envoie le signal à ScrollTextBox
+        self.scrolltextbox.quit()
         ## Attend que mplayer se soit éteint
         time.sleep(0.1)
         ## Tue l'application root
@@ -182,6 +183,9 @@ if __name__=="__main__":
     for key, val in kwarg.iteritems():
         if val in ['True', 'False', 'true', 'false']:
             kwarg[key] = str2bool(val)
+
+    ## Charge gobject (Important pour ScrollTextBox
+    gobject.threads_init()
     
     ## arg et kwarg
     MainWindow(**kwarg)
