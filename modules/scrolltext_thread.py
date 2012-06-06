@@ -8,6 +8,7 @@ import time
 import gobject
 import subprocess
 import threading
+import os
 
 class ScrollBuffer(threading.Thread):
     """ Classe :threading.Thread
@@ -95,7 +96,7 @@ class ScrollBuffer(threading.Thread):
 class ScrollText(gtk.ScrolledWindow):
     """ Classe permettant de faire défiler du text indéfiniment
     """
-    def __init__(self, filename=__file__, speed=0.1):
+    def __init__(self, filename=os.path.join(os.getcwd(), __file__), speed=0.1):
         """ Initialisation de la classe
         
         - filename : Fichier à faire défiler (defaut le code lui même)
@@ -177,7 +178,7 @@ class ScrollTextBox(gtk.VBox):
     - speed    : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
     """
 
-    def __init__(self, filename=__file__, speed=0.1, forcebutton=True):
+    def __init__(self, filename=os.path.join(os.getcwd(), __file__), speed=0.1, forcebutton=True):
         """ Initialisation de la classe
         """
         ## Inititalisation de la class gtk.VBox (conteneur)
