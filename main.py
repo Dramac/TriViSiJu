@@ -164,6 +164,15 @@ class MainWindow(gtk.Window):
         gtk.main_quit()
 
 if __name__=="__main__":
+    ## Licence
+    licence = """
+    TriViSiJu  Copyright (C) 2012 Jules DAVID, Tristan GREGOIRE, Simon NICOLAS and Vincent PRAT
+    This program comes with ABSOLUTELY NO WARRANTY; for details type `./main.py -h'.
+    This is free software, and you are welcome to redistribute it
+    under certain conditions; type `./main.py -h' for details.
+    """
+    print licence
+
     ## Descrition
     description = """ Application Grand Jeu : TriViSiJu
     
