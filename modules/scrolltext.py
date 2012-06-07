@@ -43,7 +43,7 @@ class ScrollBuffer(threading.Thread):
     - speed     : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
     """
 
-    def __init__(self, root, buffer, lines=[""], n=0, speed=0.1, crypt=True):
+    def __init__(self, root, buffer, lines=[""], n=0, speed=1.0, crypt=True):
         """ Initialise la classe
         """
         ## Permet de remplacer les méthodes de la classe parente (ici threading.Thread qui contient une méthode run)
@@ -125,7 +125,7 @@ class ScrollBuffer(threading.Thread):
                 self.line = self.line + self.lines[self.n]
             
             ## Attend avant la ligne suivante
-            time.sleep(self.speed)
+            time.sleep(self.speed/10.)
 
     def set_speed(self, speed):
         """ Change la vitesse de défilement
@@ -147,17 +147,19 @@ class ScrollBuffer(threading.Thread):
 class ScrollText(gtk.ScrolledWindow):
     """ Classe permettant de faire défiler du text indéfiniment
     """
-    def __init__(self, filename=os.path.join(os.getcwd(), __file__.replace('.pyc', '.py')), speed=0.1):
+    def __init__(self, filename=os.path.join(os.getcwd(), __file__.replace('.pyc', '.py')), speed=1.0,\
+                crypt=True):
         """ Initialisation de la classe
         
         - filename : Fichier à faire défiler (defaut le code lui même)
-        - speed    : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
+        - speed    : Vitesse de défilement (temps entre chaque ligne en milliseseconde : (defaut 1.0))
         """
         ## Initialisation des variables
         self.filename = filename    # Fichier à faire défiler
         self.launch = False         # Permet de contrôler si le texte défile
         self.buffertext = 0         # Position de lecture lors de l'arrêt du défilement
         self.speed = speed          # Vitesse de défilement
+        self.crypt = crypt          # Si True crypte le texte (defaut)
 
         ## Initialisation de gtk.ScrolledWindow
         gtk.ScrolledWindow.__init__(self)
@@ -198,7 +200,8 @@ class ScrollText(gtk.ScrolledWindow):
         if not self.launch:
             lines = self.loadfile()
             ## Reset ScrollBuffer
-            self.scroll_buffer = ScrollBuffer(self, self.buffer, lines=lines, n=self.buffertext, speed=self.speed)
+            self.scroll_buffer = ScrollBuffer(self, self.buffer, lines=lines, n=self.buffertext, speed=self.speed,\
+                                             crypt=self.crypt)
             ## Charge les lignes à faire défiler
             self.scroll_buffer.lines = lines
             ## Lance le défilement
@@ -217,6 +220,15 @@ class ScrollText(gtk.ScrolledWindow):
         self.speed = speed
         self.scroll_buffer.set_speed(self.speed)
 
+    def set_crypt(self):
+        """ Cypte le texte s'il est clair ou decrypt s'il est crypté
+        """
+        if self.crypt:
+            self.crypt = False
+        else:
+            self.crypt = True
+        self.scroll_buffer.crypt = self.crypt
+
     def quit(self):
         """ Quitte proprement
         """
@@ -230,7 +242,8 @@ class ScrollTextBox(gtk.VBox):
     - speed    : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
     """
 
-    def __init__(self, filename=os.path.join(os.getcwd(), __file__.replace('.pyc', '.py')), speed=0.1, forcebutton=True):
+    def __init__(self, filename=os.path.join(os.getcwd(), __file__.replace('.pyc', '.py')), speed=1.0, forcebutton=True,\
+                crypt=True):
         """ Initialisation de la classe
         """
         ## Inititalisation de la class gtk.VBox (conteneur)
@@ -253,7 +266,7 @@ class ScrollTextBox(gtk.VBox):
             vbox.pack_start(label, True, True, 0)
 
             ## Ajustement
-            adj = gtk.Adjustment(1.00, 0.01, 10.0, 0.01, 0.1, 1.0)
+            adj = gtk.Adjustment(speed, 0.01, 10.0, 0.01, 0.1, 1.0)
             
             ## HScale
             hscale = gtk.HScale(adj)
@@ -268,11 +281,15 @@ class ScrollTextBox(gtk.VBox):
             boutton = gtk.Button(stock=("gtk-open"))
             hbox.pack_start(boutton, True, True, 0)
 
+            ## Boutton cryptage
+            bcrypt = gtk.ToggleButton(label="clair/crypt")
+            hbox.pack_start(bcrypt, True, True, 0)
+
             ## Pack hbox
             self.pack_start(hbox, True, True, 0)
         
         ## Charge ScrollText
-        self.scrolltext = ScrollText()
+        self.scrolltext = ScrollText(filename=filename, speed=speed, crypt=crypt)
         self.pack_start(self.scrolltext, True, True, 0)
 
         ## Connexion
@@ -283,11 +300,18 @@ class ScrollTextBox(gtk.VBox):
             adj.connect("value_changed", lambda w: self.update(hscale))
             ## Ouvrir un nouveau fichier
             boutton.connect("clicked", self.open)
+            ## Crypt
+            bcrypt.connect("clicked", self.set_crypt)
 
     def scroll(self, *parent):
         """ Lance le défilement
         """
         self.scrolltext.scroll()
+
+    def set_crypt(self, *parent):
+        """ Cypte le texte s'il est clair ou decrypt s'il est crypté
+        """
+        self.scrolltext.set_crypt()
 
     def open(self, parent):
         """ Ouvrir un fichier grâce à un explorateur de fichier
@@ -305,7 +329,7 @@ class ScrollTextBox(gtk.VBox):
 
         - hscale : gtk.HScale instance
         """
-        self.set_speed(hscale.get_value()/10.)
+        self.set_speed(hscale.get_value())
 
     def set_speed(self, speed):
         """ Change la vitesse de défilement (pourra être connectée au shell)

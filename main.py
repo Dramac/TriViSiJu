@@ -73,7 +73,7 @@ class MainWindow(gtk.Window):
         self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
 
         ## Texte crypté
-        self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'])
+        self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'], speed=kwarg['speed'], crypt=kwarg['crypt'])
 
         ## Prompt
         self.prompt = promptBox()
@@ -212,6 +212,11 @@ if __name__=="__main__":
     for key, val in kwarg.iteritems():
         if val in ['True', 'False', 'true', 'false']:
             kwarg[key] = str2bool(val)
+        else:
+            try:
+                kwarg[key] = float(val)
+            except ValueError:
+                pass
 
     ## Charge gobject (Important pour ScrollTextBox
     gobject.threads_init()

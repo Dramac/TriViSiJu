@@ -38,10 +38,11 @@ def conf2dict(liste):
 def str2bool(string):
     """ Convertit une string True/False en booléen
     """
+    print "coucou", string
     if string == 'True' or string == 'true':
         return True
     elif string == 'False' or string == 'false':
         return False
     else:
-        raise ValueEroor("'%s' n'est pas dans ['True', 'true', 'False', 'false']"%(string))
+        raise ValueError("'%s' n'est pas dans ['True', 'true', 'False', 'false']"%(string))
 
