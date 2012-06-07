@@ -29,6 +29,7 @@ import gobject
 import subprocess
 import threading
 import os
+import hashlib
 
 class ScrollBuffer(threading.Thread):
     """ Classe :threading.Thread
@@ -42,7 +43,7 @@ class ScrollBuffer(threading.Thread):
     - speed     : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
     """
 
-    def __init__(self, root, buffer, lines=[""], n=0, speed=0.1):
+    def __init__(self, root, buffer, lines=[""], n=0, speed=0.1, crypt=True):
         """ Initialise la classe
         """
         ## Permet de remplacer les méthodes de la classe parente (ici threading.Thread qui contient une méthode run)
@@ -55,10 +56,13 @@ class ScrollBuffer(threading.Thread):
         self.lines = lines
         self.n = n
         self.speed = speed
+        self.crypt = crypt
         if self.n <= len(self.lines):
             self.line = self.lines[self.n]
         else:
             self.line = ""
+        if self.crypt:
+            self.line = self.cryptage(self.line)
 
     def update_buffer(self, texte):
         """ Met à jour le buffer
@@ -74,6 +78,28 @@ class ScrollBuffer(threading.Thread):
         
         ## Retourne False pour gobject (???)
         return False
+    
+    def cryptage(self, texte):
+        """ Fonction de cryptage
+
+        - texte : Texte à crypter
+        """
+        ## Déclaration du cryptage
+        h = hashlib.md5()
+        h.update(texte)
+
+        return h.hexdigest()
+
+    def incremente(self):
+        """ Incrémente n de 1 et vérifie le nombre de ligne
+        """
+        ## Incrémente n (lecteur de ligne dans le fichier)
+        self.n = self.n + 1
+        if self.n >= len(self.lines):
+            self.n = 0
+            ## Pour le moment il reste un saut quand le bufer a plus de 100 lignes
+            self.line = "\n".join(self.line.split('\n')[-100:])
+
 
     def run(self):
         """ Lance le Thread (ré-écriture de la méthode inhérente à threading.Thread)
@@ -82,16 +108,21 @@ class ScrollBuffer(threading.Thread):
         while self.continuer:
             ## Met à jour le buffer
             gobject.idle_add(self.update_buffer, self.line)
-            
-            ## Incrémente n (lecteur de ligne dans le fichier)
-            self.n = self.n + 1
-            if self.n >= len(self.lines):
-                self.n = 0
-                ## Pour le moment il reste un saut quand le bufer a plus de 100 linges
-                self.line = "\n".join(self.line.split('\n')[-100:])
+
+            ## Incrémente self.n
+            self.incremente()
             
             ## Ajout de la ligne suivante
-            self.line = self.line + self.lines[self.n]
+            if self.crypt:
+                ajout = ""
+                ## Ajoute des lignes cryptées pour remplir la boîte
+                while len(ajout) < 32.*5:
+                    ajout = ajout + self.cryptage(self.lines[self.n])
+                    ## Incrémente self.n
+                    self.incremente()
+                self.line = self.line + '\n' + ajout
+            else:
+                self.line = self.line + self.lines[self.n]
             
             ## Attend avant la ligne suivante
             time.sleep(self.speed)
