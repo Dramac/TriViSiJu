@@ -4,3 +4,4 @@
 *.avi
 *.dat
 .DS_Store
+doc/*

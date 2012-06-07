@@ -26,12 +26,17 @@ pygtk.require("2.0")
 import gtk
 
 class promptBox(gtk.VBox):
-    def __init__(self):
+    """ Boîte contenant un prompt et une zone de texte pour afficher les résultats
+    """
+    def __init__(self, promptCharacter = '>'):
         gtk.VBox.__init__(self)
+        
+        # Initialisation des attributs
+        self.promptCharacter = promptCharacter
 
         # Créations des widgets
         self.entry = gtk.Entry()
-        self.entry.set_text(">")
+        self.entry.set_text(self.promptCharacter)
         self.result = gtk.TextView()
         self.result.set_editable(False)
         self.result.set_cursor_visible(False)
@@ -48,11 +53,31 @@ class promptBox(gtk.VBox):
         self.buffer = self.result.get_buffer()
 
         # Connexion des signaux
-        self.entry.connect("activate",self.parseEntry)
+        self.entry.connect("activate", self.parseEntry)
+        self.entry.connect("insert-text", self.onInsert)
+        self.entry.connect("delete-text", self.onDelete)
 
     def parseEntry(self, entry):
-        self.buffer.insert(self.buffer.get_end_iter(), entry.get_text() + "\n")
+        """ Méthode appelée lorsque l'on appuie sur la touche Entrée depuis le prompt
+        """
+        text = entry.get_text()
+        self.buffer.insert(self.buffer.get_end_iter(), text + "\n")
         self.result.scroll_to_iter(self.buffer.get_end_iter(), 0)
+        entry.delete_text(1,len(text))
+        # met le curseur à la fin
+        entry.set_position(-1)
+
+    def onInsert(self, entry, newText, newTextLength, position):
+        """ Méthode appelée lorsque l'on ajoute du texte dans le prompt
+        """
+        if entry.get_position() == 0:
+            entry.stop_emission("insert-text")
+
+    def onDelete(self, entry, start, end):
+        """ Méthode appelée lorsque l'on supprime du texte dans le prompt
+        """
+        if start == 0:
+            entry.stop_emission("delete-text")
 
 if __name__ == "__main__":
     a = gtk.Window()
