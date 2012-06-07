@@ -28,12 +28,14 @@ import gobject
 import Image
 
 class countdownBox(gtk.VBox):
-    def __init__(self,path_to_images="images/"):
+    def __init__(self,path_to_images="images/", forcebutton=True):
+        ## Initialise gtk.VBox, gtk.HBox
         gtk.VBox.__init__(self)
         hbox = gtk.HBox()
 
         # Initialisation des variables
         self.path_to_images = path_to_images
+        self.forcebutton = forcebutton
 
         # Création des conteneurs d'images
         self.img_10h = gtk.Image()       
@@ -76,6 +78,10 @@ class countdownBox(gtk.VBox):
         self.pack_start(hbox)
         self.timer = None
         self.playPause = None
+
+        # Show control
+        if self.forcebutton:
+            self.showControl()
 
     def setStartTime(self,h=0,m=0,s=20,cs=0):
         self.h_start = h
@@ -133,13 +139,15 @@ class countdownBox(gtk.VBox):
         if self.timer is None:
             # Initialisation du timer
             self.timer = gobject.timeout_add(10, self.on_timeout)
-            self.buttonToggle()
+            if self.forcebutton:
+                self.buttonToggle()
 
     def pause(self):
         if self.timer:
             gobject.source_remove(self.timer)
             self.timer = None
-            self.buttonToggle()
+            if self.forcebutton:
+                self.buttonToggle()
             
     def toggle(self,widget=None):
         """

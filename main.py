@@ -69,11 +69,8 @@ class MainWindow(gtk.Window):
         self.screen2 = PlayerFrame(self, 2, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'])
 
         ## Compte à rebours
-        self.countdown = countdownBox()
+        self.countdown = countdownBox(forcebutton=kwarg['forcebutton'])
         self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
-        if kwarg['forcebutton']:
-            self.countdown.showControl()
-        #self.countdown.start()
 
         ## Texte crypté
         self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'])
@@ -131,6 +128,11 @@ class MainWindow(gtk.Window):
         ## Charge la/les vidéo(s)
         self.loadmovie(kwarg['videopath1'], 1)
         self.loadmovie(kwarg['videopath2'], 2)
+
+        ## Lance le timer et le défilement
+        if not kwarg['forcebutton']:
+            # Lance le timer
+            self.countdown.start()
         
         ## Connexion de destroy à la fonction quit
         self.connect("destroy", lambda w: self.quit())
