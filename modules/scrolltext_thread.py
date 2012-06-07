@@ -266,7 +266,7 @@ class ScrollTextBox(gtk.VBox):
         dialog.connect("destroy", lambda w: dialog.destroy())
         statut = dialog.run()
         if statut == gtk.RESPONSE_OK:
-            self.set_filename(dialog.get_filename().replace(' ', '\ '))
+            self.set_filename(dialog.get_filename()) # Pas besoin de corriger les ' ' car la fonction open le fait déjà !
         dialog.destroy()
 
     def update(self, hscale):
