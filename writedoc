@@ -14,4 +14,8 @@ pydoc -w modules/scrolltext.py
 pydoc -w modules/teams.py
 
 ## Déplace dans doc/
+if [ ! -d doc ]
+then
+    mkdir doc
+fi
 mv -v *.html doc/
