@@ -133,6 +133,8 @@ class MainWindow(gtk.Window):
         if not kwarg['forcebutton']:
             # Lance le timer
             self.countdown.start()
+            # Défilement
+            self.scrolltextbox.scroll()
         
         ## Connexion de destroy à la fonction quit
         self.connect("destroy", lambda w: self.quit())
