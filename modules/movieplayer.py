@@ -38,6 +38,15 @@ class Player(gtk.Socket):
 	gtk.Socket -> Frame cible pour un programme externe
     """
 
+    class MplayerIdError(Exception):
+        """ Erreur soulevée lorsqu'il y a un problème avec mplayer
+        """
+        def __init__(self):
+            self.msg = repr("Vous devez parametrer une 'wid' pour mplayer... Voir Player.setwid(wid)")
+
+        def __str__(self):
+            return self.msg
+
     def __init__(self, id):
         """ Initialise la classe Player
 
@@ -83,15 +92,13 @@ class Player(gtk.Socket):
     def loadfile(self, filename):
         """ Charge un fichier
         """
-        ## TODO: Créé un type d'erreur pour mieux la déclarer
+        ## wid non déclarée
         if not self.start:
-            print "Vous devez paramétrer une 'wid' pour mplayer... Voir Player.setwid(wid)"
-            raise
+            raise self.MplayerIdError()
         else:
             self.cmdplayer("loadfile %s"%(filename))
             self.cmdplayer("change_resctangle w=100:h=100")
 
-    ## TODO: Ajouter un boutton pause
     def pause(self, parent):
         """ Envoie la commande pause à mplayer
         """
@@ -116,10 +123,12 @@ class Player(gtk.Socket):
     def quit(self):
         """ Encoie la commande quitter (suit) à mplayer
         """
-        ## Envoie la commande quitter
-        self.cmdplayer("quit")
-        ## Déclare mplayer comme non actif
-        self.start = False
+        if self.start:
+            ## Envoie la commande quitter
+            self.cmdplayer("quit")
+            ## Déclare mplayer comme non actif
+            self.start = False
+
         ## Supprime le fichier FIFO
         os.remove(self.pipe)
 
@@ -193,8 +202,14 @@ class PlayerFrame(gtk.Table):
         dialog.connect("destroy", lambda w: dialog.destroy())
         statut = dialog.run()
         if statut == gtk.RESPONSE_OK:
-            self.Screen.loadfile(dialog.get_filename().replace(' ', '\ '))
-        dialog.destroy()
+            try:
+                self.Screen.loadfile(dialog.get_filename().replace(' ', '\ '))
+            except self.Screen.MplayerIdError:
+                raise
+            finally:
+                dialog.destroy()
+        else:
+            dialog.destroy()
 
 class Root:
     """ Fenêtre principale contenant toute les Frame et sous-Frame
