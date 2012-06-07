@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# main
+pydoc -w main
+
+# function
+pydoc -w function
+
+# modules
+pydoc -w modules/countdown.py
+pydoc -w modules/movieplayer.py
+pydoc -w modules/prompt.py
+pydoc -w modules/scrolltext.py
+pydoc -w modules/teams.py
+
+## Déplace dans doc/
+mv -v *.html doc/

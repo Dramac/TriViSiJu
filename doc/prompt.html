@@ -1,0 +1,888 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module prompt</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>prompt</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/tristan/github/TriViSiJu/modules/prompt.py">/Users/tristan/github/TriViSiJu/modules/prompt.py</a></font></td></tr></table>
+    <p><tt>TriViSiJu:&nbsp;Graphical&nbsp;interface&nbsp;for&nbsp;the&nbsp;AstroJeune&nbsp;Festival<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Copyright&nbsp;(C)&nbsp;2012&nbsp;&nbsp;Jules&nbsp;DAVID,&nbsp;Tristan&nbsp;GREGOIRE,&nbsp;Simon&nbsp;NICOLAS&nbsp;and&nbsp;Vincent&nbsp;PRAT<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;file&nbsp;is&nbsp;part&nbsp;of&nbsp;TriViSiJu.<br>
+&nbsp;<br>
+TriViSiJu&nbsp;is&nbsp;free&nbsp;software:&nbsp;you&nbsp;can&nbsp;redistribute&nbsp;it&nbsp;and/or&nbsp;modify<br>
+it&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;as&nbsp;published&nbsp;by<br>
+the&nbsp;Free&nbsp;Software&nbsp;Foundation,&nbsp;either&nbsp;version&nbsp;3&nbsp;of&nbsp;the&nbsp;License,&nbsp;or<br>
+(at&nbsp;your&nbsp;option)&nbsp;any&nbsp;later&nbsp;version.<br>
+&nbsp;<br>
+TriViSiJu&nbsp;is&nbsp;distributed&nbsp;in&nbsp;the&nbsp;hope&nbsp;that&nbsp;it&nbsp;will&nbsp;be&nbsp;useful,<br>
+but&nbsp;WITHOUT&nbsp;ANY&nbsp;WARRANTY;&nbsp;without&nbsp;even&nbsp;the&nbsp;implied&nbsp;warranty&nbsp;of<br>
+MERCHANTABILITY&nbsp;or&nbsp;FITNESS&nbsp;FOR&nbsp;A&nbsp;PARTICULAR&nbsp;PURPOSE.&nbsp;&nbsp;See&nbsp;the<br>
+GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;for&nbsp;more&nbsp;details.<br>
+&nbsp;<br>
+You&nbsp;should&nbsp;have&nbsp;received&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License<br>
+along&nbsp;with&nbsp;TriViSiJu.&nbsp;&nbsp;If&nbsp;not,&nbsp;see&nbsp;&lt;<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="gtk.html">gtk</a><br>
+</td><td width="25%" valign=top><a href="pygtk.html">pygtk</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="gtk.html#VBox">gtk.VBox</a>(<a href="gtk.html#Box">gtk.Box</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="prompt.html#promptBox">promptBox</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="promptBox">class <strong>promptBox</strong></a>(<a href="gtk.html#VBox">gtk.VBox</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="prompt.html#promptBox">promptBox</a></dd>
+<dd><a href="gtk.html#VBox">gtk.VBox</a></dd>
+<dd><a href="gtk.html#Box">gtk.Box</a></dd>
+<dd><a href="gtk.html#Container">gtk.Container</a></dd>
+<dd><a href="gtk.html#Widget">gtk.Widget</a></dd>
+<dd><a href="gtk.html#Object">gtk.Object</a></dd>
+<dd><a href="gobject._gobject.html#GObject">gobject._gobject.GObject</a></dd>
+<dd><a href="atk.html#ImplementorIface">atk.ImplementorIface</a></dd>
+<dd><a href="gtk.html#Buildable">gtk.Buildable</a></dd>
+<dd><a href="gtk.html#Orientable">gtk.Orientable</a></dd>
+<dd><a href="gobject.html#GInterface">gobject.GInterface</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="promptBox-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="promptBox-parseEntry"><strong>parseEntry</strong></a>(self, entry)</dt></dl>
+
+<hr>
+Methods inherited from <a href="gtk.html#VBox">gtk.VBox</a>:<br>
+<dl><dt><a name="promptBox-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="gtk.html#VBox">gtk.VBox</a>:<br>
+<dl><dt><strong>__gtype__</strong> = &lt;GType GtkVBox (140623592342880)&gt;</dl>
+
+<hr>
+Methods inherited from <a href="gtk.html#Box">gtk.Box</a>:<br>
+<dl><dt><a name="promptBox-get_homogeneous"><strong>get_homogeneous</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_spacing"><strong>get_spacing</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-pack_end"><strong>pack_end</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-pack_end_defaults"><strong>pack_end_defaults</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-pack_start"><strong>pack_start</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-pack_start_defaults"><strong>pack_start_defaults</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-query_child_packing"><strong>query_child_packing</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-reorder_child"><strong>reorder_child</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_child_packing"><strong>set_child_packing</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_homogeneous"><strong>set_homogeneous</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_spacing"><strong>set_spacing</strong></a>(...)</dt></dl>
+
+<hr>
+Methods inherited from <a href="gtk.html#Container">gtk.Container</a>:<br>
+<dl><dt><a name="promptBox-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="promptBox-__nonzero__"><strong>__nonzero__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__nonzero__">__nonzero__</a>()&nbsp;&lt;==&gt;&nbsp;x&nbsp;!=&nbsp;0</tt></dd></dl>
+
+<dl><dt><a name="promptBox-add"><strong>add</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-add_with_properties"><strong>add_with_properties</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-check_resize"><strong>check_resize</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-child_get"><strong>child_get</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-child_get_property"><strong>child_get_property</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-child_set"><strong>child_set</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-child_set_property"><strong>child_set_property</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-child_type"><strong>child_type</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-children"><strong>children</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_add"><strong>do_add</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_check_resize"><strong>do_check_resize</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_child_type"><strong>do_child_type</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_composite_name"><strong>do_composite_name</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_forall"><strong>do_forall</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_get_child_property"><strong>do_get_child_property</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_remove"><strong>do_remove</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_set_child_property"><strong>do_set_child_property</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_set_focus_child"><strong>do_set_focus_child</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-forall"><strong>forall</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-foreach"><strong>foreach</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_border_width"><strong>get_border_width</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_children"><strong>get_children</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_focus_chain"><strong>get_focus_chain</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_focus_child"><strong>get_focus_child</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_focus_hadjustment"><strong>get_focus_hadjustment</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_focus_vadjustment"><strong>get_focus_vadjustment</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_resize_mode"><strong>get_resize_mode</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-install_child_property"><strong>install_child_property</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-list_child_properties"><strong>list_child_properties</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-propagate_expose"><strong>propagate_expose</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-remove"><strong>remove</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-resize_children"><strong>resize_children</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_border_width"><strong>set_border_width</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_focus_chain"><strong>set_focus_chain</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_focus_child"><strong>set_focus_child</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_focus_hadjustment"><strong>set_focus_hadjustment</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_focus_vadjustment"><strong>set_focus_vadjustment</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_reallocate_redraws"><strong>set_reallocate_redraws</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_resize_mode"><strong>set_resize_mode</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-unset_focus_chain"><strong>unset_focus_chain</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="gtk.html#Container">gtk.Container</a>:<br>
+<dl><dt><strong>border_width</strong></dt>
+</dl>
+<dl><dt><strong>focus_child</strong></dt>
+</dl>
+<dl><dt><strong>has_focus_chain</strong></dt>
+</dl>
+<dl><dt><strong>need_resize</strong></dt>
+</dl>
+<dl><dt><strong>reallocate_redraws</strong></dt>
+</dl>
+<dl><dt><strong>resize_mode</strong></dt>
+</dl>
+<hr>
+Methods inherited from <a href="gtk.html#Widget">gtk.Widget</a>:<br>
+<dl><dt><a name="promptBox-activate"><strong>activate</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-add_accelerator"><strong>add_accelerator</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-add_events"><strong>add_events</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-add_mnemonic_label"><strong>add_mnemonic_label</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-can_activate_accel"><strong>can_activate_accel</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-child_focus"><strong>child_focus</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-child_notify"><strong>child_notify</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-class_path"><strong>class_path</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-create_pango_context"><strong>create_pango_context</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-create_pango_layout"><strong>create_pango_layout</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-destroy"><strong>destroy</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_button_press_event"><strong>do_button_press_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_button_release_event"><strong>do_button_release_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_can_activate_accel"><strong>do_can_activate_accel</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_client_event"><strong>do_client_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_composited_changed"><strong>do_composited_changed</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_configure_event"><strong>do_configure_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_delete_event"><strong>do_delete_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_destroy_event"><strong>do_destroy_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_direction_changed"><strong>do_direction_changed</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_drag_begin"><strong>do_drag_begin</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_drag_data_delete"><strong>do_drag_data_delete</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_drag_data_get"><strong>do_drag_data_get</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_drag_data_received"><strong>do_drag_data_received</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_drag_drop"><strong>do_drag_drop</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_drag_end"><strong>do_drag_end</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_drag_leave"><strong>do_drag_leave</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_drag_motion"><strong>do_drag_motion</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_enter_notify_event"><strong>do_enter_notify_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_event"><strong>do_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_expose_event"><strong>do_expose_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_focus"><strong>do_focus</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_focus_in_event"><strong>do_focus_in_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_focus_out_event"><strong>do_focus_out_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_get_accessible"><strong>do_get_accessible</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_grab_broken_event"><strong>do_grab_broken_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_grab_focus"><strong>do_grab_focus</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_grab_notify"><strong>do_grab_notify</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_hide"><strong>do_hide</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_hide_all"><strong>do_hide_all</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_hierarchy_changed"><strong>do_hierarchy_changed</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_key_press_event"><strong>do_key_press_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_key_release_event"><strong>do_key_release_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_leave_notify_event"><strong>do_leave_notify_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_map"><strong>do_map</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_map_event"><strong>do_map_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_mnemonic_activate"><strong>do_mnemonic_activate</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_motion_notify_event"><strong>do_motion_notify_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_no_expose_event"><strong>do_no_expose_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_parent_set"><strong>do_parent_set</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_popup_menu"><strong>do_popup_menu</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_property_notify_event"><strong>do_property_notify_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_proximity_in_event"><strong>do_proximity_in_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_proximity_out_event"><strong>do_proximity_out_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_realize"><strong>do_realize</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_screen_changed"><strong>do_screen_changed</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_scroll_event"><strong>do_scroll_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_selection_clear_event"><strong>do_selection_clear_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_selection_get"><strong>do_selection_get</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_selection_notify_event"><strong>do_selection_notify_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_selection_received"><strong>do_selection_received</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_selection_request_event"><strong>do_selection_request_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_show"><strong>do_show</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_show_all"><strong>do_show_all</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_show_help"><strong>do_show_help</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_size_allocate"><strong>do_size_allocate</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_size_request"><strong>do_size_request</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_state_changed"><strong>do_state_changed</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_style_set"><strong>do_style_set</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_unmap"><strong>do_unmap</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_unmap_event"><strong>do_unmap_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_unrealize"><strong>do_unrealize</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_visibility_notify_event"><strong>do_visibility_notify_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_window_state_event"><strong>do_window_state_event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_begin"><strong>drag_begin</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_check_threshold"><strong>drag_check_threshold</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_dest_add_image_targets"><strong>drag_dest_add_image_targets</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_dest_add_text_targets"><strong>drag_dest_add_text_targets</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_dest_add_uri_targets"><strong>drag_dest_add_uri_targets</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_dest_find_target"><strong>drag_dest_find_target</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_dest_get_target_list"><strong>drag_dest_get_target_list</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_dest_get_track_motion"><strong>drag_dest_get_track_motion</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_dest_set"><strong>drag_dest_set</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_dest_set_proxy"><strong>drag_dest_set_proxy</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_dest_set_target_list"><strong>drag_dest_set_target_list</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_dest_set_track_motion"><strong>drag_dest_set_track_motion</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_dest_unset"><strong>drag_dest_unset</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_get_data"><strong>drag_get_data</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_highlight"><strong>drag_highlight</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_source_add_image_targets"><strong>drag_source_add_image_targets</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_source_add_text_targets"><strong>drag_source_add_text_targets</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_source_add_uri_targets"><strong>drag_source_add_uri_targets</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_source_get_target_list"><strong>drag_source_get_target_list</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_source_set"><strong>drag_source_set</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_source_set_icon"><strong>drag_source_set_icon</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_source_set_icon_name"><strong>drag_source_set_icon_name</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_source_set_icon_pixbuf"><strong>drag_source_set_icon_pixbuf</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_source_set_icon_stock"><strong>drag_source_set_icon_stock</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_source_set_target_list"><strong>drag_source_set_target_list</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_source_unset"><strong>drag_source_unset</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-drag_unhighlight"><strong>drag_unhighlight</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-draw"><strong>draw</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-ensure_style"><strong>ensure_style</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-error_bell"><strong>error_bell</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-event"><strong>event</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-freeze_child_notify"><strong>freeze_child_notify</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_accessible"><strong>get_accessible</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_action"><strong>get_action</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_activate_signal"><strong>get_activate_signal</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_allocation"><strong>get_allocation</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_ancestor"><strong>get_ancestor</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_app_paintable"><strong>get_app_paintable</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_can_default"><strong>get_can_default</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_can_focus"><strong>get_can_focus</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_child_requisition"><strong>get_child_requisition</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_child_visible"><strong>get_child_visible</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_clipboard"><strong>get_clipboard</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_colormap"><strong>get_colormap</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_composite_name"><strong>get_composite_name</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_direction"><strong>get_direction</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_display"><strong>get_display</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_double_buffered"><strong>get_double_buffered</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_events"><strong>get_events</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_extension_events"><strong>get_extension_events</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_has_tooltip"><strong>get_has_tooltip</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_has_window"><strong>get_has_window</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_mapped"><strong>get_mapped</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_modifier_style"><strong>get_modifier_style</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_name"><strong>get_name</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_no_show_all"><strong>get_no_show_all</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_pango_context"><strong>get_pango_context</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_parent"><strong>get_parent</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_parent_window"><strong>get_parent_window</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_pointer"><strong>get_pointer</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_realized"><strong>get_realized</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_receives_default"><strong>get_receives_default</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_requisition"><strong>get_requisition</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_root_window"><strong>get_root_window</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_screen"><strong>get_screen</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_sensitive"><strong>get_sensitive</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_settings"><strong>get_settings</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_size_request"><strong>get_size_request</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_snapshot"><strong>get_snapshot</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_state"><strong>get_state</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_style"><strong>get_style</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_tooltip_markup"><strong>get_tooltip_markup</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_tooltip_text"><strong>get_tooltip_text</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_tooltip_window"><strong>get_tooltip_window</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_toplevel"><strong>get_toplevel</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_visible"><strong>get_visible</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_visual"><strong>get_visual</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_window"><strong>get_window</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-grab_add"><strong>grab_add</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-grab_default"><strong>grab_default</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-grab_focus"><strong>grab_focus</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-grab_remove"><strong>grab_remove</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-has_default"><strong>has_default</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-has_focus"><strong>has_focus</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-has_grab"><strong>has_grab</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-has_rc_style"><strong>has_rc_style</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-has_screen"><strong>has_screen</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-hide"><strong>hide</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-hide_all"><strong>hide_all</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-hide_on_delete"><strong>hide_on_delete</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-input_shape_combine_mask"><strong>input_shape_combine_mask</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-intersect"><strong>intersect</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-is_ancestor"><strong>is_ancestor</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-is_composited"><strong>is_composited</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-is_drawable"><strong>is_drawable</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-is_focus"><strong>is_focus</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-is_sensitive"><strong>is_sensitive</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-is_toplevel"><strong>is_toplevel</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-keynav_failed"><strong>keynav_failed</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-list_accel_closures"><strong>list_accel_closures</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-list_mnemonic_labels"><strong>list_mnemonic_labels</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-map"><strong>map</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-menu_get_for_attach_widget"><strong>menu_get_for_attach_widget</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-mnemonic_activate"><strong>mnemonic_activate</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-modify_base"><strong>modify_base</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-modify_bg"><strong>modify_bg</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-modify_cursor"><strong>modify_cursor</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-modify_fg"><strong>modify_fg</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-modify_font"><strong>modify_font</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-modify_style"><strong>modify_style</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-modify_text"><strong>modify_text</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-path"><strong>path</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-queue_clear"><strong>queue_clear</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-queue_clear_area"><strong>queue_clear_area</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-queue_draw"><strong>queue_draw</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-queue_draw_area"><strong>queue_draw_area</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-queue_resize"><strong>queue_resize</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-queue_resize_no_redraw"><strong>queue_resize_no_redraw</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-rc_get_style"><strong>rc_get_style</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-realize"><strong>realize</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-region_intersect"><strong>region_intersect</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-remove_accelerator"><strong>remove_accelerator</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-remove_mnemonic_label"><strong>remove_mnemonic_label</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-render_icon"><strong>render_icon</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-reparent"><strong>reparent</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-reset_rc_styles"><strong>reset_rc_styles</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-reset_shapes"><strong>reset_shapes</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-selection_add_target"><strong>selection_add_target</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-selection_add_targets"><strong>selection_add_targets</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-selection_clear_targets"><strong>selection_clear_targets</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-selection_convert"><strong>selection_convert</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-selection_owner_set"><strong>selection_owner_set</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-selection_remove_all"><strong>selection_remove_all</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-send_expose"><strong>send_expose</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-send_focus_change"><strong>send_focus_change</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_accel_path"><strong>set_accel_path</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_activate_signal"><strong>set_activate_signal</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_allocation"><strong>set_allocation</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_app_paintable"><strong>set_app_paintable</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_can_default"><strong>set_can_default</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_can_focus"><strong>set_can_focus</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_child_visible"><strong>set_child_visible</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_colormap"><strong>set_colormap</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_composite_name"><strong>set_composite_name</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_direction"><strong>set_direction</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_double_buffered"><strong>set_double_buffered</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_events"><strong>set_events</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_extension_events"><strong>set_extension_events</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_has_tooltip"><strong>set_has_tooltip</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_has_window"><strong>set_has_window</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_mapped"><strong>set_mapped</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_name"><strong>set_name</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_no_show_all"><strong>set_no_show_all</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_parent"><strong>set_parent</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_parent_window"><strong>set_parent_window</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_realized"><strong>set_realized</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_receives_default"><strong>set_receives_default</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_redraw_on_allocate"><strong>set_redraw_on_allocate</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_scroll_adjustments"><strong>set_scroll_adjustments</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_sensitive"><strong>set_sensitive</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_set_scroll_adjustments_signal"><strong>set_set_scroll_adjustments_signal</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_size_request"><strong>set_size_request</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_state"><strong>set_state</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_style"><strong>set_style</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_tooltip_markup"><strong>set_tooltip_markup</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_tooltip_text"><strong>set_tooltip_text</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_tooltip_window"><strong>set_tooltip_window</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_uposition"><strong>set_uposition</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_usize"><strong>set_usize</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_visible"><strong>set_visible</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_window"><strong>set_window</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-shape_combine_mask"><strong>shape_combine_mask</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-show"><strong>show</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-show_all"><strong>show_all</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-show_now"><strong>show_now</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-size_allocate"><strong>size_allocate</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-size_request"><strong>size_request</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-style_attach"><strong>style_attach</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-style_get_property"><strong>style_get_property</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-thaw_child_notify"><strong>thaw_child_notify</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-translate_coordinates"><strong>translate_coordinates</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-trigger_tooltip_query"><strong>trigger_tooltip_query</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-unmap"><strong>unmap</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-unparent"><strong>unparent</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-unrealize"><strong>unrealize</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="gtk.html#Widget">gtk.Widget</a>:<br>
+<dl><dt><strong>allocation</strong></dt>
+</dl>
+<dl><dt><strong>name</strong></dt>
+</dl>
+<dl><dt><strong>parent</strong></dt>
+</dl>
+<dl><dt><strong>requisition</strong></dt>
+</dl>
+<dl><dt><strong>saved_state</strong></dt>
+</dl>
+<dl><dt><strong>state</strong></dt>
+</dl>
+<dl><dt><strong>style</strong></dt>
+</dl>
+<dl><dt><strong>window</strong></dt>
+</dl>
+<hr>
+Methods inherited from <a href="gtk.html#Object">gtk.Object</a>:<br>
+<dl><dt><a name="promptBox-do_destroy"><strong>do_destroy</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-flags"><strong>flags</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-remove_data"><strong>remove_data</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-remove_no_notify"><strong>remove_no_notify</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_flags"><strong>set_flags</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-unset_flags"><strong>unset_flags</strong></a>(...)</dt></dl>
+
+<hr>
+Methods inherited from <a href="gobject._gobject.html#GObject">gobject._gobject.GObject</a>:<br>
+<dl><dt><a name="promptBox-__copy__"><strong>__copy__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-__deepcopy__"><strong>__deepcopy__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="promptBox-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<strong>__gdoc__</strong> = 'Object GtkVBox<font color="#c040c0">\n\n</font>Properties from GtkBox:<font color="#c040c0">\n</font>  spacin...sateur<font color="#c040c0">\n\n</font>Signals from GObject:<font color="#c040c0">\n</font>  notify (GParam)<font color="#c040c0">\n\n</font>'
+<dl><dt><a name="promptBox-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="promptBox-__gobject_init__"><strong>__gobject_init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="promptBox-__hash__"><strong>__hash__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__hash__">__hash__</a>()&nbsp;&lt;==&gt;&nbsp;hash(x)</tt></dd></dl>
+
+<dl><dt><a name="promptBox-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="promptBox-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="promptBox-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="promptBox-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="promptBox-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#promptBox-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="promptBox-chain"><strong>chain</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-connect"><strong>connect</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-connect_after"><strong>connect_after</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-connect_object"><strong>connect_object</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-connect_object_after"><strong>connect_object_after</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-disconnect"><strong>disconnect</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-disconnect_by_func"><strong>disconnect_by_func</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-emit"><strong>emit</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-emit_stop_by_name"><strong>emit_stop_by_name</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-freeze_notify"><strong>freeze_notify</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_data"><strong>get_data</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_properties"><strong>get_properties</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_property"><strong>get_property</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-handler_block"><strong>handler_block</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-handler_block_by_func"><strong>handler_block_by_func</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-handler_disconnect"><strong>handler_disconnect</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-handler_is_connected"><strong>handler_is_connected</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-handler_unblock"><strong>handler_unblock</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-handler_unblock_by_func"><strong>handler_unblock_by_func</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-notify"><strong>notify</strong></a>(...)</dt></dl>
+
+<strong>props</strong> = &lt;gobject.GProps object&gt;
+<dl><dt><a name="promptBox-set_data"><strong>set_data</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_properties"><strong>set_properties</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_property"><strong>set_property</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-stop_emission"><strong>stop_emission</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-thaw_notify"><strong>thaw_notify</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-weak_ref"><strong>weak_ref</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="gobject._gobject.html#GObject">gobject._gobject.GObject</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>__grefcount__</strong></dt>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="gobject._gobject.html#GObject">gobject._gobject.GObject</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of GObjectMeta object&gt;<dd><tt>T.<a href="#promptBox-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="atk.html#ImplementorIface">atk.ImplementorIface</a>:<br>
+<dl><dt><a name="promptBox-ref_accessible"><strong>ref_accessible</strong></a>(...)</dt></dl>
+
+<hr>
+Methods inherited from <a href="gtk.html#Buildable">gtk.Buildable</a>:<br>
+<dl><dt><a name="promptBox-add_child"><strong>add_child</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-construct_child"><strong>construct_child</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_add_child"><strong>do_add_child</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_construct_child"><strong>do_construct_child</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_get_internal_child"><strong>do_get_internal_child</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_parser_finished"><strong>do_parser_finished</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-do_set_name"><strong>do_set_name</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-get_internal_child"><strong>get_internal_child</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-parser_finished"><strong>parser_finished</strong></a>(...)</dt></dl>
+
+<hr>
+Methods inherited from <a href="gtk.html#Orientable">gtk.Orientable</a>:<br>
+<dl><dt><a name="promptBox-get_orientation"><strong>get_orientation</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="promptBox-set_orientation"><strong>set_orientation</strong></a>(...)</dt></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>
