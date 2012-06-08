@@ -1,21 +1,65 @@
-#!/bin/bash
+#!/usr/bin/env python
+#-*- coding:utf*8 -*-
 
-# main
-pydoc -w main
+""" TriViSiJu: Graphical interface for the AstroJeune Festival
+    
+	Copyright (C) 2012  Jules DAVID, Tristan GREGOIRE, Simon NICOLAS and Vincent PRAT
 
-# function
-pydoc -w function
+	This file is part of TriViSiJu.
 
-# modules
-pydoc -w modules/countdown.py
-pydoc -w modules/movieplayer.py
-pydoc -w modules/prompt.py
-pydoc -w modules/scrolltext.py
-pydoc -w modules/teams.py
+    TriViSiJu is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-## Déplace dans doc/
-if [ ! -d doc ]
-then
-    mkdir doc
-fi
-mv -v *.html doc/
+    TriViSiJu is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with TriViSiJu.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+import os
+import pydoc
+import re
+import main
+import fonction
+import modules
+
+# Création de la documentation de premier niveau
+pydoc.writedoc(main)
+pydoc.writedoc(fonction)
+
+# Liste des fichiers du dossier modules
+modules = os.listdir('./modules') 
+# Création de la documentation de deuxième niveau
+for item in modules:
+    if re.search("\.py$",item) and item != '__init__.py':
+        item = "modules."+item.replace(".py","")
+        pydoc.writedoc(item)
+
+# Liste des fichiers du dossier racine
+files = os.listdir('.') 
+
+# Déplacement et correction de l'encodage
+if not os.path.isdir("doc"):
+    os.mkdir("doc")
+for item in files:
+    if re.search("\.html$",item):
+        # correction de l'encodage (ajout de <meta charset=utf-8 /> dans le head)
+        old_file = open(item)
+        new_file = open(item+".tmp","w")
+        for line in old_file.readlines():
+            if re.search(r"<html><head>",line):
+                line = line.replace("<head>","<head><meta charset=utf-8 />")
+            new_file.write(line)
+        old_file.close()
+        new_file.close()
+        os.remove(item)
+
+        # Déplacement vers le dossier doc/
+        os.rename(item+".tmp","doc/"+item)
+
+print "\nLa documentation a été générée dans le dossier doc/\n"
