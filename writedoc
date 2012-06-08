@@ -28,11 +28,21 @@ import main
 import fonction
 import modules
 
+## Paramètres 
+# Repertoire de stockage de la documentation
+doc = "doc/dev"
+# Liste des modules python
+listmodule = ["os", "gtk", "pygtk", "time", "ConfigParser", "argparse",\
+              "sys", "gobject", "Image", "subprocess", "tempfile",\
+              "hashlib", "pickle"]
+
 # Création de la documentation de premier niveau
+print ">> Documentation 1er niveau :"
 pydoc.writedoc(main)
 pydoc.writedoc(fonction)
 
 # Liste des fichiers du dossier modules
+print ">> Documentation 2cd niveau :"
 modules = os.listdir('./modules') 
 # Création de la documentation de deuxième niveau
 for item in modules:
@@ -40,12 +50,19 @@ for item in modules:
         item = "modules."+item.replace(".py","")
         pydoc.writedoc(item)
 
+# Creation de la doc des modules python utilisés
+print ">> Documentation Python et autres librairies externes :"
+for mod in listmodule:
+    pydoc.writedoc(mod)
+
 # Liste des fichiers du dossier racine
 files = os.listdir('.') 
 
 # Déplacement et correction de l'encodage
-if not os.path.isdir("doc"):
-    os.mkdir("doc")
+print "\n>> Correction de l'encodage"
+if not os.path.isdir(doc):
+    print "Creation du repertoire '%s'"%(doc)
+    os.system("mkdir -p %s"%(doc))
 for item in files:
     if re.search("\.html$",item):
         # correction de l'encodage (ajout de <meta charset=utf-8 /> dans le head)
@@ -60,6 +77,7 @@ for item in files:
         os.remove(item)
 
         # Déplacement vers le dossier doc/
-        os.rename(item+".tmp","doc/"+item)
+        os.rename(item+".tmp", os.path.join(doc, item))
+print "Done"
 
-print "\nLa documentation a été générée dans le dossier doc/\n"
+print "\nLa documentation a été générée dans le dossier '%s'\n"%(doc)
