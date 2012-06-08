@@ -24,6 +24,7 @@
 import pygtk
 pygtk.require("2.0")
 import gtk
+import argparse
 
 class promptBox(gtk.VBox):
     """ Boîte contenant un prompt et une zone de texte pour afficher les résultats
@@ -51,21 +52,44 @@ class promptBox(gtk.VBox):
 
         # Buffer du textView
         self.buffer = self.result.get_buffer()
+        self.iter = self.buffer.get_end_iter()
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
         self.entry.connect("insert-text", self.onInsert)
         self.entry.connect("delete-text", self.onDelete)
 
+        # Gestion des commandes
+        self.parser = argparse.ArgumentParser("Process command-line")
+        self.commands = {'bip': gtk.gdk.beep}
+        self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
+
+
     def parseEntry(self, entry):
         """ Méthode appelée lorsque l'on appuie sur la touche Entrée depuis le prompt
         """
         text = entry.get_text()
-        self.buffer.insert(self.buffer.get_end_iter(), text + "\n")
-        self.result.scroll_to_iter(self.buffer.get_end_iter(), 0)
+        if (text == self.promptCharacter):
+            return
+        self.buffer.insert(self.iter, text + "\n")
         entry.delete_text(1,len(text))
         # met le curseur à la fin
         entry.set_position(-1)
+
+        text = text[1:]
+        # parsing de la ligne de commande
+        try:
+            args = vars(self.parser.parse_args(text.split()))
+        except:
+            self.buffer.insert(self.iter, "Erreur : commande invalide\n")
+            self.result.scroll_to_mark(self.buffer.get_insert(), 0)
+            return
+
+        # gestion des commandes
+        self.commands[args['command']]()
+        
+        # on se place à la fin du texte
+        self.result.scroll_to_mark(self.buffer.get_insert(), 0)
 
     def onInsert(self, entry, newText, newTextLength, position):
         """ Méthode appelée lorsque l'on ajoute du texte dans le prompt
