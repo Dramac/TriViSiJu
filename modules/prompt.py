@@ -61,7 +61,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': gtk.gdk.beep, 'fullscreen': self.onFullscreen}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -103,6 +103,13 @@ class promptBox(gtk.VBox):
         """
         if start == 0:
             entry.stop_emission("delete-text")
+
+    def onBip(self, args):
+        """ Méthode de traitement de la commande "bip" """
+        if len(args) > 0:
+            self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+            return
+        gtk.gdk.beep()
 
     def onFullscreen(self, args):
         """ Méthode de traitement de la commande "fullscreen" """
