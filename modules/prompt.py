@@ -61,8 +61,9 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': gtk.gdk.beep}
+        self.commands = {'bip': gtk.gdk.beep, 'fullscreen': self.onFullscreen}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
+        self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
 
     def parseEntry(self, entry):
@@ -86,7 +87,7 @@ class promptBox(gtk.VBox):
             return
 
         # gestion des commandes
-        self.commands[args['command']]()
+        self.commands[args['command']](args['arguments'])
         
         # on se place à la fin du texte
         self.result.scroll_to_mark(self.buffer.get_insert(), 0)
@@ -102,6 +103,20 @@ class promptBox(gtk.VBox):
         """
         if start == 0:
             entry.stop_emission("delete-text")
+
+    def onFullscreen(self, args):
+        """ Méthode de traitement de la commande "fullscreen" """
+        if len(args) > 1:
+            self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+            return
+        if len(args) == 0:
+            args = ['on']
+        if args[0] == 'on':
+            self.get_window().fullscreen()
+        elif args[0] == 'off':
+            self.get_window().unfullscreen()
+        else:
+            self.buffer.insert(self.iter, "Erreur : argument invalide\n")
 
 if __name__ == "__main__":
     a = gtk.Window()
