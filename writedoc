@@ -40,6 +40,7 @@ listmodule = ["os", "gtk", "pygtk", "time", "ConfigParser", "argparse",\
 print ">> Documentation 1er niveau :"
 pydoc.writedoc(main)
 pydoc.writedoc(fonction)
+pydoc.writedoc(modules)
 
 # Liste des fichiers du dossier modules
 print ">> Documentation 2cd niveau :"
