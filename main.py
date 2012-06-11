@@ -28,11 +28,6 @@ import time
 import os
 import ConfigParser
 import sys
-import sys
-if sys.version < '2.7':
-    print sys.version
-    print 'python >= 2.7, or python:', sys.version
-    sys.exit(1)
 import argparse
 
 class MainWindow(gtk.Window):
