@@ -76,7 +76,7 @@ class MainWindow(gtk.Window):
         self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'], speed=kwarg['speed'], crypt=kwarg['crypt'])
 
         ## Prompt
-        self.prompt = promptBox()
+        self.prompt = promptBox(self)
 
         ## Caractéristiques techniques
         text6 = gtk.Label("<b>Panneau haut droite</b>\nCaractéristiques techniques")
@@ -146,12 +146,6 @@ class MainWindow(gtk.Window):
         if os.path.isfile(videoPath):
             exec("self.screen%s.Screen.loadfile('%s')"%(id, videoPath.replace(' ', '\ ')))
 
-    def fullscreen(self):
-        """ Met en plein écran
-        """
-        ##TODO: connecter cette fonction à un racourcis clavier ou un menu
-        self.fullscreen()
-        
     def quit(self, *parent):
         """ Fonction quitter
         
