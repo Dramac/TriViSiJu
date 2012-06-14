@@ -84,6 +84,7 @@ class MainWindow(gtk.Window):
 
         ## Liste des équipes
         self.teamBox = teamBox()
+        self.prompt.connect("add-team", self.teamBox.addTeam)
         #self.teamBox.addTeam("SpaceX")
         #self.teamBox.addTeam("ESA")
         #self.teamBox.addTeam("NASA")

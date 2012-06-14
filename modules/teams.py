@@ -53,7 +53,7 @@ class teamBox(gtk.Label):
         self.team_list = []
         self.fichier = fichier
 
-    def addTeam(self,name):
+    def addTeam(self, sender, name):
         """Ajouter une équipe à la liste"""
         newTeam = team(name)
         self.team_list.append(newTeam)

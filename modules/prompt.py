@@ -25,6 +25,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 import argparse
+import gobject
 
 class promptBox(gtk.VBox):
     """ Boîte contenant un prompt et une zone de texte pour afficher les résultats
@@ -56,6 +57,9 @@ class promptBox(gtk.VBox):
         self.buffer = self.result.get_buffer()
         self.iter = self.buffer.get_end_iter()
 
+        # Création de signaux personnalisés
+        gobject.signal_new("add-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
+
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
         self.entry.connect("insert-text", self.onInsert)
@@ -65,7 +69,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'addteam': self.onAddTeam}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -132,6 +136,17 @@ class promptBox(gtk.VBox):
             self.mainWindow.unfullscreen()
         else:
             self.mainWindow.fullscreen()
+
+    def onAddTeam(self, args):
+        """ Méthode de traitement de la commande "addteam" """
+        nargs = len(args)
+        if nargs == 0:
+            self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
+            return
+        elif nargs > 1:
+            self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+            return
+        self.emit("add-team", args[0])
 
 if __name__ == "__main__":
     a = gtk.Window()
