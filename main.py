@@ -84,14 +84,8 @@ class MainWindow(gtk.Window):
 
         ## Liste des équipes
         self.teamBox = teamBox()
+        self.teamBox.connect("message",self.prompt.onExternalInsert)
         self.prompt.connect("add-team", self.teamBox.addTeam)
-        #self.teamBox.addTeam("SpaceX")
-        #self.teamBox.addTeam("ESA")
-        #self.teamBox.addTeam("NASA")
-        #self.teamBox.addTeam("JAXA")
-        #self.teamBox.addPasswd("ESA","123456")
-        #self.teamBox.save()
-        #self.teamBox.load()
         
         ## Affichage des textes provisoires
         #leftBox
@@ -131,11 +125,11 @@ class MainWindow(gtk.Window):
         self.loadmovie(kwarg['videopath2'], 2)
 
         ## Lance le timer et le défilement
-        if not kwarg['forcebutton']:
+        #if not kwarg['forcebutton']:
             # Lance le timer
-            self.countdown.start()
+            #self.countdown.start()
             # Défilement
-            self.scrolltextbox.scroll()
+            #self.scrolltextbox.scroll()
         
         ## Connexion de destroy à la fonction quit
         self.connect("destroy", lambda w: self.quit())
