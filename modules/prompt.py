@@ -148,6 +148,9 @@ class promptBox(gtk.VBox):
             return
         self.emit("add-team", args[0])
 
+    def onExternalInsert(self,sender,message):
+        self.buffer.insert(self.iter,message)
+
 if __name__ == "__main__":
     a = gtk.Window()
     a.set_default_size(400,100)

@@ -26,6 +26,7 @@ pygtk.require("2.0")
 import gtk
 import pickle
 import os
+import gobject
 
 class TeamError(Exception):
     """Exception levée lors de la mauvaise manipulation d'équipe"""
@@ -47,24 +48,43 @@ class team():
         return "Équipe {}".format(self.nom)
 
 class teamBox(gtk.Label):
-    def __init__(self,fichier=os.path.join(os.path.dirname(__file__), "teams.dat")):
+    def __init__(self,fichier=os.path.join(os.path.dirname(__file__), "teams.dat"),prompt=None):
         gtk.Label.__init__(self)
         self.set_text("Vide")
         self.team_list = []
         self.fichier = fichier
+        self.prompt = prompt
+        gobject.signal_new("message",teamBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
 
-    def addTeam(self, sender, name):
+    def toPrompt(self,message):
+        """Affiche les messages dans le prompt"""
+        self.emit("message",message)
+
+    def addTeam(self, sender=None, name=None):
         """Ajouter une équipe à la liste"""
-        newTeam = team(name)
-        self.team_list.append(newTeam)
-        self.printTeams()
+        if name is not None:
+            try:
+                self.selectTeam(name)
+                print "Cette équipe existe déjà"
+                self.toPrompt("Cette équipe existe déjà\n")
+            except TeamError:
+                newTeam = team(name)
+                self.team_list.append(newTeam)
+                self.printTeams()
 
-    def addPasswd(self,team_name,passwd):
+    def addPasswd(self,sender,team_name,passwd):
+        """Ajout du mot de passe associé à l'équipe"""
         try:
             team = self.selectTeam(team_name)
             team.passwd = passwd
         except TeamError as err:
             print err
+        self.printTeams()
+
+    def deleteTeam(self,sender,name):
+        """Suppression d'une équipe"""
+        team = self.selectTeam(name)
+        self.team_list.remove(team)
         self.printTeams()
 
     def printTeams(self):
@@ -111,11 +131,13 @@ if __name__ == "__main__":
     rootWindow.connect("destroy",gtk.main_quit)
 
     teams = teamBox()
-    teams.addTeam("SpaceX")
-    teams.addTeam("ESA")
-    teams.addTeam("NASA")
-    teams.addTeam("JAXA")
-    teams.addPasswd("ESA","123456")
+    teams.addTeam(name="SpaceX")
+    teams.addTeam(name="ESA")
+    teams.addTeam(name="ESA")
+    teams.addTeam(name="NASA")
+    teams.addTeam(name="JAXA")
+    teams.addPasswd(None,"ESA","123456")
+    teams.deleteTeam(None,"NASA")
     teams.save()
 
     rootWindow.add(teams)
