@@ -28,7 +28,7 @@ import gobject
 import Image
 
 class countdownBox(gtk.VBox):
-    def __init__(self,path_to_images="images/", forcebutton=True):
+    def __init__(self,path_to_images="images/", forcebutton=True, width=29, height=50):
         ## Initialise gtk.VBox, gtk.HBox
         gtk.VBox.__init__(self)
         hbox = gtk.HBox()
@@ -36,6 +36,8 @@ class countdownBox(gtk.VBox):
         # Initialisation des variables
         self.path_to_images = path_to_images
         self.forcebutton = forcebutton
+        self.WD = width
+        self.HG = height
 
         # Création des conteneurs d'images
         self.img_10h = gtk.Image()       
@@ -82,6 +84,31 @@ class countdownBox(gtk.VBox):
         # Show control
         if self.forcebutton:
             self.showControl()
+
+    def onSizeChange(self):
+        allocation = self.get_allocation()
+        widget_width = allocation.width
+        image_width = float(widget_width)/11.
+        self.set_image_size(width=image_width)
+        self.writeDigits()
+
+    def set_image_size(self, width=None, height=None):
+        """ Change la taille des images à la volée
+        """
+        if width != None and height == None:
+            width = int(width)
+            ratio = float(self.WD)/float(width)
+            self.WD = width
+            self.HG = int(self.HG*ratio)
+        if width == None and height != None:
+            height = int(height)
+            ratio = float(self.HG)/float(height)
+            self.HG = height
+            self.WD = int(self.HG*ratio)
+        if width != None and height != None:
+            self.HG = int(height)
+            self.WD = int(width)
+
 
     def setStartTime(self,h=0,m=0,s=20,cs=0):
         self.h_start = h
@@ -209,17 +236,28 @@ class countdownBox(gtk.VBox):
         tencs = self.cs/10
         cs = self.cs%10
         # Changement d'image
-        self.img_10h.set_from_file(self.folder[self.way]+self.digits[tenh])
-        self.img_h.set_from_file(self.folder[self.way]+self.digits[h])
-        self.img_col1.set_from_file(self.folder[self.way]+"column.png")
-        self.img_10m.set_from_file(self.folder[self.way]+self.digits[tenm])
-        self.img_m.set_from_file(self.folder[self.way]+self.digits[m])
-        self.img_col2.set_from_file(self.folder[self.way]+"column.png")
-        self.img_10s.set_from_file(self.folder[self.way]+self.digits[tens])
-        self.img_s.set_from_file(self.folder[self.way]+self.digits[s])
-        self.img_col3.set_from_file(self.folder[self.way]+"column.png")
-        self.img_10cs.set_from_file(self.folder[self.way]+self.digits[tencs])
-        self.img_cs.set_from_file(self.folder[self.way]+self.digits[cs])
+        #self.img_10h.set_from_file(self.folder[self.way]+self.digits[tenh])
+        self.img_10h.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[tenh]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
+        #self.img_h.set_from_file(self.folder[self.way]+self.digits[h])
+        self.img_h.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[h]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
+        #self.img_col1.set_from_file(self.folder[self.way]+"column.png")
+        self.img_col1.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+"column.png").scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
+        #self.img_10m.set_from_file(self.folder[self.way]+self.digits[tenm])
+        self.img_10m.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[tenm]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
+        #self.img_m.set_from_file(self.folder[self.way]+self.digits[m])
+        self.img_m.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[m]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
+        #self.img_col2.set_from_file(self.folder[self.way]+"column.png")
+        self.img_col2.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+"column.png").scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
+        #self.img_10s.set_from_file(self.folder[self.way]+self.digits[tens])
+        self.img_10s.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[tens]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
+        #self.img_s.set_from_file(self.folder[self.way]+self.digits[s])
+        self.img_s.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[s]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
+        #self.img_col3.set_from_file(self.folder[self.way]+"column.png")
+        self.img_col3.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+"column.png").scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
+        #self.img_10cs.set_from_file(self.folder[self.way]+self.digits[tencs])
+        self.img_10cs.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[tencs]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
+        #self.img_cs.set_from_file(self.folder[self.way]+self.digits[cs])
+        self.img_cs.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[cs]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
 
 if __name__ == "__main__":
     gobject.threads_init()
@@ -229,7 +267,6 @@ if __name__ == "__main__":
     a.connect("destroy", gtk.main_quit)
     
     box = countdownBox("../images/")
-    box.showControl()
     a.add(box)
     a.show_all()
 
