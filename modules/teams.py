@@ -37,9 +37,9 @@ class TeamError(Exception):
         return "Équipe %s : %s"%(self.team,self.message)
 
 class team():
-    def __init__(self,nom):
+    def __init__(self,nom, passwd=""):
         self.nom = nom
-        self.passwd = ""
+        self.passwd = passwd
     def __repr__(self):
         """Surcharge de l'opérateur repr"""
         return self.nom
