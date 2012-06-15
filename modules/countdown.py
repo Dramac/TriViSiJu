@@ -36,8 +36,10 @@ class countdownBox(gtk.VBox):
         # Initialisation des variables
         self.path_to_images = path_to_images
         self.forcebutton = forcebutton
+        # Taille des images initiale
         self.WDi = width
         self.HGi = height
+        # Taille des images
         self.WD = width
         self.HG = height
 
@@ -78,8 +80,12 @@ class countdownBox(gtk.VBox):
         hbox.pack_start(self.img_10cs,False,False)
         hbox.pack_start(self.img_cs,False,False)
 
+        # Alignement (permet de centrer le coutdown)
+        align = gtk.Alignment(0.5, 0.5, 0, 0)
+        align.add(hbox)
+
         # Insertion des chiffres dans le block mère
-        self.pack_start(hbox)
+        self.pack_start(align)
         self.timer = None
         self.playPause = None
 
@@ -90,6 +96,8 @@ class countdownBox(gtk.VBox):
     def onSizeChange(self, fullscreen):
         """ Permet de redéfinir la taille des images en fonction de la taille allouée au widget
         """
+        # Si fullscreen -> recupère la taille du widget
+        # sinon remet la taille par defaut
         if fullscreen:
             allocation = self.get_allocation()
             widget_width = allocation.width
@@ -103,6 +111,7 @@ class countdownBox(gtk.VBox):
     def set_image_size(self, width=None, height=None):
         """ Change la taille des images à la volée
         """
+        # Estime la taille sans perdre le ratio
         if width != None and height == None:
             width = int(width)
             ratio = float(self.WD)/float(width)
@@ -113,6 +122,7 @@ class countdownBox(gtk.VBox):
             ratio = float(self.HG)/float(height)
             self.HG = height
             self.WD = int(self.HG/ratio)
+        # Force une taille 
         if width != None and height != None:
             self.HG = int(height)
             self.WD = int(width)
