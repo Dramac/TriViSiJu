@@ -47,7 +47,7 @@ class Player(gtk.Socket):
         def __str__(self):
             return self.msg
 
-    def __init__(self, id):
+    def __init__(self, id, bgcolor=gtk.gdk.color_parse("#000000")):
         """ Initialise la classe Player
 
 		Il est nécessaire de lui donner un 'id' de façon à faire un tunnel (pipe) entre le GUI et mplayer
@@ -61,6 +61,10 @@ class Player(gtk.Socket):
 
         ## Init gtk.Socket instance
         gtk.Socket.__init__(self)
+
+        # Definition d'une couleur
+        if bgcolor != None:
+            self.modify_bg(gtk.STATE_NORMAL, bgcolor)
 
         ## Créé un fichier FIFO pour le tunnel (pipe)
         self.pipe = tempfile.mktemp(suffix='video'+str(id), prefix='pipe', dir=PIPE_PATH)
@@ -136,13 +140,14 @@ class PlayerFrame(gtk.Table):
     """ Génère une Frame contenant le lecteur, les bouttons de contrôle et tout ce qui va avec.
     """
 
-    def __init__(self, root, id, quitb=True, forcebutton=False):
+    def __init__(self, root, id, quitb=True, forcebutton=False, bgcolor=gtk.gdk.color_parse("#000000")):
         """ Initialise la classe
 
         root        : Fenêtre principale (Besoin de quitter l'application proprement avec la fonction Root.quit())
         id          : Entier utiliser pour faire le tunnel entre mplayer et la classe Player
         quitb       : Booléen. Si True (Défaut), affiche le boutton quitter /!\ forcebutton doit être True
         forcebutton : Booléen. Si True, force l'affichage des boutton (lectue, avance et recule) (défaut False)
+        bgcolor     : Couleur de fond gtk.gdk.color_parse
         """
         ## Root
         self.root = root
@@ -157,7 +162,7 @@ class PlayerFrame(gtk.Table):
         self.set_row_spacings(10)
 
         # Charge la classe Player
-        self.Screen = Player(id)
+        self.Screen = Player(id, bgcolor=bgcolor)
         self.Screen.set_size_request(100, 100)
         self.attach(self.Screen, 0, 5, 0, 1, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, xpadding=5, ypadding=5)
 

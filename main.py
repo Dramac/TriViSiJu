@@ -43,13 +43,17 @@ class MainWindow(gtk.Window):
         self.set_default_size(800,600)
         self.set_position(gtk.WIN_POS_CENTER)
 
+        # Definition d'une couleur
+        bgcolor = gtk.gdk.color_parse("#000000")
+        self.modify_bg(gtk.STATE_NORMAL, bgcolor)
+
         ## Table
         self.grid = gtk.Table(rows=4, columns=7, homogeneous=True)
         rightBox = gtk.VBox(homogeneous=False,spacing=0)
 
         # Vidéos
         ## Charge la classe Player
-        self.screen1 = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'])
+        self.screen1 = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'], bgcolor=bgcolor)
 
         ## Compte à rebours
         self.countdown = countdownBox(forcebutton=kwarg['forcebutton'])
@@ -108,7 +112,7 @@ class MainWindow(gtk.Window):
 
         # Connexion du signal de changement d'état de la fenêtre
         self.connect("window-state-event", self.onStateChange)
-
+        
     def on_fullscreen(self, sender):
         """ Slot de mise en plein écran """
         if self.full:
