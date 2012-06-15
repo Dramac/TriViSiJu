@@ -60,7 +60,8 @@ class MainWindow(gtk.Window):
 
         ## Prompt
         self.prompt = promptBox()
-        self.prompt.connect("fullscreen",self.on_fullscreen)
+        self.prompt.connect("fullscreen", self.on_fullscreen)
+        self.prompt.connect("quit", self.quit)
 
         ## Caractéristiques techniques
         text6 = gtk.Label("<b>Panneau haut droite</b>\nCaractéristiques techniques")

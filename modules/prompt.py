@@ -59,6 +59,7 @@ class promptBox(gtk.VBox):
         # Création de signaux personnalisés
         gobject.signal_new("add-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
         gobject.signal_new("fullscreen", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("quit", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -67,7 +68,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'addteam': self.onAddTeam}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'addteam': self.onAddTeam, 'quit': self.onQuit}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -136,7 +137,15 @@ class promptBox(gtk.VBox):
         self.emit("add-team", args[0])
 
     def onExternalInsert(self,sender,message):
+        """ Méthode pour ajouter du texte """
         self.buffer.insert(self.iter,message)
+
+    def onQuit(self, args):
+        """ Méthode de traitement de la commande quit """
+        if len(args) > 0:
+            self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+            return
+        self.emit("quit")
 
 if __name__ == "__main__":
     a = gtk.Window()
