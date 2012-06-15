@@ -43,30 +43,13 @@ class MainWindow(gtk.Window):
         self.set_default_size(800,600)
         self.set_position(gtk.WIN_POS_CENTER)
 
-        ## Création de 4 boîtes
-        # \-rootBox
-        #   \-leftBox
-        #       '-text1 : Vidéo Ariane V sur le pas de tir
-        #       '-séparateur
-        #       \-text2 : Vidéo Satellite/Sonde ou Modélisation 3D Ariane
-        #   \-centerBox
-        #       '-coutdown
-        #       '-séparateur
-        #       '-text4
-        #       \-séparateur
-        #   \-rightBox
-        #       '-text6 : Caractéristiques techniques
-        #       '-séparateur
-        #       \-text7 : Liste des équipes
-        rootBox = gtk.HBox(homogeneous=False,spacing=0)
-        leftBox = gtk.VBox(homogeneous=False,spacing=0)
-        centerBox = gtk.VBox(homogeneous=False,spacing=0)
+        ## Table
+        self.grid = gtk.Table(rows=4, columns=7, homogeneous=True)
         rightBox = gtk.VBox(homogeneous=False,spacing=0)
 
         # Vidéos
         ## Charge la classe Player
         self.screen1 = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'])
-        self.screen2 = PlayerFrame(self, 2, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'])
 
         ## Compte à rebours
         self.countdown = countdownBox(forcebutton=kwarg['forcebutton'])
@@ -88,41 +71,27 @@ class MainWindow(gtk.Window):
         self.prompt.connect("add-team", self.teamBox.addTeam)
         
         ## Affichage des textes provisoires
-        #leftBox
-        leftBox.pack_start(self.screen1,True,True,0)
-        leftBox.pack_start(gtk.HSeparator(),True,True)
-        leftBox.pack_start(self.screen2,True,True,0)
-        #centerBox
-        centerBox.pack_start(self.countdown,True,True)
-        centerBox.pack_start(gtk.HSeparator(),True,True)
-        centerBox.pack_start(self.scrolltextbox,True,True)
-        centerBox.pack_start(gtk.HSeparator(),True,True)
-        centerBox.pack_start(self.prompt,True,True)
-        #rightBox
         rightBox.pack_start(text6,True,True)
-        rightBox.pack_start(gtk.HSeparator(),True,True)
-        rightBox.pack_start(self.teamBox,True,True)
 
-        ## Ajout des sous-boîtes (leftBox, centerBox, rightBox) dans rootBox
-        rootBox.pack_start(leftBox,True,True,0)
-        rootBox.pack_start(gtk.VSeparator(),True,True,0)
-        rootBox.pack_start(centerBox,True,True,0)
-        rootBox.pack_start(gtk.VSeparator(),True,True,0)
-        rootBox.pack_start(rightBox,True,True,0)
+        ## Table
+        self.grid.attach(self.screen1,   0, 4, 0, 2, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.teamBox,   0, 2, 2, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(rightBox,       2, 4, 2, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.countdown, 4, 7, 0, 1, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.scrolltextbox, 4, 7, 1, 3, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.prompt, 4, 7, 3, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
 
-        ## Ajout de rootBox sur la fenêtre principale
-        self.add(rootBox)
+        ## Ajout de self.grid sur la fenêtre principale
+        self.add(self.grid)
         
         ## Affichage général
         self.show_all()
         
         ## Envoie de l'id à mplayer après l'avoir affiché
         self.screen1.Screen.setwid(long(self.screen1.Screen.get_id()))
-        self.screen2.Screen.setwid(long(self.screen2.Screen.get_id()))
         
         ## Charge la/les vidéo(s)
         self.loadmovie(kwarg['videopath1'], 1)
-        self.loadmovie(kwarg['videopath2'], 2)
 
         ## Lance le timer et le défilement
         #if not kwarg['forcebutton']:
@@ -148,7 +117,6 @@ class MainWindow(gtk.Window):
         """
         ## Envoie le signal à mplayer
         self.screen1.Screen.quit()
-        self.screen2.Screen.quit()
         ## Envoie le signal à ScrollTextBox
         self.scrolltextbox.quit()
         ## Attend que mplayer se soit éteint
