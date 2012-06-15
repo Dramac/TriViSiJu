@@ -1,0 +1,3 @@
+Sélection de l'équipe 'NOM'
+Teste de la clef de décryptage TAB [OK/KO]
+Clef accepte/rejetee TABTABTAB [OK/KO]
