@@ -30,12 +30,11 @@ import gobject
 class promptBox(gtk.VBox):
     """ Boîte contenant un prompt et une zone de texte pour afficher les résultats
     """
-    def __init__(self, mainWindow = None, promptCharacter = '>'):
+    def __init__(self, promptCharacter = '>'):
         gtk.VBox.__init__(self)
         
         # Initialisation des attributs
         self.promptCharacter = promptCharacter
-        self.mainWindow = mainWindow
         self.full = False
 
         # Créations des widgets
@@ -59,13 +58,12 @@ class promptBox(gtk.VBox):
 
         # Création de signaux personnalisés
         gobject.signal_new("add-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
+        gobject.signal_new("fullscreen", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
         self.entry.connect("insert-text", self.onInsert)
         self.entry.connect("delete-text", self.onDelete)
-        if mainWindow != None:
-            mainWindow.connect("window-state-event", self.onStateChange)
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
@@ -112,14 +110,6 @@ class promptBox(gtk.VBox):
         if start == 0:
             entry.stop_emission("delete-text")
 
-    def onStateChange(self, window, event):
-        """ Méthode appelée quand l'état de la fenêtre change
-        """
-        if event.new_window_state and gtk.gdk.WINDOW_STATE_FULLSCREEN:
-            self.full = True
-        else:
-            self.full = False
-
     def onBip(self, args):
         """ Méthode de traitement de la commande "bip" """
         if len(args) > 0:
@@ -132,10 +122,7 @@ class promptBox(gtk.VBox):
         if len(args) > 0:
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
             return
-        if self.full:
-            self.mainWindow.unfullscreen()
-        else:
-            self.mainWindow.fullscreen()
+        self.emit("fullscreen")
 
     def onAddTeam(self, args):
         """ Méthode de traitement de la commande "addteam" """
@@ -157,7 +144,7 @@ if __name__ == "__main__":
     a.set_position(gtk.WIN_POS_CENTER)
     a.connect("destroy", gtk.main_quit)
     
-    box = promptBox(a)
+    box = promptBox()
     a.add(box)
     a.show_all()
 

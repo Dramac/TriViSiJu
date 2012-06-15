@@ -59,7 +59,8 @@ class MainWindow(gtk.Window):
         self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'], speed=kwarg['speed'], crypt=kwarg['crypt'])
 
         ## Prompt
-        self.prompt = promptBox(self)
+        self.prompt = promptBox()
+        self.prompt.connect("fullscreen",self.on_fullscreen)
 
         ## Caractéristiques techniques
         text6 = gtk.Label("<b>Panneau haut droite</b>\nCaractéristiques techniques")
@@ -101,7 +102,25 @@ class MainWindow(gtk.Window):
             #self.scrolltextbox.scroll()
         
         ## Connexion de destroy à la fonction quit
-        self.connect("destroy", lambda w: self.quit())
+        self.connect("destroy", self.quit)
+
+        # Connexion du signal de changement d'état de la fenêtre
+        self.connect("window-state-event", self.onStateChange)
+
+    def on_fullscreen(self, sender):
+        """ Slot de mise en plein écran """
+        if self.full:
+            self.unfullscreen()
+        else:
+            self.fullscreen()
+
+    def onStateChange(self, window, event):
+        """ Méthode appelée quand l'état de la fenêtre change
+        """
+        if event.new_window_state and gtk.gdk.WINDOW_STATE_FULLSCREEN:
+            self.full = True
+        else:
+            self.full = False
 
     def loadmovie(self, videoPath, id):
         """ Charge la video si elle existe
