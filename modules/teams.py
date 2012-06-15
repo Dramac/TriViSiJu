@@ -66,7 +66,7 @@ class teamBox(gtk.Label):
             try:
                 self.selectTeam(name)
                 print "Cette équipe existe déjà"
-                self.toPrompt("Cette équipe existe déjà\n")
+                self.toPrompt("Erreur : cette équipe existe déjà\n")
             except TeamError:
                 newTeam = team(name)
                 self.team_list.append(newTeam)

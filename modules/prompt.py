@@ -54,7 +54,6 @@ class promptBox(gtk.VBox):
 
         # Buffer du textView
         self.buffer = self.result.get_buffer()
-        self.iter = self.buffer.get_end_iter()
 
         # Création de signaux personnalisés
         gobject.signal_new("add-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
@@ -79,6 +78,7 @@ class promptBox(gtk.VBox):
         text = entry.get_text()
         if (text == self.promptCharacter):
             return
+        self.iter = self.buffer.get_start_iter()
         self.buffer.insert(self.iter, text + "\n")
         entry.delete_text(1,len(text))
         # met le curseur à la fin
@@ -90,14 +90,14 @@ class promptBox(gtk.VBox):
             args = vars(self.parser.parse_args(text.split()))
         except:
             self.buffer.insert(self.iter, "Erreur : commande invalide\n")
-            self.result.scroll_to_mark(self.buffer.get_insert(), 0)
+            self.result.scroll_to_iter(self.iter, 0)
             return
 
         # gestion des commandes
         self.commands[args['command']](args['arguments'])
         
         # on se place à la fin du texte
-        self.result.scroll_to_mark(self.buffer.get_insert(), 0)
+        self.result.scroll_to_iter(self.iter, 0)
 
     def onInsert(self, entry, newText, newTextLength, position):
         """ Méthode appelée lorsque l'on ajoute du texte dans le prompt
