@@ -34,7 +34,7 @@ class TeamError(Exception):
         self.team = team
         self.message = message
     def __str__(self):
-        return "Équipe {}: {}".format(self.team,self.message)
+        return "Équipe %s : %s"%(self.team,self.message)
 
 class team():
     def __init__(self,nom):
@@ -51,6 +51,7 @@ class teamBox(gtk.Label):
     def __init__(self,fichier=os.path.join(os.path.dirname(__file__), "teams.dat"),prompt=None):
         gtk.Label.__init__(self)
         self.set_text("Vide")
+        self.set_use_markup(True)   # Mise en forme Markup
         self.team_list = []
         self.fichier = fichier
         self.prompt = prompt
@@ -66,7 +67,7 @@ class teamBox(gtk.Label):
             try:
                 self.selectTeam(name)
                 print "Cette équipe existe déjà"
-                self.toPrompt("Erreur : cette équipe existe déjà\n")
+                self.emit("message", "Cette équipe existe déjà")
             except TeamError:
                 newTeam = team(name)
                 self.team_list.append(newTeam)
@@ -83,21 +84,23 @@ class teamBox(gtk.Label):
 
     def deleteTeam(self,sender,name):
         """Suppression d'une équipe"""
-        team = self.selectTeam(name)
-        self.team_list.remove(team)
+        try:
+            team = self.selectTeam(name)
+            self.team_list.remove(team)
+        except TeamError as err:
+            print err
+            self.emit("message", str(err))
         self.printTeams()
 
     def printTeams(self):
         """Affichage des équipes dans le panneau"""
         if len(self.team_list):
             self.set_alignment(0,0)     # Alignement à gauche
-            self.set_use_markup(True)   # Mise en forme Markup
             self.set_padding(5,5)       # Marge de 5px avec les bords
-
             ## Mise en forme de la sortie
             tmp = ""
             for team in self.team_list:
-                tmp += "<b>"+team.nom+":</b>\t\t "+team.passwd+"\n"
+                tmp += "<b>"+team.nom+" :</b>\t\t "+team.passwd+"\n"
             self.set_text(tmp)
             self.set_use_markup(True)
 
