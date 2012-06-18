@@ -58,6 +58,7 @@ class promptBox(gtk.VBox):
         # Création de signaux personnalisés
         gobject.signal_new("add-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
         gobject.signal_new("delete-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
+        gobject.signal_new("passwd-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING, gobject.TYPE_STRING])
         gobject.signal_new("fullscreen", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("quit", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
@@ -146,6 +147,13 @@ class promptBox(gtk.VBox):
             if nargs == 2:
                 self.emit("delete-team", args[1])
             elif nargs < 2:
+                nargs = 0
+            else:
+                nargs = -1
+        elif subcommand == 'passwd':
+            if nargs == 3:
+                self.emit("passwd-team", args[1], args[2])
+            elif nargs < 3:
                 nargs = 0
             else:
                 nargs = -1

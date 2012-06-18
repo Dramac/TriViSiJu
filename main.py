@@ -76,6 +76,7 @@ class MainWindow(gtk.Window):
         self.teamBox.connect("message",self.prompt.onExternalInsert)
         self.prompt.connect("add-team", self.teamBox.addTeam)
         self.prompt.connect("delete-team", self.teamBox.deleteTeam)
+        self.prompt.connect("passwd-team", self.teamBox.addPasswd)
         
         ## Affichage des textes provisoires
         rightBox.pack_start(text6,True,True)

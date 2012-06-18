@@ -80,6 +80,7 @@ class teamBox(gtk.Label):
             team.passwd = passwd
         except TeamError as err:
             print err
+            self.emit("message", str(err))
         self.printTeams()
 
     def deleteTeam(self,sender,name):
