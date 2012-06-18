@@ -183,6 +183,13 @@ class ScrollText(gtk.ScrolledWindow):
         self.textview = gtk.TextView()
         self.textview.set_editable(False)       # TextView inéditable
         self.textview.set_cursor_visible(False) # Curseur invible
+        colour = gtk.gdk.color_parse("black")
+        colour2 = gtk.gdk.color_parse("green")
+        style = self.textview.get_style().copy()
+        style.bg[gtk.STATE_NORMAL] = colour
+        style.base[gtk.STATE_NORMAL] = colour
+        style.text[gtk.STATE_NORMAL] = colour2
+        self.textview.set_style(style)
         
         ## Récupération de gtk.Buffer
         self.buffer = self.textview.get_buffer()

@@ -44,6 +44,15 @@ class promptBox(gtk.VBox):
         self.result.set_editable(False)
         self.result.set_cursor_visible(False)
 
+        colour = gtk.gdk.color_parse("black")
+        colour2 = gtk.gdk.color_parse("green")
+        style = self.entry.get_style().copy()
+        style.bg[gtk.STATE_NORMAL] = colour
+        style.base[gtk.STATE_NORMAL] = colour
+        style.text[gtk.STATE_NORMAL] = colour2
+        self.entry.set_style(style)
+        self.result.set_style(style)
+
         resultWindow = gtk.ScrolledWindow()
         resultWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         resultWindow.add(self.result)
