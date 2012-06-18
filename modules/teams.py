@@ -91,7 +91,8 @@ class teamBox(gtk.Label):
         except TeamError as err:
             print err
             self.emit("message", str(err))
-        self.printTeams()
+        finally:
+            self.printTeams()
 
     def printTeams(self):
         """Affichage des équipes dans le panneau"""
@@ -99,11 +100,17 @@ class teamBox(gtk.Label):
             self.set_alignment(0,0)     # Alignement à gauche
             self.set_padding(5,5)       # Marge de 5px avec les bords
             ## Mise en forme de la sortie
-            tmp = ""
+            tmp = "<span foreground='green' size='large'>"
             for team in self.team_list:
-                tmp += "<b>"+team.nom+" :</b>\t\t "+team.passwd+"\n"
-            self.set_text(tmp)
+                if team.passwd is "":
+                    tmp += u"<span foreground='orange'>\u25CF</span> "
+                else:
+                    tmp += u"\u25CF "
+                tmp += "<b>"+team.nom+" </b>\n"
+            self.set_text(tmp+"</span>")
             self.set_use_markup(True)
+        else:
+            self.set_text("")
 
     def selectTeam(self,team_name):
         """Sélecteur d'équipe pour modification"""
