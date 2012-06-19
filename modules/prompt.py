@@ -70,6 +70,10 @@ class promptBox(gtk.VBox):
         gobject.signal_new("passwd-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING, gobject.TYPE_STRING])
         gobject.signal_new("fullscreen", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("quit", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("start-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("stop-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("reset-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("set-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -78,7 +82,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -174,6 +178,64 @@ class promptBox(gtk.VBox):
             self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
         elif nargs == -1:
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+
+    def onTimer(self, args):
+        """ Méthode de traitement de la commande "timer" """
+        nargs = len(args)
+        if nargs < 1:
+            self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
+            return
+        subcommand = args[0]
+        if subcommand == 'start':
+            if nargs == 1:
+                self.emit("start-timer")
+            else:
+                # code qui indique qu'il y a trop d'arguments
+                nargs = -1
+        elif subcommand == 'stop':
+            if nargs == 1:
+                self.emit("stop-timer")
+            else:
+                nargs = -1
+        elif subcommand == 'reset':
+            if nargs == 1:
+                self.emit("reset-timer")
+            else:
+                nargs = -1
+        elif subcommand == 'set':
+            h = 0
+            m = 0
+            s = 0
+            cs = 0
+            if nargs == 1:
+                # code qui indique qu'il n'y a pas assez d'arguments
+                nargs = 0
+            try:
+                if nargs > 1:
+                    h = int(args[1])
+                if nargs > 2:
+                    m = int(args[2])
+                if nargs > 3:
+                    s = int(args[3])
+                if nargs > 4:
+                    cs = int(args[4])
+            except:
+                self.buffer.insert(self.iter, "Erreur : arguments invalides\n")
+                return
+            if nargs > 5:
+                nargs = -1
+                nargs = 0
+            if nargs > 0:
+                self.emit("set-timer", h, m, s, cs)
+        else:
+            self.buffer.insert(self.iter, "Erreur : sous-commande invalide\n")
+            return
+        # Erreurs
+        if nargs == 0:
+            self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
+        elif nargs == -1:
+            self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+
 
     def onExternalInsert(self,sender,message):
         """ Méthode pour ajouter du texte """

@@ -55,17 +55,21 @@ class MainWindow(gtk.Window):
         ## Charge la classe Player
         self.screen1 = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'], bgcolor=bgcolor)
 
-        ## Compte à rebours
-        self.countdown = countdownBox(forcebutton=kwarg['forcebutton'])
-        self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
-
-        ## Texte crypté
-        self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'], speed=kwarg['speed'], crypt=kwarg['crypt'])
-
         ## Prompt
         self.prompt = promptBox()
         self.prompt.connect("fullscreen", self.on_fullscreen)
         self.prompt.connect("quit", self.quit)
+
+        ## Compte à rebours
+        self.countdown = countdownBox(forcebutton=kwarg['forcebutton'])
+        self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
+        self.prompt.connect("start-timer", self.countdown.start)
+        self.prompt.connect("stop-timer", self.countdown.pause)
+        self.prompt.connect("reset-timer", self.countdown.reset)
+        self.prompt.connect("set-timer", self.countdown.setStartTime)
+
+        ## Texte crypté
+        self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'], speed=kwarg['speed'], crypt=kwarg['crypt'])
 
         ## Caractéristiques techniques
         text6 = gtk.Label("<b>Panneau haut droite</b>\nCaractéristiques techniques")

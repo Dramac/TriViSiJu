@@ -128,7 +128,7 @@ class countdownBox(gtk.VBox):
             self.WD = int(width)
 
 
-    def setStartTime(self,h=0,m=0,s=20,cs=0):
+    def setStartTime(self, sender=None, h=0, m=0, s=20, cs=0):
         self.h_start = h
         self.m_start = m
         self.s_start = s
@@ -160,7 +160,7 @@ class countdownBox(gtk.VBox):
 
         self.add(hbox2)
 
-    def reset(self,widget=None):
+    def reset(self, sender=None):
         """
         Remise à zéro du compteur
         """
@@ -180,21 +180,21 @@ class countdownBox(gtk.VBox):
         elif self.button.get_label() == "gtk-media-pause":
             self.button.set_label("gtk-media-play")
 
-    def start(self):
+    def start(self, sender=None):
         if self.timer is None:
             # Initialisation du timer
             self.timer = gobject.timeout_add(10, self.on_timeout)
             if self.forcebutton:
                 self.buttonToggle()
 
-    def pause(self):
+    def pause(self, sender=None):
         if self.timer:
             gobject.source_remove(self.timer)
             self.timer = None
             if self.forcebutton:
                 self.buttonToggle()
             
-    def toggle(self,widget=None):
+    def toggle(self, sender=None):
         """
         Play/Pause
         """
