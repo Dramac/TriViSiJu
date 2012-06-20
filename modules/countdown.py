@@ -43,6 +43,8 @@ class countdownBox(gtk.VBox):
         self.WD = width
         self.HG = height
 
+        gobject.signal_new("message",countdownBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
+
         # Création des conteneurs d'images
         self.img_10h = gtk.Image()       
         self.img_h = gtk.Image()
@@ -62,7 +64,7 @@ class countdownBox(gtk.VBox):
 
         # Chemins des différentes images
         self.folder = [self.path_to_images+"orange_",self.path_to_images+"red_",self.path_to_images+"green_"]
-        self.digits = ["0.png","1.png","2.png","3.png","4.png","5.png","6.png","7.png","8.png","9.png"]
+        self.digits = ["0.png","1.png","2.png","3.png","4.png","5.png","6.png","7.png","8.png","9.png","column.png"]
 
         # Affichage des chiffres
         self.setStartTime()
@@ -92,6 +94,8 @@ class countdownBox(gtk.VBox):
         # Show control
         if self.forcebutton:
             self.showControl()
+
+   
 
     def onSizeChange(self, fullscreen):
         """ Permet de redéfinir la taille des images en fonction de la taille allouée au widget
@@ -129,14 +133,28 @@ class countdownBox(gtk.VBox):
 
 
     def setStartTime(self, sender=None, h=0, m=0, s=20, cs=0):
-        self.h_start = h
-        self.m_start = m
-        self.s_start = s
-        self.cs_start = cs
-        self.h = h
-        self.m = m
-        self.s = s
-        self.cs = cs
+        """Spécification de l'heure du timer"""
+        # Vérification des conditions
+        if h < 100 and h >= 0:
+            self.h_start = h
+            self.h = h
+        else:
+            self.emit("message","0 >= h > 100")
+        if m < 60 and m >= 0:
+            self.m_start = m
+            self.m = m
+        else:
+            self.emit("message","0 >= m > 60")
+        if s < 60 and s >= 0:
+            self.s_start = s
+            self.s = s
+        else:
+            self.emit("message","0 >= s > 60")
+        if cs < 100 and cs >= 0:
+            self.cs_start = cs
+            self.cs = cs
+        else:
+            self.emit("message","0 >= cs > 100")
         self.writeDigits()
 
     def showControl(self):
@@ -254,28 +272,26 @@ class countdownBox(gtk.VBox):
         tencs = self.cs/10
         cs = self.cs%10
         # Changement d'image
-        #self.img_10h.set_from_file(self.folder[self.way]+self.digits[tenh])
-        self.img_10h.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[tenh]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
-        #self.img_h.set_from_file(self.folder[self.way]+self.digits[h])
-        self.img_h.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[h]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
-        #self.img_col1.set_from_file(self.folder[self.way]+"column.png")
-        self.img_col1.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+"column.png").scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
-        #self.img_10m.set_from_file(self.folder[self.way]+self.digits[tenm])
-        self.img_10m.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[tenm]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
-        #self.img_m.set_from_file(self.folder[self.way]+self.digits[m])
-        self.img_m.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[m]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
-        #self.img_col2.set_from_file(self.folder[self.way]+"column.png")
-        self.img_col2.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+"column.png").scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
-        #self.img_10s.set_from_file(self.folder[self.way]+self.digits[tens])
-        self.img_10s.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[tens]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
-        #self.img_s.set_from_file(self.folder[self.way]+self.digits[s])
-        self.img_s.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[s]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
-        #self.img_col3.set_from_file(self.folder[self.way]+"column.png")
-        self.img_col3.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+"column.png").scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
-        #self.img_10cs.set_from_file(self.folder[self.way]+self.digits[tencs])
-        self.img_10cs.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[tencs]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
-        #self.img_cs.set_from_file(self.folder[self.way]+self.digits[cs])
-        self.img_cs.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[cs]).scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR))
+        self._changePixbuf(self.img_10h,tenh)
+        self._changePixbuf(self.img_h,h)
+        self._changePixbuf(self.img_col1,10)
+        self._changePixbuf(self.img_10m,tenm)
+        self._changePixbuf(self.img_m,m)
+        self._changePixbuf(self.img_col2,10)
+        self._changePixbuf(self.img_10s,tens)
+        self._changePixbuf(self.img_s,s)
+        self._changePixbuf(self.img_col3,10)
+        self._changePixbuf(self.img_10cs,tencs)
+        self._changePixbuf(self.img_cs,cs)
+
+    def _changePixbuf(self,img,digit):
+        """Modification de l'image sélectionée (fonction privée)"""
+        # import de la nouvelle image et conversion en pixbuf
+        pixbuf = gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[digit])
+        # Correction de la taille
+        pixbuf = pixbuf.scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR)
+        # puis envoi vers le conteneur
+        img.set_from_pixbuf(pixbuf)
 
 if __name__ == "__main__":
     gobject.threads_init()

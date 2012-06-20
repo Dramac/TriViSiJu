@@ -63,6 +63,7 @@ class MainWindow(gtk.Window):
         ## Compte à rebours
         self.countdown = countdownBox(forcebutton=kwarg['forcebutton'])
         self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
+        self.countdown.connect("message",self.prompt.onExternalInsert)
         self.prompt.connect("start-timer", self.countdown.start)
         self.prompt.connect("stop-timer", self.countdown.pause)
         self.prompt.connect("reset-timer", self.countdown.reset)
