@@ -79,7 +79,7 @@ class ScrollBuffer(threading.Thread):
         adj = self.root.get_vadjustment()
         adj.set_value( adj.upper - adj.page_size )
         
-        ## Retourne False pour gobject (???)
+        ## Retourne False pour gobject (évite que la fonction soit rappeller automatiquement)
         return False
     
     def cryptage(self, texte):

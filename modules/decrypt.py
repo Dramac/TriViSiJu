@@ -24,10 +24,10 @@
 import pygtk
 pygtk.require("2.0")
 import gtk
-from scrolltext import ScrollText
+import time
+import subprocess
 import gobject
 from teams import team
-import time
 
 class DecryptBox(gtk.VBox):
     """ Fenêtre de décryptage
@@ -49,10 +49,25 @@ class DecryptBox(gtk.VBox):
         self.pbar = gtk.ProgressBar()
         self.update_pbar(team_data=("", 0))
 
+        ## Scroll text
+        self.textview = gtk.TextView()
+        self.textview.set_editable(False)
+        self.textview.set_cursor_visible(False)
+        self.scrolledwindow = gtk.ScrolledWindow()
+        self.scrolledwindow.add(self.textview)
+        self.scrolledwindow.get_vscrollbar().set_child_visible(False) # Cache la barre verticale
+        self.scrolledwindow.get_hscrollbar().set_child_visible(False)
+
+        ## Buffer
+        self.buffer = self.textview.get_buffer()
+
         ## Affichage sur self
-        self.pack_start(self.pbar)
+        self.pack_start(self.pbar, True, True, 0)
+        self.pack_start(self.scrolledwindow, True, True, 0)
 
     def phase1(self):
+        """ La pahse 1 consiste à tester le mot de passe de toute les équipes
+        """
         ## Variable de detection des mot de passe
         at_least_one_passwd = False
 
@@ -81,11 +96,12 @@ class DecryptBox(gtk.VBox):
         
             ## Boucle sur les lignes
             for i,line in enumerate(text):
-                time.sleep(1)
+                time.sleep(0.1)
                 count = count + 1
                 self.percent = float(count)/total
                 self.update_pbar()
-                print "FAIRE UN SCROLL TEXTE: "+line
+                self.text = self.text + '\n' + line
+                self.update_buffer(self.text)
 
             ## Incrémente le compteur
             num = num + 1
@@ -97,10 +113,23 @@ class DecryptBox(gtk.VBox):
         ## Renvoie at_least_one_passwd
         return at_least_one_passwd
 
+    def update_buffer(self, text):
+        ## Met à jour le buffer
+        self.buffer.set_text(text)
+        ## Fait défiler le text
+        adj = self.scrolledwindow.get_vadjustment()
+        adj.set_value( adj.upper - adj.page_size )
+
     def show_warning_and_continue(self):
         """ Montre que le mot de passe a été trouvé et valide le décryptage
         """
-        pass
+        label = gtk.Label("Le décryptage a réussi, bravo à tous et en particulier à ceux qui ont trouvé la solution.\n\
+                          Nous pouvons maintenant avoir accès aux commandes de lancement.")
+        self.dialog = gtk.Dialog("Décryptage réussi")
+        self.dialog.vbox.pack_start(label)
+        label.show()
+        self.dialog.run()
+        self.dialog.destroy()
 
     def phase2(self):
         """ Montre des messages d'erreur et lance une procédure de récupération 
@@ -112,6 +141,7 @@ class DecryptBox(gtk.VBox):
         """ Lance la procédure de décryptage
         """
         ## Reset les variables
+        self.text = ""
         self.continuer = True
         self.update_pbar(team_data=("", 0))
 
@@ -173,7 +203,7 @@ class RootWindow(gtk.Window):
     """ Fenêtre principale pour tester le module
     """
     def __init__(self):
-        ## Charge gobject
+        ## Charge gobject (Important pour ScrollTextBox
         gobject.threads_init()
 
         ## Charge la fenêtre
