@@ -224,7 +224,6 @@ class promptBox(gtk.VBox):
                 return
             if nargs > 5:
                 nargs = -1
-                nargs = 0
             if nargs > 0:
                 self.emit("set-timer", h, m, s, cs)
         else:
