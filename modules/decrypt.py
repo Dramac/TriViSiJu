@@ -27,12 +27,13 @@ import gtk
 from scrolltext import ScrollText
 import gobject
 from teams import team
+import time
 
 class DecryptBox(gtk.VBox):
     """ Fenêtre de décryptage
     """
 
-    def __init__(self, passwd="passwd", team_list=[team("Equipe1", passwd="passwd"), team("Equipe2", passwd="Passwd")]):
+    def __init__(self, passwd="passwd", team_list=[team("Orion1", passwd="passwd"), team("Pegase2", passwd="Passwd"), team("Ariane3", passwd="")]):
         """ Initialisation
         """
         ## Initialise la fenetre
@@ -40,38 +41,103 @@ class DecryptBox(gtk.VBox):
         
         ## Charge les variables
         self.passwd = passwd
+        self.team_list = team_list
+        self.nteam = len(self.team_list)
+        self.percent = 0.0
 
         ## Initialise la barre de progression
         self.pbar = gtk.ProgressBar()
-
-        ## Génère le text
-        self.text = self.text_gen(team_list)
-
-        ## Scroll text
-        self.scrolltext= ScrollText(lines=self.text, speed=6., crypt=False, autostop_at_end=True)
+        self.update_pbar(team_data=("", 0))
 
         ## Affichage sur self
         self.pack_start(self.pbar)
-        self.pack_start(self.scrolltext)
 
-        ## Lance le défilement
-        self.scrolltext.scroll()
+    def phase1(self):
+        ## Variable de detection des mot de passe
+        at_least_one_passwd = False
 
+        ## Nombre de lignes / équipe
+        nligne = float(len(self.get_template().split('\n')))
+        
+        ## Nombre total d'action
+        total = nligne*self.nteam
+        
+        ## Compteur
+        count = 0
+        num = 0
 
-    def text_gen(self, team_list):
-        """ Génère le texte à faire défiler pour une équipe
-        """
-        text = ""
-        ## Génère le texte pour chaque équipe
-        for team in team_list:
+        ## Boucle sur toutes les équipes
+        while self.continuer:
+            ## Recupere la classe de l'équipe
+            team = self.team_list[num]
             if self.passwd == team.passwd:
-                text = text + self.team_text(team, True)
-            else:
-                text = text + self.team_text(team, False)
+                at_least_one_passwd = True
+            
+            ## Met à jour le texte de la barre
+            self.update_pbar(team_data=(team.nom, num+1))
 
-        ## Renvoie
-        return [ s+'\n' for s in text.split('\n') ]
-    
+            ## Génère le texte de l'équipe
+            text = self.team_text(team).split('\n')
+        
+            ## Boucle sur les lignes
+            for i,line in enumerate(text):
+                time.sleep(1)
+                count = count + 1
+                self.percent = float(count)/total
+                self.update_pbar()
+                print "FAIRE UN SCROLL TEXTE: "+line
+
+            ## Incrémente le compteur
+            num = num + 1
+
+            ## Arrêt de la boucle while
+            if num >= self.nteam:
+                self.continuer = False
+
+        ## Renvoie at_least_one_passwd
+        return at_least_one_passwd
+
+    def show_warning_and_continue(self):
+        """ Montre que le mot de passe a été trouvé et valide le décryptage
+        """
+        pass
+
+    def phase2(self):
+        """ Montre des messages d'erreur et lance une procédure de récupération 
+        du mot de passe à partir de tous ceux trouvé par chaque équipe
+        """
+        pass
+
+    def start(self):
+        """ Lance la procédure de décryptage
+        """
+        ## Reset les variables
+        self.continuer = True
+        self.update_pbar(team_data=("", 0))
+
+        ## Lancement de la phase 1
+        win = self.phase1()
+
+        ## Test la réussite
+        if win:
+            self.show_warning_and_continue()
+        else:
+            self.phase2()
+
+    def update_pbar(self, percent=None, team_data=None):
+        """ Met à jour le texte de la barre de progression
+        """
+        ## Met à jour percent
+        if percent != None:
+            self.perent = percent
+        ## Met à jour le texte et la valeur de la barre
+        self.pbar.set_fraction(self.percent)
+        if team_data != None:
+            self.pbar.set_text("Équipe '%s' (%d/%d)"%(team_data[0], team_data[1], self.nteam))
+        ## On fordce la mise à jour de la fenêtre
+        while gtk.events_pending():
+            gtk.main_iteration(False)
+
     def get_template(self):
         """ Charge le template du texte
         """
@@ -80,7 +146,7 @@ class DecryptBox(gtk.VBox):
         lines = ''.join(lines)
         return lines
 
-    def team_text(self, team, good):
+    def team_text(self, team):
         """ Renvoie le texte mis en forme pour l'équipe donnée
         """
         ## Lit le template
@@ -89,10 +155,10 @@ class DecryptBox(gtk.VBox):
         ## Met en forme le texte
         lines = lines.replace("NOM", team.nom)
         lines = lines.replace("TAB", "\t")
-        if good:
-            lines = lines.replace('[OK/KO]', 'OK')
+        if self.passwd == team.passwd:
+            lines = lines.replace('[OK/KO]', '[OK]')
         else:
-            lines = lines.replace('[OK/KO]', 'KO')
+            lines = lines.replace('[OK/KO]', '[KO]')
 
         ## Renvoie
         return lines
@@ -100,8 +166,8 @@ class DecryptBox(gtk.VBox):
     def quit(self, *parent):
         """ Fonction qui permet de quitter proprement
         """
-        ## Ferme ScrollTextBox
-        self.scrolltext.quit()
+        if self.continuer:
+            self.continuer = False
 
 class RootWindow(gtk.Window):
     """ Fenêtre principale pour tester le module
@@ -113,16 +179,26 @@ class RootWindow(gtk.Window):
         ## Charge la fenêtre
         gtk.Window.__init__(self)
         self.set_title("Décryptage")
+        vbox = gtk.VBox()
+
+        ## Boutton
+        button = gtk.Button(label="start")
         
         ## DecryptBox
         self.decryptbox = DecryptBox()
 
         ## Affichage
-        self.add(self.decryptbox)
+        vbox.pack_start(self.decryptbox, True, True, 0)
+        vbox.pack_start(button, True, True, 0)
+        self.add(vbox)
         self.show_all()
 
         ## Connexion
         self.connect("destroy", self.quit)
+        button.connect("clicked", self.start)
+
+    def start(self, *parent):
+        self.decryptbox.start()
     
     def quit(self, *parent):
         """ Fonction qui permet de quitter proprement
