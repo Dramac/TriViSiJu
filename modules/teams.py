@@ -40,6 +40,12 @@ class team():
     def __init__(self,nom, passwd=""):
         self.nom = nom
         self.passwd = passwd
+
+        # Status:
+        #   - None : non checké
+        #   - True : checké
+        #   - False: checké mais faux
+        self.status = None 
     def __repr__(self):
         """Surcharge de l'opérateur repr"""
         return self.nom
@@ -103,9 +109,13 @@ class teamBox(gtk.Label):
             tmp = "<span foreground='green' size='large'>"
             for team in self.team_list:
                 if team.passwd is "":
+                    tmp += u"<span foreground='red'>\u25CB</span> "
+                elif team.status == None:
                     tmp += u"<span foreground='orange'>\u25CF</span> "
-                else:
-                    tmp += u"\u25CF "
+                elif team.status == True:
+                    tmp += u"<span foreground='green'>\u25CF</span> "
+                else:   #mauvais mot de passe
+                    tmp += u"<span foreground='red'>\u25CF</span> "
                 tmp += "<b>"+team.nom+" </b>\n"
             self.set_text(tmp+"</span>")
             self.set_use_markup(True)
