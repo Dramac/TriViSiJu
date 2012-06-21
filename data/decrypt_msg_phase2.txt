@@ -1,0 +1,17 @@
+Aucune clef n'a permis de décrypter le code.
+Enclenchement de la procédure de recherche à partir des fausses clefs.
+Tentative 1/3:
+	Recherche d'un indice commun
+	Échec de la méthode
+Tentative 2/3:
+	Utilisation d'un algorythme intelligent
+	Échec de la méthode
+Tentative 3/3:
+	Utilisation d'un algorythme quatique de la théorie des cordes
+	Premier indice trouvé
+	Seconde indice trouvé
+	Troisième indice NON trouvé
+	Recherche conjecturale
+	. . . . . . . . . . . . 
+	. . . . . . . . . . . .
+	Réussite de la méthode

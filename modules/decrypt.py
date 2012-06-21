@@ -33,7 +33,7 @@ class DecryptBox(gtk.VBox):
     """ Fenêtre de décryptage
     """
 
-    def __init__(self, passwd="passwd", team_list=[team("Orion1", passwd="passwd"), team("Pegase2", passwd="Passwd"), team("Ariane3", passwd="")]):
+    def __init__(self, passwd="passwd", team_list=[team("Orion1", passwd="asswd"), team("Pegase2", passwd="Passwd"), team("Ariane3", passwd="")]):
         """ Initialisation
         """
         ## Initialise la fenetre
@@ -114,17 +114,20 @@ class DecryptBox(gtk.VBox):
         return at_least_one_passwd
 
     def update_buffer(self, text):
+        """ Met à jour le buffer et fait défiler le texte
+        """
         ## Met à jour le buffer
         self.buffer.set_text(text)
         ## Fait défiler le text
         adj = self.scrolledwindow.get_vadjustment()
         adj.set_value( adj.upper - adj.page_size )
+        while gtk.events_pending():
+            gtk.main_iteration()
 
-    def show_warning_and_continue(self):
+    def show_warning_and_continue(self, msg):
         """ Montre que le mot de passe a été trouvé et valide le décryptage
         """
-        label = gtk.Label("Le décryptage a réussi, bravo à tous et en particulier à ceux qui ont trouvé la solution.\n\
-                          Nous pouvons maintenant avoir accès aux commandes de lancement.")
+        label = gtk.Label(msg.decode('utf-8'))
         self.dialog = gtk.Dialog("Décryptage réussi")
         self.dialog.vbox.pack_start(label)
         label.show()
@@ -135,7 +138,29 @@ class DecryptBox(gtk.VBox):
         """ Montre des messages d'erreur et lance une procédure de récupération 
         du mot de passe à partir de tous ceux trouvé par chaque équipe
         """
-        pass
+        ## Lecture du fichier 'phase2'
+        with open('../data/decrypt_msg_phase2.txt') as f:
+            lines = f.readlines()
+
+        ## Activation de la barre de progression en mode activité
+        self.percent = 0
+        self.pbar.set_text("")
+        self.pbar.set_orientation(gtk.PROGRESS_RIGHT_TO_LEFT)
+        self.update_pbar()
+
+        ## Affichage du fichier 'phase2'
+        nlines = len(lines)
+        n = 0
+        while self.continuer:
+            line = lines[n]
+            time.sleep(1)
+            self.percent = float(n)/float(nlines)
+            self.update_pbar()
+            self.text = self.text + line
+            self.update_buffer(self.text)
+            n = n + 1
+            if n >= nlines:
+                self.continuer = False
 
     def start(self):
         """ Lance la procédure de décryptage
@@ -144,15 +169,28 @@ class DecryptBox(gtk.VBox):
         self.text = ""
         self.continuer = True
         self.update_pbar(team_data=("", 0))
+        self.pbar.set_orientation(gtk.PROGRESS_LEFT_TO_RIGHT)
 
         ## Lancement de la phase 1
         win = self.phase1()
 
         ## Test la réussite
         if win:
-            self.show_warning_and_continue()
+            msg = self.msg_from_file('../data/decrypt_msg_phase1win.txt')
+            self.show_warning_and_continue(msg)
         else:
+            self.continuer = True
             self.phase2()
+            msg = self.msg_from_file('../data/decrypt_msg_phase2win.txt')
+            self.show_warning_and_continue(msg)
+
+    def msg_from_file(self, file):
+        """ Lit un message depuis un fichier
+        """
+        with open(file, 'r') as f:
+            msg = f.readlines()
+        msg = "".join(msg)
+        return msg
 
     def update_pbar(self, percent=None, team_data=None):
         """ Met à jour le texte de la barre de progression

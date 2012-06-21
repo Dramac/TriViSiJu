@@ -1,0 +1,2 @@
+Le décryptage vient de réussir mais aucune clef n'était correcte.
+Nous venons de récupérer la main sur les commandes de lancement.
