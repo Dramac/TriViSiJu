@@ -51,14 +51,18 @@ class MainWindow(gtk.Window):
         self.grid = gtk.Table(rows=4, columns=7, homogeneous=True)
         rightBox = gtk.VBox(homogeneous=False,spacing=0)
 
-        # Vidéos
-        ## Charge la classe Player
-        self.screen = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'], bgcolor=bgcolor)
-
         ## Prompt
         self.prompt = promptBox()
         self.prompt.connect("fullscreen", self.on_fullscreen)
         self.prompt.connect("quit", self.quit)
+
+        # Vidéos
+        ## Charge la classe Player
+        self.screen = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'], bgcolor=bgcolor)
+        self.prompt.connect("load-video", self.screen.Screen.loadFile)
+        self.prompt.connect("pause-video", self.screen.Screen.pause)
+        self.prompt.connect("forward-video", self.screen.Screen.forward)
+        self.prompt.connect("backward-video", self.screen.Screen.backward)
 
         ## Compte à rebours
         self.countdown = countdownBox(forcebutton=kwarg['forcebutton'])
@@ -104,7 +108,7 @@ class MainWindow(gtk.Window):
         self.screen.Screen.setwid(long(self.screen.Screen.get_id()))
         
         ## Charge la/les vidéo(s)
-        self.loadmovie(kwarg['videopath1'], 1)
+        self.loadmovie(kwarg['videopath1'])
 
         ## Lance le timer et le défilement
         #if not kwarg['forcebutton']:
@@ -135,12 +139,12 @@ class MainWindow(gtk.Window):
             self.full = False
         self.countdown.onSizeChange(self.full)
 
-    def loadmovie(self, videoPath, id):
+    def loadmovie(self, videoPath):
         """ Charge la video si elle existe
         """
         ## Test videoPath
         if os.path.isfile(videoPath):
-            self.screen.Screen.loadfile(videoPath.replace(' ', '\ '))
+            self.screen.Screen.loadFile(filename = videoPath.replace(' ', '\ '))
 
     def quit(self, *parent):
         """ Fonction quitter

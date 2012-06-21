@@ -93,7 +93,7 @@ class Player(gtk.Socket):
         ## Déclare mplayer comme étant lancé
         self.start = True
 
-    def loadfile(self, filename):
+    def loadFile(self, sender=None, filename=""):
         """ Charge un fichier
         """
         ## wid non déclarée
@@ -114,12 +114,12 @@ class Player(gtk.Socket):
         elif parent.get_label() == "gtk-media-play":
             parent.set_label("gtk-media-pause")
 
-    def forward(self, parent):
+    def forward(self, sender):
         """ Envoie la commande avancer de +10 0 (seek +10 0) à mplayer
         """
         self.cmdplayer("seek +10 0")
 
-    def backward(self, parent):
+    def backward(self, sender):
         """ Envoie la commande reculer de -10 0 (seek -10 0) à mplayer
         """
         self.cmdplayer("seek -10 0")
@@ -208,7 +208,7 @@ class PlayerFrame(gtk.Table):
         statut = dialog.run()
         if statut == gtk.RESPONSE_OK:
             try:
-                self.Screen.loadfile(dialog.get_filename().replace(' ', '\ '))
+                self.Screen.loadFile(filename = dialog.get_filename().replace(' ', '\ '))
             except self.Screen.MplayerIdError:
                 raise
             finally:

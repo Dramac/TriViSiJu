@@ -74,6 +74,10 @@ class promptBox(gtk.VBox):
         gobject.signal_new("stop-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("reset-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("set-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT])
+        gobject.signal_new("load-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
+        gobject.signal_new("pause-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("forward-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("backward-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -82,7 +86,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -235,6 +239,45 @@ class promptBox(gtk.VBox):
         elif nargs == -1:
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
 
+    def onVideo(self, args):
+        """ Méthode de traitement de la commande "addteam" """
+        nargs = len(args)
+        if nargs < 1:
+            self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
+            return
+        subcommand = args[0]
+        if subcommand == 'load':
+            if nargs == 2:
+                self.emit("load-video", args[1])
+            elif nargs < 2:
+                # code qui indique qu'il n'y a pas assez d'arguments
+                nargs = 0
+            else:
+                # code qui indique qu'il y a trop d'arguments
+                nargs = -1
+        elif subcommand == 'pause':
+            if nargs == 1:
+                self.emit("pause-video")
+            else:
+                nargs = -1
+        elif subcommand == 'forward':
+            if nargs == 1:
+                self.emit("forward-video")
+            else:
+                nargs = -1
+        elif subcommand == 'backward':
+            if nargs == 1:
+                self.emit("backward-video")
+            else:
+                nargs = -1
+        else:
+            self.buffer.insert(self.iter, "Erreur : sous-commande invalide\n")
+            return
+        # Erreurs
+        if nargs == 0:
+            self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
+        elif nargs == -1:
+            self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
 
     def onExternalInsert(self,sender,message):
         """ Méthode pour ajouter du texte """
