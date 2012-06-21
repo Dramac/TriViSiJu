@@ -53,7 +53,7 @@ class MainWindow(gtk.Window):
 
         # Vidéos
         ## Charge la classe Player
-        self.screen1 = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'], bgcolor=bgcolor)
+        self.screen = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'], bgcolor=bgcolor)
 
         ## Prompt
         self.prompt = promptBox()
@@ -87,7 +87,7 @@ class MainWindow(gtk.Window):
         rightBox.pack_start(text6,True,True)
 
         ## Table
-        self.grid.attach(self.screen1,   0, 4, 0, 2, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.screen,   0, 4, 0, 2, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
         self.grid.attach(self.teamBox,   0, 2, 2, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
         self.grid.attach(rightBox,       2, 4, 2, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
         self.grid.attach(self.countdown, 4, 7, 0, 1, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
@@ -101,7 +101,7 @@ class MainWindow(gtk.Window):
         self.show_all()
         
         ## Envoie de l'id à mplayer après l'avoir affiché
-        self.screen1.Screen.setwid(long(self.screen1.Screen.get_id()))
+        self.screen.Screen.setwid(long(self.screen.Screen.get_id()))
         
         ## Charge la/les vidéo(s)
         self.loadmovie(kwarg['videopath1'], 1)
@@ -140,7 +140,7 @@ class MainWindow(gtk.Window):
         """
         ## Test videoPath
         if os.path.isfile(videoPath):
-            exec("self.screen%s.Screen.loadfile('%s')"%(id, videoPath.replace(' ', '\ ')))
+            self.screen.Screen.loadfile(videoPath.replace(' ', '\ '))
 
     def quit(self, *parent):
         """ Fonction quitter
@@ -148,7 +148,7 @@ class MainWindow(gtk.Window):
         Tue proprement l'application root
         """
         ## Envoie le signal à mplayer
-        self.screen1.Screen.quit()
+        self.screen.Screen.quit()
         ## Envoie le signal à ScrollTextBox
         self.scrolltextbox.quit()
         ## Attend que mplayer se soit éteint
