@@ -175,9 +175,8 @@ class ScrollText(gtk.ScrolledWindow):
         ## Initialisation de gtk.ScrolledWindow
         gtk.ScrolledWindow.__init__(self)
         
-        ## Initialisation de gtk.ScrolledWindow pour contenir un gtk.TextView
-        self.get_vscrollbar().set_child_visible(False) # Cache la barre verticale
-        self.get_hscrollbar().set_child_visible(False) # Cache la barre horizontale
+        ## Suppresssion de barre de défilement
+        self.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
         
         ## Initialisation de gtk.TextView()
         self.textview = gtk.TextView()
