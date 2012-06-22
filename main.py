@@ -87,6 +87,10 @@ class MainWindow(gtk.Window):
         self.prompt.connect("delete-team", self.teamBox.deleteTeam)
         self.prompt.connect("passwd-team", self.teamBox.addPasswd)
         
+        ## Popup window de décryptage
+        self.popup = popupWindow()
+        self.prompt.connect("decrypt",self.popup.start)
+
         ## Affichage des textes provisoires
         rightBox.pack_start(text6,True,True)
 

@@ -26,6 +26,7 @@ pygtk.require("2.0")
 import gtk
 import argparse
 import gobject
+import decrypt
 
 class promptBox(gtk.VBox):
     """ Boîte contenant un prompt et une zone de texte pour afficher les résultats
@@ -78,6 +79,7 @@ class promptBox(gtk.VBox):
         gobject.signal_new("pause-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("forward-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("backward-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("decrypt", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -86,7 +88,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -278,6 +280,12 @@ class promptBox(gtk.VBox):
             self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
         elif nargs == -1:
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+
+    def onDecrypt(self, args):
+        """Initialisation de la décryption"""
+        #popup = decrypt.popupWindow()
+        #popup.start()
+        self.emit("decrypt")
 
     def onExternalInsert(self,sender,message):
         """ Méthode pour ajouter du texte """

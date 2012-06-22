@@ -374,46 +374,29 @@ class ScrollTextBox(gtk.VBox):
         self.scrolltext.quit()
  
 
-class RootWindows():
-    """ Fenêtre principale pour tester ScrollText
-    """
-    def __init__(self):
-        """ Initialise la fenêtre et chareg ScrollText
-        """
-        ## Charge gobject
-        gobject.threads_init()
-
-        ## Créer la fenêtre principale
-        self.root = gtk.Window()
-        self.root.set_title(__file__)
-        self.root.set_default_size(500, 400)
-        self.root.set_position(gtk.WIN_POS_CENTER)
-        self.root.connect("destroy", self.quit)
-        
-        ## ScrollTextBox
-        self.scrolltextbox = ScrollTextBox()
-        
-        ## On attache le tout à root
-        self.root.add(self.scrolltextbox)
-        
-        ## On affiche tout
-        self.root.show_all()
-
-       
-    def quit(self, *parent):
-        """ Fonction qui permet de quitter proprement
-        """
-        ## Ferme ScrollTextBox
-        self.scrolltextbox.quit()
-
-        ## On quitte l'application
-        gtk.main_quit()
-        
-    def loop(self):
-        """ Boucle principale
-        """
-        gtk.main()
-
 if __name__ == "__main__":
-    r = RootWindows()
-    r.loop()
+    # Fenêtre principale pour tester ScrollText
+
+    def quit(args):
+        scrolltextbox.quit()
+        gtk.main_quit()
+
+    ## Charge gobject
+    gobject.threads_init()
+
+    ## Créer la fenêtre principale
+    root = gtk.Window()
+    root.set_title(__file__)
+    root.set_default_size(500, 400)
+    root.set_position(gtk.WIN_POS_CENTER)
+    root.connect("destroy", quit)
+    
+    ## ScrollTextBox
+    scrolltextbox = ScrollTextBox()
+    
+    ## On attache le tout à root
+    root.add(scrolltextbox)
+    
+    ## On affiche tout
+    root.show_all()
+    gtk.main()

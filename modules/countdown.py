@@ -158,10 +158,7 @@ class countdownBox(gtk.VBox):
         self.writeDigits()
 
     def showControl(self):
-        """
-        Affiche les contrôles sous l'horloge
-        TODO: possibilité de déporter dans un autre panneau
-        """
+        """Affiche les contrôles sous l'horloge"""
 
         # Création du bouton Play/Pause...
         self.button = gtk.Button(stock=("gtk-media-play"))

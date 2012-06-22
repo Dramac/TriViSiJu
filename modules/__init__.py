@@ -21,7 +21,8 @@
 """
 
 from countdown import *
-from movieplayer import Player, PlayerFrame
+from movieplayer import *
 from prompt import *
 from teams import *
-from scrolltext import ScrollTextBox
+from scrolltext import *
+from decrypt import *

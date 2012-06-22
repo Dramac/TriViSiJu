@@ -33,7 +33,7 @@ class DecryptBox(gtk.VBox):
     """ Fenêtre de décryptage
     """
 
-    def __init__(self, passwd="passwd", team_list=[team("Orion1", passwd="asswd"), team("Pegase2", passwd="Passwd"), team("Ariane3", passwd="")]):
+    def __init__(self, passwd="passwd", team_list=[team("Orion1", passwd="asswd"), team("Pegase2", passwd="Passwd"), team("Ariane3", passwd="")],data_folder="data/"):
         """ Initialisation
         """
         ## Initialise la fenetre
@@ -44,11 +44,13 @@ class DecryptBox(gtk.VBox):
         self.team_list = team_list
         self.nteam = len(self.team_list)
         self.percent = 0.0
+        self.data_folder = data_folder
 
         ## Initialise la barre de progression
         self.pbar = gtk.ProgressBar()
         self.pbar.set_size_request(500, 50)
         self.update_pbar(team_data=("", 0))
+        self.continuer=True
 
         ## Scroll text
         self.textview = gtk.TextView()
@@ -139,7 +141,7 @@ class DecryptBox(gtk.VBox):
         du mot de passe à partir de tous ceux trouvé par chaque équipe
         """
         ## Lecture du fichier 'phase2'
-        with open('../data/decrypt_msg_phase2.txt') as f:
+        with open(self.data_folder+'decrypt_msg_phase2.txt') as f:
             lines = f.readlines()
 
         ## Activation de la barre de progression en mode activité
@@ -173,12 +175,12 @@ class DecryptBox(gtk.VBox):
 
         ## Test la réussite
         if win:
-            msg = self.msg_from_file('../data/decrypt_msg_phase1win.txt')
+            msg = self.msg_from_file(self.data_folder+'decrypt_msg_phase1win.txt')
             self.show_warning_and_continue(msg)
         else:
             self.continuer = True
             self.phase2()
-            msg = self.msg_from_file('../data/decrypt_msg_phase2win.txt')
+            msg = self.msg_from_file(self.data_folder+'decrypt_msg_phase2win.txt')
             self.show_warning_and_continue(msg)
 
     def msg_from_file(self, file):
@@ -208,7 +210,7 @@ class DecryptBox(gtk.VBox):
     def get_template(self):
         """ Charge le template du texte
         """
-        with open('../data/decrypt_team.txt', 'r') as fichier:
+        with open(self.data_folder+'decrypt_team.txt', 'r') as fichier:
             lines = fichier.readlines()
         lines = ''.join(lines)
         return lines
@@ -236,35 +238,38 @@ class DecryptBox(gtk.VBox):
         if self.continuer:
             self.continuer = False
 
-class RootWindow(gtk.Window):
+class popupWindow(gtk.Window):
     """ Fenêtre principale pour tester le module
     """
-    def __init__(self):
-        ## Charge gobject (Important pour ScrollTextBox
+    def __init__(self,showcontrol=False,dataf="data/"):
+        ## Charge gobject (Important pour ScrollTextBox)
         gobject.threads_init()
 
         ## Charge la fenêtre
         gtk.Window.__init__(self)
         self.set_title("Décryptage")
-        vbox = gtk.VBox()
 
         ## Boutton
         button = gtk.Button(label="start")
         
         ## DecryptBox
-        self.decryptbox = DecryptBox()
+        self.decryptbox = DecryptBox(data_folder=dataf)
 
         ## Affichage
-        vbox.pack_start(self.decryptbox, True, True, 0)
-        vbox.pack_start(button, True, True, 0)
-        self.add(vbox)
-        self.show_all()
+        if showcontrol:
+            vbox = gtk.VBox()
+            vbox.pack_start(self.decryptbox, True, True, 0)
+            vbox.pack_start(button, True, True, 0)
+            self.add(vbox)
+        else:
+            self.add(self.decryptbox)
 
         ## Connexion
         self.connect("destroy", self.quit)
         button.connect("clicked", self.start)
 
     def start(self, *parent):
+        self.show_all()
         self.decryptbox.start()
     
     def quit(self, *parent):
@@ -273,12 +278,10 @@ class RootWindow(gtk.Window):
         ## Ferme ScrollTextBox
         self.decryptbox.quit()
 
-        ## On quitte l'application
-        gtk.main_quit()
-
     def main(self):
         gtk.main()
 
 if __name__ == "__main__":
-    r = RootWindow()
+    r = popupWindow(showcontrol=True,dataf="../data/")
+    r.show_all()
     r.main()
