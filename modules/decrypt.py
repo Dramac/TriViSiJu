@@ -47,6 +47,7 @@ class DecryptBox(gtk.VBox):
 
         ## Initialise la barre de progression
         self.pbar = gtk.ProgressBar()
+        self.pbar.set_size_request(500, 50)
         self.update_pbar(team_data=("", 0))
 
         ## Scroll text
@@ -55,14 +56,14 @@ class DecryptBox(gtk.VBox):
         self.textview.set_cursor_visible(False)
         self.scrolledwindow = gtk.ScrolledWindow()
         self.scrolledwindow.add(self.textview)
-        self.scrolledwindow.get_vscrollbar().set_child_visible(False) # Cache la barre verticale
-        self.scrolledwindow.get_hscrollbar().set_child_visible(False)
+        self.scrolledwindow.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
+        self.set_size_request(500, 300)
 
         ## Buffer
         self.buffer = self.textview.get_buffer()
 
         ## Affichage sur self
-        self.pack_start(self.pbar, True, True, 0)
+        self.pack_start(self.pbar, expand=False, fill=True, padding=0)
         self.pack_start(self.scrolledwindow, True, True, 0)
 
     def phase1(self):
@@ -127,11 +128,11 @@ class DecryptBox(gtk.VBox):
         """ Montre que le mot de passe a été trouvé et valide le décryptage
         """
         label = gtk.Label(msg.decode('utf-8'))
-        self.dialog = gtk.Dialog("Décryptage réussi")
-        self.dialog.vbox.pack_start(label)
+        dialog = gtk.Dialog("Décryptage réussi")
+        dialog.vbox.pack_start(label)
         label.show()
-        self.dialog.run()
-        self.dialog.destroy()
+        dialog.run()
+        dialog.destroy()
 
     def phase2(self):
         """ Montre des messages d'erreur et lance une procédure de récupération 
@@ -150,7 +151,7 @@ class DecryptBox(gtk.VBox):
         n = 0
         while self.continuer:
             line = lines[n]
-            time.sleep(1)
+            time.sleep(0.1)
             self.update_pbar(percent=float(n+1)/float(nlines))
             self.text = self.text + line
             self.update_buffer(self.text)
