@@ -98,8 +98,7 @@ class DecryptBox(gtk.VBox):
             for i,line in enumerate(text):
                 time.sleep(0.1)
                 count = count + 1
-                self.percent = float(count)/total
-                self.update_pbar()
+                self.update_pbar(percent=float(count)/total)
                 self.text = self.text + '\n' + line
                 self.update_buffer(self.text)
 
@@ -143,10 +142,8 @@ class DecryptBox(gtk.VBox):
             lines = f.readlines()
 
         ## Activation de la barre de progression en mode activité
-        self.percent = 0
         self.pbar.set_text("")
         self.pbar.set_orientation(gtk.PROGRESS_RIGHT_TO_LEFT)
-        self.update_pbar()
 
         ## Affichage du fichier 'phase2'
         nlines = len(lines)
@@ -154,8 +151,7 @@ class DecryptBox(gtk.VBox):
         while self.continuer:
             line = lines[n]
             time.sleep(1)
-            self.percent = float(n)/float(nlines)
-            self.update_pbar()
+            self.update_pbar(percent=float(n+1)/float(nlines))
             self.text = self.text + line
             self.update_buffer(self.text)
             n = n + 1
@@ -197,7 +193,9 @@ class DecryptBox(gtk.VBox):
         """
         ## Met à jour percent
         if percent != None:
-            self.perent = percent
+            if percent > 1.0:
+                percent = 1.0
+            self.percent = percent
         ## Met à jour le texte et la valeur de la barre
         self.pbar.set_fraction(self.percent)
         if team_data != None:
