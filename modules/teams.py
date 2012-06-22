@@ -37,8 +37,8 @@ class TeamError(Exception):
         return "Équipe %s : %s"%(self.team,self.message)
 
 class team():
-    def __init__(self,nom, passwd=""):
-        self.nom = nom
+    def __init__(self,name, passwd=""):
+        self.name = name
         self.passwd = passwd
 
         # Status:
@@ -48,10 +48,10 @@ class team():
         self.status = None 
     def __repr__(self):
         """Surcharge de l'opérateur repr"""
-        return self.nom
+        return self.name
     def __str__(self):
         """Surcharge de l'opérateur print"""
-        return "Équipe {}".format(self.nom)
+        return "Équipe {}".format(self.name)
 
 class teamBox(gtk.Label):
     def __init__(self,fichier=os.path.join(os.path.dirname(__file__), "teams.dat"),prompt=None):
@@ -62,6 +62,7 @@ class teamBox(gtk.Label):
         self.fichier = fichier
         self.prompt = prompt
         gobject.signal_new("message",teamBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
+        gobject.signal_new("send-teams",teamBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_PYOBJECT])
 
     def toPrompt(self,message):
         """Affiche les messages dans le prompt"""
@@ -116,7 +117,7 @@ class teamBox(gtk.Label):
                     tmp += u"<span foreground='green'>\u25CF</span> "
                 else:   #mauvais mot de passe
                     tmp += u"<span foreground='red'>\u25CF</span> "
-                tmp += "<b>"+team.nom+" </b>\n"
+                tmp += "<b>"+team.name+" </b>\n"
             self.set_text(tmp+"</span>")
             self.set_use_markup(True)
         else:
@@ -124,18 +125,18 @@ class teamBox(gtk.Label):
 
     def selectTeam(self,team_name):
         """Sélecteur d'équipe pour modification"""
-        filter = lambda x: x.nom == team_name # Création du filtre
+        filter = lambda x: x.name == team_name # Création du filtre
         for team in self.team_list:
             if filter(team):
                 return team
         raise TeamError(team_name,"Cette équipe n'existe pas")
 
-    def save(self):
+    def save(self,sender=None):
         """Sauvegarde des équipes créées"""
         with open(self.fichier,'w') as fichier:
             pickle.Pickler(fichier).dump(self.team_list)
 
-    def load(self):
+    def load(self,sender=None):
         """Chargement des équipes sauvées"""
         if os.path.exists(self.fichier):
             with open(self.fichier,'r') as fichier:
@@ -143,6 +144,23 @@ class teamBox(gtk.Label):
             self.printTeams()
         else:
             print "Teams : Fichier d'équipes inexistant ("+self.fichier+")."
+
+    def sendTeams(self, sender):
+        # Vérifie que toutes les équipes on bien rentrées un passwd
+        # et envoie à decrypt
+        go = True
+        for team in self.team_list:
+            if team.passwd == "":
+                go = False
+        if go:
+            self.emit("send-teams",self.team_list)
+        else:
+            self.emit("message","Mot de passe manquant")
+
+    def updateTeam(self,sender,team_name,check):
+        team = self.selectTeam(team_name)
+        team.status = check
+        self.printTeams()
 
 if __name__ == "__main__":
     # Fenêtre de test et d'exemple

@@ -53,25 +53,14 @@ class MainWindow(gtk.Window):
 
         ## Prompt
         self.prompt = promptBox()
-        self.prompt.connect("fullscreen", self.on_fullscreen)
-        self.prompt.connect("quit", self.quit)
 
         # Vidéos
         ## Charge la classe Player
         self.screen = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'], bgcolor=bgcolor)
-        self.prompt.connect("load-video", self.screen.Screen.loadFile)
-        self.prompt.connect("pause-video", self.screen.Screen.pause)
-        self.prompt.connect("forward-video", self.screen.Screen.forward)
-        self.prompt.connect("backward-video", self.screen.Screen.backward)
 
         ## Compte à rebours
         self.countdown = countdownBox(forcebutton=kwarg['forcebutton'])
         self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
-        self.countdown.connect("message",self.prompt.onExternalInsert)
-        self.prompt.connect("start-timer", self.countdown.start)
-        self.prompt.connect("stop-timer", self.countdown.pause)
-        self.prompt.connect("reset-timer", self.countdown.reset)
-        self.prompt.connect("set-timer", self.countdown.setStartTime)
 
         ## Texte crypté
         self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'], speed=kwarg['speed'], crypt=kwarg['crypt'])
@@ -82,14 +71,9 @@ class MainWindow(gtk.Window):
 
         ## Liste des équipes
         self.teamBox = teamBox()
-        self.teamBox.connect("message",self.prompt.onExternalInsert)
-        self.prompt.connect("add-team", self.teamBox.addTeam)
-        self.prompt.connect("delete-team", self.teamBox.deleteTeam)
-        self.prompt.connect("passwd-team", self.teamBox.addPasswd)
         
         ## Popup window de décryptage
-        self.popup = popupWindow()
-        self.prompt.connect("decrypt",self.popup.start)
+        self.decrypt = popupWindow()
 
         ## Affichage des textes provisoires
         rightBox.pack_start(text6,True,True)
@@ -121,10 +105,36 @@ class MainWindow(gtk.Window):
             # Défilement
             #self.scrolltextbox.scroll()
         
+        # Signaux :
+        self.teamBox.connect("message",self.prompt.onExternalInsert)
+        self.countdown.connect("message",self.prompt.onExternalInsert)
+        self.decrypt.connect("ask-teams",self.teamBox.sendTeams)
+        self.decrypt.connect("update-team",self.teamBox.updateTeam)
+        self.teamBox.connect("send-teams",self.decrypt.getTeams)
+        ## de prompt vers teambox
+        self.prompt.connect("add-team", self.teamBox.addTeam)
+        self.prompt.connect("delete-team", self.teamBox.deleteTeam)
+        self.prompt.connect("passwd-team", self.teamBox.addPasswd)
+        self.prompt.connect("load-teams", self.teamBox.load)
+        self.prompt.connect("save-teams", self.teamBox.save)
+        ## de prompt vers decrypt
+        self.prompt.connect("decrypt",self.decrypt.start)
+        ## de prompt vers countdown
+        self.prompt.connect("start-timer", self.countdown.start)
+        self.prompt.connect("stop-timer", self.countdown.pause)
+        self.prompt.connect("reset-timer", self.countdown.reset)
+        self.prompt.connect("set-timer", self.countdown.setStartTime)
+        ## de prompt vers video
+        self.prompt.connect("load-video", self.screen.Screen.loadFile)
+        self.prompt.connect("pause-video", self.screen.Screen.pause)
+        self.prompt.connect("forward-video", self.screen.Screen.forward)
+        self.prompt.connect("backward-video", self.screen.Screen.backward)
+        ## de prompt vers main
+        self.prompt.connect("fullscreen", self.on_fullscreen)
+        self.prompt.connect("quit", self.quit)
         ## Connexion de destroy à la fonction quit
         self.connect("destroy", self.quit)
-
-        # Connexion du signal de changement d'état de la fenêtre
+        ## Connexion du signal de changement d'état de la fenêtre
         self.connect("window-state-event", self.onStateChange)
         
     def on_fullscreen(self, sender):

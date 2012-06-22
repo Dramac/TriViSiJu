@@ -80,6 +80,8 @@ class promptBox(gtk.VBox):
         gobject.signal_new("forward-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("backward-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("decrypt", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("load-teams", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("save-teams", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -174,6 +176,16 @@ class promptBox(gtk.VBox):
                 self.emit("passwd-team", args[1], args[2])
             elif nargs < 3:
                 nargs = 0
+            else:
+                nargs = -1
+        elif subcommand == 'load':
+            if nargs == 1:
+                self.emit("load-teams")
+            else:
+                nargs = -1
+        elif subcommand == 'save':
+            if nargs == 1:
+                self.emit("save-teams")
             else:
                 nargs = -1
         else:

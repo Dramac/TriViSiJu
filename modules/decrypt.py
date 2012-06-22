@@ -27,13 +27,13 @@ import gtk
 import time
 import subprocess
 import gobject
-from teams import team
+import teams
 
 class DecryptBox(gtk.VBox):
     """ Fenêtre de décryptage
     """
 
-    def __init__(self, passwd="passwd", team_list=[team("Orion1", passwd="asswd"), team("Pegase2", passwd="Passwd"), team("Ariane3", passwd="")],data_folder="data/"):
+    def __init__(self, passwd="passwd", team_list=[teams.team("Orion1", passwd="asswd"), teams.team("Pegase2", passwd="Passwd"), teams.team("Ariane3", passwd="")],data_folder="data/"):
         """ Initialisation
         """
         ## Initialise la fenetre
@@ -68,6 +68,13 @@ class DecryptBox(gtk.VBox):
         self.pack_start(self.pbar, expand=False, fill=True, padding=0)
         self.pack_start(self.scrolledwindow, True, True, 0)
 
+        gobject.signal_new("update-team",DecryptBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING,gobject.TYPE_BOOLEAN])
+        
+
+    def setTeams(self,team_list):
+        self.team_list = team_list
+        self.nteam = len(self.team_list)
+
     def phase1(self):
         """ La pahse 1 consiste à tester le mot de passe de toute les équipes
         """
@@ -88,22 +95,26 @@ class DecryptBox(gtk.VBox):
         while self.continuer:
             ## Recupere la classe de l'équipe
             team = self.team_list[num]
+            passwd_check = False
             if self.passwd == team.passwd:
                 at_least_one_passwd = True
+                passwd_check = True
             
             ## Met à jour le texte de la barre
-            self.update_pbar(team_data=(team.nom, num+1))
+            self.update_pbar(team_data=(team.name, num+1))
 
             ## Génère le texte de l'équipe
             text = self.team_text(team).split('\n')
         
             ## Boucle sur les lignes
             for i,line in enumerate(text):
-                time.sleep(0.1)
+                time.sleep(1)
                 count = count + 1
                 self.update_pbar(percent=float(count)/total)
                 self.text = self.text + '\n' + line
                 self.update_buffer(self.text)
+
+            self.emit("update-team",team.name,passwd_check)
 
             ## Incrémente le compteur
             num = num + 1
@@ -111,6 +122,7 @@ class DecryptBox(gtk.VBox):
             ## Arrêt de la boucle while
             if num >= self.nteam:
                 self.continuer = False
+            time.sleep(2)
 
         ## Renvoie at_least_one_passwd
         return at_least_one_passwd
@@ -222,7 +234,7 @@ class DecryptBox(gtk.VBox):
         lines = self.get_template()
 
         ## Met en forme le texte
-        lines = lines.replace("NOM", team.nom)
+        lines = lines.replace("NOM", team.name)
         lines = lines.replace("TAB", "\t")
         if self.passwd == team.passwd:
             lines = lines.replace('[OK/KO]', '[OK]')
@@ -244,16 +256,20 @@ class popupWindow(gtk.Window):
     def __init__(self,showcontrol=False,dataf="data/"):
         ## Charge gobject (Important pour ScrollTextBox)
         gobject.threads_init()
+        gobject.signal_new("ask-teams",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("update-team",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING, gobject.TYPE_BOOLEAN])
 
         ## Charge la fenêtre
         gtk.Window.__init__(self)
         self.set_title("Décryptage")
+        self.ready = False
 
         ## Boutton
         button = gtk.Button(label="start")
         
         ## DecryptBox
         self.decryptbox = DecryptBox(data_folder=dataf)
+        self.decryptbox.connect("update-team",self.onUpdateTeam)
 
         ## Affichage
         if showcontrol:
@@ -268,7 +284,14 @@ class popupWindow(gtk.Window):
         self.connect("destroy", self.quit)
         button.connect("clicked", self.start)
 
+    def onUpdateTeam(self,sender,team_name,check):
+        self.emit("update-team",team_name,check)
+
     def start(self, *parent):
+        self.emit("ask-teams")
+
+    def getTeams(self,sender,team_list):
+        self.decryptbox.setTeams(team_list)
         self.show_all()
         self.decryptbox.start()
     
@@ -276,7 +299,8 @@ class popupWindow(gtk.Window):
         """ Fonction qui permet de quitter proprement
         """
         ## Ferme ScrollTextBox
-        self.decryptbox.quit()
+        #self.decryptbox.quit()
+        self.hide_all()
 
     def main(self):
         gtk.main()
