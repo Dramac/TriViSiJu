@@ -38,6 +38,13 @@ class promptBox(gtk.VBox):
         self.promptCharacter = promptCharacter
         self.full = False
 
+        # Gestion de l'historique des commandes
+        self.history_file = ".prompt_history"
+        self.history_max = 100
+        self.history_cursor = 0
+        self.history = []
+        self.loadHistory()
+
         # Créations des widgets
         self.entry = gtk.Entry()
         self.entry.set_text(self.promptCharacter)
@@ -87,6 +94,7 @@ class promptBox(gtk.VBox):
         self.entry.connect("activate", self.parseEntry)
         self.entry.connect("insert-text", self.onInsert)
         self.entry.connect("delete-text", self.onDelete)
+        self.entry.connect("key-press-event", self.onKeypress)
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
@@ -94,11 +102,67 @@ class promptBox(gtk.VBox):
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
+    def loadHistory(self):
+        """Charge l'historique à partir du fichier self.history_file"""
+        try:
+            with open(self.history_file,'r') as f:
+                lines = f.readlines()
+                if len(lines) >= self.history_max :
+                    # sélection des N dernières lignes
+                    lines = lines[-self.history_max:-1]
+                self.history = lines
+        except:
+            pass
+
+    def addToHistory(self,text):
+        """Ajout de la commande à l'historique RAM et fichier"""
+        text = text[1:]
+        self.history.append(text)
+        self.history_cursor = 0
+        with open(self.history_file,'a') as f:
+            f.write(text+"\n")
+
+    def onKeypress(self,widget,event):
+        """Détection de la touche active du clavier"""
+        keyname = gtk.gdk.keyval_name(event.keyval)
+        #print "Key %s (%d) was pressed" % (keyname, event.keyval)
+        if keyname in ("Up","Down"):
+            if keyname == "Up":
+                self.history_navigate(-1)
+            else:
+                self.history_navigate(1)
+            return True
+        else:
+            return False
+
+    def history_navigate(self,way):
+        """Navigation à travers l'historique
+        
+        - way : -1 pour précédant, +1 pour suivant
+        """
+        
+        # Condition aux limites
+        if (way == -1 and -self.history_cursor <= len(self.history)-1) or (way == +1 and self.history_cursor < -1):
+            self.history_cursor += way
+            # Suppression de la commande en cours d'affichage
+            self.entry.delete_text(1,len(self.entry.get_text()))
+            # Récuppération de la commande précédante/suivante et affichage
+            new_text = self.history[self.history_cursor].replace("\n","")
+            self.entry.set_text(self.promptCharacter+new_text)
+            # Suppression du dernier caractère (pas compris d'où il venait)
+            self.entry.delete_text(len(new_text)+1,-1)
+            self.entry.set_position(-1)
+        elif way == 1 and self.history_cursor == -1:
+            # dans le cas où on a passé la dernière commande de l'historique
+            # on nettoie le prompt
+            self.history_cursor += way
+            self.entry.delete_text(1,len(self.entry.get_text()))
 
     def parseEntry(self, entry):
         """ Méthode appelée lorsque l'on appuie sur la touche Entrée depuis le prompt
         """
         text = entry.get_text()
+        self.addToHistory(text)
         if (text == self.promptCharacter):
             return
         self.iter = self.buffer.get_start_iter()

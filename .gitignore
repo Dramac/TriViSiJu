@@ -5,3 +5,4 @@
 *.dat
 .DS_Store
 doc/*
+.prompt_history
