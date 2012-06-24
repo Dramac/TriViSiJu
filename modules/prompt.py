@@ -28,6 +28,37 @@ import argparse
 import gobject
 import decrypt
 
+def responseToDialog(entry, dialog, response):
+    dialog.response(response)
+def getPasswd():
+    #base this on a message dialog
+    dialog = gtk.MessageDialog(
+        None,
+        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+        gtk.MESSAGE_QUESTION,
+        gtk.BUTTONS_OK,
+        None)
+    dialog.set_markup('Please enter your <b>name</b>:')
+    #create the text input field
+    entry = gtk.Entry()
+    entry.set_visibility(False)
+    #allow the user to press enter to do ok
+    entry.connect("activate", responseToDialog, dialog, gtk.RESPONSE_OK)
+    #create a horizontal box to pack the entry and a label
+    hbox = gtk.HBox()
+    hbox.pack_start(gtk.Label("Name:"), False, 5, 5)
+    hbox.pack_end(entry)
+    #some secondary text
+    dialog.format_secondary_markup("This will be used for <i>identification</i> purposes")
+    #add it and show it
+    dialog.vbox.pack_end(hbox, True, True, 0)
+    dialog.show_all()
+    #go go go
+    dialog.run()
+    text = entry.get_text()
+    dialog.destroy()
+    return text
+
 class promptBox(gtk.VBox):
     """ Boîte contenant un prompt et une zone de texte pour afficher les résultats
     """
@@ -236,8 +267,9 @@ class promptBox(gtk.VBox):
             else:
                 nargs = -1
         elif subcommand == 'passwd':
-            if nargs == 3:
-                self.emit("passwd-team", args[1], args[2])
+            if nargs == 2:
+                passwd = getPasswd()
+                self.emit("passwd-team", args[1], passwd)
             elif nargs < 3:
                 nargs = 0
             else:
