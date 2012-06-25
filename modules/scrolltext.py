@@ -320,14 +320,14 @@ class ScrollTextBox(gtk.VBox):
             ## Ouvrir un nouveau fichier
             boutton.connect("clicked", self.open)
             ## Crypt
-            bcrypt.connect("clicked", self.set_crypt)
+            bcrypt.connect("clicked", self.toggle_crypt)
 
     def scroll(self, *parent):
         """ Lance le défilement
         """
         self.scrolltext.scroll()
 
-    def set_crypt(self, *parent):
+    def toggle_crypt(self, *parent):
         """ Cypte le texte s'il est clair ou decrypt s'il est crypté
         """
         self.scrolltext.set_crypt()
@@ -340,7 +340,7 @@ class ScrollTextBox(gtk.VBox):
         dialog.connect("destroy", lambda w: dialog.destroy())
         statut = dialog.run()
         if statut == gtk.RESPONSE_OK:
-            self.set_filename(dialog.get_filename()) # Pas besoin de corriger les ' ' car la fonction open le fait déjà !
+            self.set_filename(filename=dialog.get_filename()) # Pas besoin de corriger les ' ' car la fonction open le fait déjà !
         dialog.destroy()
 
     def update(self, hscale):
@@ -350,23 +350,29 @@ class ScrollTextBox(gtk.VBox):
         """
         self.set_speed(hscale.get_value())
 
-    def set_speed(self, speed):
+    def set_speed(self, sender=None, speed=None):
         """ Change la vitesse de défilement (pourra être connectée au shell)
 
         - speed : Délai entre l'affichage de chaque ligne en seconde
         """
-        self.scrolltext.set_speed(speed)
+        if speed != None:
+            self.scrolltext.set_speed(speed)
 
-    def set_filename(self, filename):
+    def set_filename(self, sender=None, filename=None):
         """ Permet de changer le fichier à faire défiler
 
         - filename : Nom du fichier à lire
         """
-        ## Arrêt du défilement s'il est lancé
-        self.quit()
-        self.scrolltext.filename = filename
-        self.buffertext = 0
-        self.scroll()
+        if filename != None:
+            if os.path.isfile(filename):
+                ## Arrêt du défilement s'il est lancé
+                self.quit()
+                self.scrolltext.filename = filename
+                self.buffertext = 0
+                self.scrolltext.lines = None ## Permet de forcer la lecture du nouveau fichier ça semble ne pas fonctionner...
+                self.scroll()
+            else:
+                raise IOError("Le fichier '%s' n'existe pas"%(filename))
 
     def quit(self, *parent):
         """ Quitte proprement

@@ -129,6 +129,11 @@ class MainWindow(gtk.Window):
         self.prompt.connect("pause-video", self.screen.Screen.pause)
         self.prompt.connect("forward-video", self.screen.Screen.forward)
         self.prompt.connect("backward-video", self.screen.Screen.backward)
+        ## de prompt vers scrolltext
+        self.prompt.connect("scroll", self.scrolltextbox.scroll)
+        self.prompt.connect("scroll-crypt", self.scrolltextbox.toggle_crypt)
+        self.prompt.connect("scroll-speed", self.scrolltextbox.set_speed)
+        self.prompt.connect("scroll-file", self.scrolltextbox.set_filename)
         ## de prompt vers main
         self.prompt.connect("fullscreen", self.on_fullscreen)
         self.prompt.connect("quit", self.quit)

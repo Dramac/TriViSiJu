@@ -120,6 +120,10 @@ class promptBox(gtk.VBox):
         gobject.signal_new("decrypt", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("load-teams", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("save-teams", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("scroll", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("scroll-crypt", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("scroll-speed", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_FLOAT])
+        gobject.signal_new("scroll-file", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -129,7 +133,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -396,6 +400,41 @@ class promptBox(gtk.VBox):
             return
         # Lancement de la séquence de décryptage
         self.emit("decrypt")
+
+    def onScroll(self, args):
+        """ Méthode de traitement de la commande "scroll" """
+        nargs = len(args)
+        if nargs == 0:
+            ## Toggle scroll
+            self.emit("scroll")
+        else:
+            subcommand = args[0]
+            if subcommand == "crypt":
+                if nargs > 1:
+                    nargs = -1
+                else:
+                    self.emit("scroll-crypt")
+            elif subcommand == "speed":
+                if nargs > 2:
+                    nargs = -1
+                elif nargs == 1:
+                    nargs = -2
+                else:
+                    self.emit("scroll-speed", float(args[1]))
+            elif subcommand == "file":
+                if nargs > 2:
+                    nargs = -1
+                elif nargs == 1:
+                    nargs = -2
+                else:
+                    self.emit("scroll-file", args[1])
+            else:
+                self.buffer.insert(self.iter, "Erreur : sous-commande invalide\n")
+                return
+        if nargs == -2:
+            self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
+        elif nargs == -1:
+            self.buffer.insert(self.iter, "Erreur : Trop d'arguments\n")
 
     def onExternalInsert(self,sender,message):
         """ Méthode pour ajouter du texte """
