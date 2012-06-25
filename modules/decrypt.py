@@ -41,7 +41,6 @@ class DecryptBox(gtk.VBox):
         
         ## Charge les variables
         self.passwd = passwd
-        print "coucouc le modepasse est --%s--"%(self.passwd)
         self.team_list = team_list
         self.nteam = len(self.team_list)
         self.percent = 0.0
