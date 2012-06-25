@@ -73,7 +73,7 @@ class MainWindow(gtk.Window):
         self.teamBox = teamBox()
         
         ## Popup window de décryptage
-        self.decrypt = popupWindow()
+        self.decrypt = popupWindow(passwd=kwarg['passwd'])
 
         ## Affichage des textes provisoires
         rightBox.pack_start(text6,True,True)

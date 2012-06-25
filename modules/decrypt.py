@@ -41,6 +41,7 @@ class DecryptBox(gtk.VBox):
         
         ## Charge les variables
         self.passwd = passwd
+        print "coucouc le modepasse est --%s--"%(self.passwd)
         self.team_list = team_list
         self.nteam = len(self.team_list)
         self.percent = 0.0
@@ -255,7 +256,7 @@ class DecryptBox(gtk.VBox):
 class popupWindow(gtk.Window):
     """ Fenêtre principale pour tester le module
     """
-    def __init__(self,showcontrol=False,dataf="data/"):
+    def __init__(self,showcontrol=False,dataf="data/", passwd="passwd"):
         ## Charge gobject (Important pour ScrollTextBox)
         gobject.threads_init()
         gobject.signal_new("ask-teams",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
@@ -270,7 +271,7 @@ class popupWindow(gtk.Window):
         button = gtk.Button(label="start")
         
         ## DecryptBox
-        self.decryptbox = DecryptBox(data_folder=dataf)
+        self.decryptbox = DecryptBox(data_folder=dataf, passwd=passwd)
         self.decryptbox.connect("update-team",self.onUpdateTeam)
 
         ## Affichage
