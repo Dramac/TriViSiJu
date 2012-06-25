@@ -30,7 +30,7 @@ import decrypt
 
 def responseToDialog(entry, dialog, response):
     dialog.response(response)
-def getPasswd():
+def getPasswd(teamname="None"):
     #base this on a message dialog
     dialog = gtk.MessageDialog(
         None,
@@ -38,7 +38,7 @@ def getPasswd():
         gtk.MESSAGE_QUESTION,
         gtk.BUTTONS_OK,
         None)
-    dialog.set_markup('Please enter your <b>name</b>:')
+    dialog.set_markup("L'équipe <b>%s</b> doit entrer son code"%(teamname))
     #create the text input field
     entry = gtk.Entry()
     entry.set_visibility(False)
@@ -46,10 +46,10 @@ def getPasswd():
     entry.connect("activate", responseToDialog, dialog, gtk.RESPONSE_OK)
     #create a horizontal box to pack the entry and a label
     hbox = gtk.HBox()
-    hbox.pack_start(gtk.Label("Name:"), False, 5, 5)
+    hbox.pack_start(gtk.Label("Code :"), False, 5, 5)
     hbox.pack_end(entry)
     #some secondary text
-    dialog.format_secondary_markup("This will be used for <i>identification</i> purposes")
+    dialog.format_secondary_markup("Le code va être utilisé pour tenter de décrypter l'ordinateur central.")
     #add it and show it
     dialog.vbox.pack_end(hbox, True, True, 0)
     dialog.show_all()
@@ -268,7 +268,7 @@ class promptBox(gtk.VBox):
                 nargs = -1
         elif subcommand == 'passwd':
             if nargs == 2:
-                passwd = getPasswd()
+                passwd = getPasswd(teamname=args[-1])
                 self.emit("passwd-team", args[1], passwd)
             elif nargs < 3:
                 nargs = 0
