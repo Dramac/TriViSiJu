@@ -76,7 +76,7 @@ class DecryptBox(gtk.VBox):
         self.nteam = len(self.team_list)
 
     def phase1(self):
-        """ La pahse 1 consiste à tester le mot de passe de toute les équipes
+        """ La phase 1 consiste à tester le mot de passe de toute les équipes
         """
         ## Variable de detection des mot de passe
         at_least_one_passwd = False
@@ -90,6 +90,8 @@ class DecryptBox(gtk.VBox):
         ## Compteur
         count = 0
         num = 0
+        if self.nteam == 0:
+            self.continuer = False
 
         ## Boucle sur toutes les équipes
         while self.continuer:

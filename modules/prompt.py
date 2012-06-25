@@ -244,7 +244,7 @@ class promptBox(gtk.VBox):
         self.emit("fullscreen")
 
     def onTeam(self, args):
-        """ Méthode de traitement de la commande "addteam" """
+        """ Méthode de traitement de la commande "team" """
         nargs = len(args)
         if nargs < 1:
             self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
@@ -350,7 +350,7 @@ class promptBox(gtk.VBox):
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
 
     def onVideo(self, args):
-        """ Méthode de traitement de la commande "addteam" """
+        """ Méthode de traitement de la commande "video" """
         nargs = len(args)
         if nargs < 1:
             self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
@@ -390,9 +390,11 @@ class promptBox(gtk.VBox):
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
 
     def onDecrypt(self, args):
-        """Initialisation de la décryption"""
-        #popup = decrypt.popupWindow()
-        #popup.start()
+        """ Méthode de traitement pour la commande "decrypt" """
+        if len(args) > 0:
+            self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+            return
+        # Lancement de la séquence de décryptage
         self.emit("decrypt")
 
     def onExternalInsert(self,sender,message):
@@ -400,7 +402,7 @@ class promptBox(gtk.VBox):
         self.buffer.insert(self.iter,message + "\n")
 
     def onQuit(self, args):
-        """ Méthode de traitement de la commande quit """
+        """ Méthode de traitement de la commande "quit" """
         if len(args) > 0:
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
             return
