@@ -152,10 +152,11 @@ class teamBox(gtk.Label):
         for team in self.team_list:
             if team.passwd == "":
                 go = False
+                msg = "Team: '%s' => Mot de passe manquant"%(team.name)
         if go:
             self.emit("send-teams",self.team_list)
         else:
-            self.emit("message","Mot de passe manquant")
+            self.emit("message",msg)
 
     def updateTeam(self,sender,team_name,check):
         team = self.selectTeam(team_name)
