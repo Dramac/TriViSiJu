@@ -450,7 +450,7 @@ class promptBox(gtk.VBox):
             return
         ## Initialisation
         # Message
-        self.buffer.insert(self.iter, "Initialisation:\n   timer:'%s'\n   videopath='%s'"%(self.kwarg['timer'], self.kwarg['videopath']))
+        self.buffer.insert(self.iter, "Initialisation:\n\ttimer: '%s'\n\tvideopath='%s'\n"%(self.kwarg['timer'], self.kwarg['videopath']))
         # Toggle défilement du texte
         self.emit("scroll")
         # Set & start timer
