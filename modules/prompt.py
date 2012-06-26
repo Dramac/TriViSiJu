@@ -62,10 +62,16 @@ def getPasswd(teamname="None"):
 class promptBox(gtk.VBox):
     """ Boîte contenant un prompt et une zone de texte pour afficher les résultats
     """
-    def __init__(self, promptCharacter = '>'):
+    def __init__(self, promptCharacter = '>', **kwarg):
+        """ Initialise le promt
+        
+        - promptCharacter : Caractère utilisé pour le prompt (defaut '>')
+        - kwarg           : Paramètres transmis par main.py -> fichier TriViSiJu.cfg
+        """
         gtk.VBox.__init__(self)
         
         # Initialisation des attributs
+        self.kwarg = kwarg
         self.promptCharacter = promptCharacter
         self.full = False
 
@@ -133,7 +139,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll, 'init':self.onInit}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -435,6 +441,22 @@ class promptBox(gtk.VBox):
             self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
         elif nargs == -1:
             self.buffer.insert(self.iter, "Erreur : Trop d'arguments\n")
+
+    def onInit(self, args):
+        """ Méthode de traitement de la commande "init" """
+        if len(args) > 0:
+            self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+            return
+        ## Initialisation
+        # Message
+        self.buffer.insert(self.iter, "Initialisation:\n   timer:'%s'\n   videopath='%s'"%(self.kwarg['timer'], self.kwarg['videopath']))
+        # Toggle défilement du texte
+        self.emit("scroll")
+        # Set & start timer
+        self.onTimer(['set']+self.kwarg['timer'].split(' '))
+        self.emit("start-timer")
+        # Charge la vidéo
+        self.emit("load-video", self.kwarg['videopath'])
 
     def onExternalInsert(self,sender,message):
         """ Méthode pour ajouter du texte """

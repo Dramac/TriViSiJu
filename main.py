@@ -52,7 +52,7 @@ class MainWindow(gtk.Window):
         rightBox = gtk.VBox(homogeneous=False,spacing=0)
 
         ## Prompt
-        self.prompt = promptBox()
+        self.prompt = promptBox(**kwarg)
 
         # Vidéos
         ## Charge la classe Player
@@ -60,7 +60,7 @@ class MainWindow(gtk.Window):
 
         ## Compte à rebours
         self.countdown = countdownBox(forcebutton=kwarg['forcebutton'])
-        self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
+        #self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
 
         ## Texte crypté
         self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'], speed=kwarg['speed'], crypt=kwarg['crypt'])
@@ -94,16 +94,6 @@ class MainWindow(gtk.Window):
         
         ## Envoie de l'id à mplayer après l'avoir affiché
         self.screen.Screen.setwid(long(self.screen.Screen.get_id()))
-        
-        ## Charge la/les vidéo(s)
-        self.loadmovie(kwarg['videopath1'])
-
-        ## Lance le timer et le défilement
-        #if not kwarg['forcebutton']:
-            # Lance le timer
-            #self.countdown.start()
-            # Défilement
-            #self.scrolltextbox.scroll()
         
         # Signaux :
         self.teamBox.connect("message",self.prompt.onExternalInsert)
@@ -141,6 +131,12 @@ class MainWindow(gtk.Window):
         self.connect("destroy", self.quit)
         ## Connexion du signal de changement d'état de la fenêtre
         self.connect("window-state-event", self.onStateChange)
+
+        ## Règle le timer
+        self.prompt.onTimer(['set']+kwarg['timer'].split(' '))
+        ## Charge la/les vidéo(s)
+        self.loadmovie(kwarg['videopath'])
+
         
     def on_fullscreen(self, sender):
         """ Slot de mise en plein écran """
