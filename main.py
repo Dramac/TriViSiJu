@@ -125,6 +125,7 @@ class MainWindow(gtk.Window):
         self.prompt.connect("scroll-speed", self.scrolltextbox.set_speed)
         self.prompt.connect("scroll-file", self.scrolltextbox.set_filename)
         ## de prompt vers main
+        self.prompt.connect("minimize", self.onMinimize)
         self.prompt.connect("fullscreen", self.on_fullscreen)
         self.prompt.connect("quit", self.quit)
         ## Connexion de destroy à la fonction quit
@@ -152,6 +153,12 @@ class MainWindow(gtk.Window):
             self.full = True
         else:
             self.full = False
+        if event.changed_mask and gtk.gdk.WINDOW_STATE_ICONIFIED:
+            if event.new_window_state and gtk.gdk.WINDOW_STATE_ICONIFIED:
+                self.icon = True
+            else:
+                self.icon = False
+
         self.countdown.onSizeChange(self.full)
 
     def loadmovie(self, videoPath):
@@ -160,6 +167,13 @@ class MainWindow(gtk.Window):
         ## Test videoPath
         if os.path.isfile(videoPath):
             self.screen.Screen.loadFile(filename = videoPath.replace(' ', '\ '))
+
+    def onMinimize(self, sender):
+        """ Minimise la fenêtre principale """
+        if self.icon:
+            self.deiconify()
+        else:
+            self.iconify()
 
     def quit(self, *parent):
         """ Fonction quitter
