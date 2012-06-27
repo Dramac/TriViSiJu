@@ -211,7 +211,7 @@ class ScrollText(gtk.ScrolledWindow):
         ## Revnoie le contenu du fichier
         return lines
 
-    def scroll(self, *parent):
+    def scroll(self, toggle = True):
         """ Fait défiler le text
         """
         if not self.launch:
@@ -225,7 +225,7 @@ class ScrollText(gtk.ScrolledWindow):
             ## Lance le défilement
             self.scroll_buffer.start()
             self.launch = True
-        else:
+        elif toggle:
             ## Stop le défilement et du coup le thread et récupère le numéro de ligne actuel
             self.buffertext = self.scroll_buffer.quit()
             self.launch = False
@@ -323,9 +323,13 @@ class ScrollTextBox(gtk.VBox):
             bcrypt.connect("clicked", self.toggle_crypt)
 
     def scroll(self, *parent):
-        """ Lance le défilement
+        """ Lance le défilement ou l'arrête s'il est lancé
         """
         self.scrolltext.scroll()
+
+    def scroll_on(self, sender):
+        """ Lance le défilement et ne l'arrête pas s'il est lancé """
+        self.scrolltext.scroll(toggle = False)
 
     def toggle_crypt(self, *parent):
         """ Cypte le texte s'il est clair ou decrypt s'il est crypté

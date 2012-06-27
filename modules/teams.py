@@ -163,6 +163,11 @@ class teamBox(gtk.Label):
         team.status = check
         self.printTeams()
 
+    def clearTeams(self, sender):
+        """ Suppression de toutes les équipes """
+        self.team_list = []
+        self.printTeams()
+
 if __name__ == "__main__":
     # Fenêtre de test et d'exemple
     rootWindow = gtk.Window()

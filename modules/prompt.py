@@ -113,6 +113,7 @@ class promptBox(gtk.VBox):
         gobject.signal_new("add-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
         gobject.signal_new("delete-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
         gobject.signal_new("passwd-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING, gobject.TYPE_STRING])
+        gobject.signal_new("clear-teams", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("fullscreen", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("quit", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("start-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
@@ -127,6 +128,7 @@ class promptBox(gtk.VBox):
         gobject.signal_new("load-teams", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("save-teams", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("scroll", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("scroll-on", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("scroll-crypt", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("scroll-speed", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_FLOAT])
         gobject.signal_new("scroll-file", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
@@ -140,7 +142,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll, 'init':self.onInit, 'minimize':self.onMinimize}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll, 'init':self.onInit, 'minimize':self.onMinimize, 'reset':self.onReset}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -452,7 +454,7 @@ class promptBox(gtk.VBox):
         # Message
         self.buffer.insert(self.iter, "Initialisation:\n\ttimer: '%s'\n\tvideopath='%s'\n"%(self.kwarg['timer'], self.kwarg['videopath']))
         # Toggle défilement du texte
-        self.emit("scroll")
+        self.emit("scroll-on")
         # Set & start timer
         self.onTimer(['set']+self.kwarg['timer'].split(' '))
         self.emit("start-timer")
@@ -466,6 +468,16 @@ class promptBox(gtk.VBox):
             return
         ## Minimize
         self.emit("minimize")
+
+    def onReset(self, args):
+        """ Méthode de traitement de la commande "reset" """
+        if len(args) > 0:
+            self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+            return
+        # suppression des équipes
+        self.emit("clear-teams")
+        # réinitialisation
+        self.onInit(args)
 
     def onExternalInsert(self,sender,message):
         """ Méthode pour ajouter du texte """

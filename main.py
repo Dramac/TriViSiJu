@@ -107,6 +107,7 @@ class MainWindow(gtk.Window):
         self.prompt.connect("passwd-team", self.teamBox.addPasswd)
         self.prompt.connect("load-teams", self.teamBox.load)
         self.prompt.connect("save-teams", self.teamBox.save)
+        self.prompt.connect("clear-teams", self.teamBox.clearTeams)
         ## de prompt vers decrypt
         self.prompt.connect("decrypt",self.decrypt.start)
         ## de prompt vers countdown
@@ -121,6 +122,7 @@ class MainWindow(gtk.Window):
         self.prompt.connect("backward-video", self.screen.Screen.backward)
         ## de prompt vers scrolltext
         self.prompt.connect("scroll", self.scrolltextbox.scroll)
+        self.prompt.connect("scroll-on", self.scrolltextbox.scroll_on)
         self.prompt.connect("scroll-crypt", self.scrolltextbox.toggle_crypt)
         self.prompt.connect("scroll-speed", self.scrolltextbox.set_speed)
         self.prompt.connect("scroll-file", self.scrolltextbox.set_filename)
