@@ -22,13 +22,14 @@
 import pygtk
 pygtk.require("2.0")
 import gtk
-from modules import *
+from modules import promptBox, countdownBox, ScrollTextBox, PlayerFrame, teamBox, popupWindow
 from fonction import conf2dict, str2bool
 import time
 import os
 import ConfigParser
 import sys
 import argparse
+import gobject
 
 class MainWindow(gtk.Window):
     """ Fenêtre principale

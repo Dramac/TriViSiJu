@@ -26,7 +26,6 @@ pygtk.require("2.0")
 import gtk
 import argparse
 import gobject
-import decrypt
 
 def responseToDialog(entry, dialog, response):
     dialog.response(response)

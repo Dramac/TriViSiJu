@@ -25,7 +25,6 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 import gobject
-import Image
 
 class countdownBox(gtk.VBox):
     def __init__(self,path_to_images="images/", forcebutton=True, width=29, height=50):

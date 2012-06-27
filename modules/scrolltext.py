@@ -26,7 +26,6 @@ pygtk.require("2.0")
 import gtk
 import time
 import gobject
-import subprocess
 import threading
 import os
 import hashlib

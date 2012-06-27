@@ -24,10 +24,9 @@
 import pygtk
 pygtk.require("2.0")
 import gtk
-import time
-import subprocess
 import gobject
 import teams
+import time
 
 class DecryptBox(gtk.VBox):
     """ Fenêtre de décryptage
@@ -197,10 +196,10 @@ class DecryptBox(gtk.VBox):
             msg = self.msg_from_file(self.data_folder+'decrypt_msg_phase2win.txt')
             self.show_warning_and_continue(msg)
 
-    def msg_from_file(self, file):
+    def msg_from_file(self, filename):
         """ Lit un message depuis un fichier
         """
-        with open(file, 'r') as f:
+        with open(filename, 'r') as f:
             msg = f.readlines()
         msg = "".join(msg)
         return msg
