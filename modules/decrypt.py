@@ -108,7 +108,7 @@ class DecryptBox(gtk.VBox):
             text = self.team_text(team).split('\n')
         
             ## Boucle sur les lignes
-            for i,line in enumerate(text):
+            for line in text:
                 time.sleep(1)
                 count = count + 1
                 self.update_pbar(percent=float(count)/total)
