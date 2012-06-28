@@ -138,8 +138,6 @@ class MainWindow(gtk.Window):
 
         ## Règle le timer
         self.prompt.onTimer(['set']+kwarg['timer'].split(' '))
-        ## Charge la/les vidéo(s)
-        self.loadmovie(kwarg['videopath'])
 
         
     def on_fullscreen(self, sender):

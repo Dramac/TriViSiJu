@@ -89,7 +89,7 @@ class Player(gtk.Socket):
         Pour les autres options de mplayer, voir le manuel de mplayer => man mplayer
         """
         ## Lance mplayer en mode esclave
-        os.system("mplayer -nojoystick -nolirc -slave -vo x11 -wid %s -vf scale=400:200 -idle -input file=%s &"%(wid, self.pipe))
+        os.system("mplayer -nojoystick -nolirc -slave -vo x11 -wid %s -idle -input file=%s &"%(wid, self.pipe))
         ## Déclare mplayer comme étant lancé
         self.start = True
 
