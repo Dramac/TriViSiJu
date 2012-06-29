@@ -246,6 +246,10 @@ class ScrollText(gtk.ScrolledWindow):
             self.crypt = True
         self.scroll_buffer.crypt = self.crypt
 
+    def show_text(self):
+        """ Affiche le texte en clair """
+        self.buffer.set_text("".join(self.loadfile()))
+
     def quit(self):
         """ Quitte proprement
         """
@@ -265,6 +269,9 @@ class ScrollTextBox(gtk.VBox):
         """
         ## Inititalisation de la class gtk.VBox (conteneur)
         gtk.VBox.__init__(self)
+
+        ## Signaux
+        gobject.signal_new("decrypt-suite", ScrollTextBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
 
         ## Affichage optionnel des bouttons
         if forcebutton:
@@ -335,6 +342,17 @@ class ScrollTextBox(gtk.VBox):
         """
         self.scrolltext.set_crypt()
 
+    def crypt_off(self):
+        """ Decrypte le texte """
+        if self.scrolltext.crypt:
+            self.toggle_crypt()
+
+    def show_clear_text(self, filename=None):
+        """ Affiche les énigmes en clair"""
+        if filename != None:
+            self.set_filename(filename)
+        self.scrolltext.show_text()
+
     def open(self, parent):
         """ Ouvrir un fichier grâce à un explorateur de fichier
         """
@@ -376,6 +394,31 @@ class ScrollTextBox(gtk.VBox):
                 self.scroll()
             else:
                 raise IOError("Le fichier '%s' n'existe pas"%(filename))
+
+    def reduce2stop(self, stop=True):
+        """ Réduit progressivement la vitesse et stop le scroll """
+        ## Test si scroll is on
+        if self.scrolltext.launch:
+            ## Récupère la vitesse
+            speed = self.scrolltext.speed
+            ## Défini le pas de 'réduction' de la vitesse
+            if speed < 1:
+                step = 0.1
+            elif speed < 5:
+                step = 1
+            else:
+                step = 2
+            ## Règle la vitesse
+            if speed <= 10:
+                self.set_speed(speed=speed+step)
+                return True ## Continue à réduire
+            else:
+                if stop:
+                    self.scroll()
+                self.emit("decrypt-suite", 1)
+                return False ## On arrète de réduire
+        else:
+            return False
 
     def quit(self, *parent):
         """ Quitte proprement

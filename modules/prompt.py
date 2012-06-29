@@ -132,6 +132,7 @@ class promptBox(gtk.VBox):
         gobject.signal_new("scroll-speed", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_FLOAT])
         gobject.signal_new("scroll-file", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
         gobject.signal_new("minimize", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("start", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -141,7 +142,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll, 'init':self.onInit, 'minimize':self.onMinimize, 'reset':self.onReset}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll, 'init':self.onInit, 'minimize':self.onMinimize, 'reset':self.onReset, 'start':self.onStart}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -168,7 +169,6 @@ class promptBox(gtk.VBox):
     def onKeypress(self,widget,event):
         """Détection de la touche active du clavier"""
         keyname = gtk.gdk.keyval_name(event.keyval)
-        #print "Key %s (%d) was pressed" % (keyname, event.keyval)
         if keyname in ("Up","Down"):
             if keyname == "Up":
                 self.history_navigate(-1)
@@ -481,6 +481,16 @@ class promptBox(gtk.VBox):
     def onExternalInsert(self,sender,message):
         """ Méthode pour ajouter du texte """
         self.buffer.insert(self.iter,message + "\n")
+
+    def onStart(self, args):
+        """ Méthode de traitement de la commande "start" """
+        if len(args) > 0:
+            self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+            return
+        ## Lance la fusée !
+        self.buffer.insert(self.iter, "Lancement de la fusée A FAIRE\n")
+        self.emit("start")
+
 
     def onQuit(self, args):
         """ Méthode de traitement de la commande "quit" """

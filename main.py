@@ -101,6 +101,8 @@ class MainWindow(gtk.Window):
         self.countdown.connect("message",self.prompt.onExternalInsert)
         self.decrypt.connect("ask-teams",self.teamBox.sendTeams)
         self.decrypt.connect("update-team",self.teamBox.updateTeam)
+        self.decrypt.connect("decrypt-start", self.onStart)
+        self.scrolltextbox.connect("decrypt-suite", self.onStart)
         self.teamBox.connect("send-teams",self.decrypt.getTeams)
         ## de prompt vers teambox
         self.prompt.connect("add-team", self.teamBox.addTeam)
@@ -175,6 +177,25 @@ class MainWindow(gtk.Window):
             self.deiconify()
         else:
             self.iconify()
+
+    def onStart(self, sender=None, step=0):
+        """ Commence la phase de lancement """
+        #if self.decrypt.decryptbox.has_at_least_one_time:
+        print "onStart, step =", step
+        if step == 0:
+            ## Fait ralentir le défilement du texte jusqu'à totalement s'arrêter
+            gobject.timeout_add(1000, self.scrolltextbox.reduce2stop)
+        elif step == 1:
+            ## Decrypte le texte
+            self.scrolltextbox.crypt_off()
+            gobject.timeout_add(2000, self.onSchedule, self.scrolltextbox.show_clear_text)
+
+    def onSchedule(self, function=None):
+        """ Permet de lancer un fonction avec gobject.timeout_add après le délais de timeout_add
+        """
+        if function != None:
+            function()
+        return False
 
     def quit(self, *parent):
         """ Fonction quitter

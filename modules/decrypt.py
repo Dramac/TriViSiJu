@@ -39,6 +39,7 @@ class DecryptBox(gtk.VBox):
         gtk.VBox.__init__(self)
         
         ## Charge les variables
+        self.has_at_least_one_time = False
         self.passwd = passwd
         self.team_list = team_list
         self.nteam = len(self.team_list)
@@ -67,8 +68,8 @@ class DecryptBox(gtk.VBox):
         self.pack_start(self.pbar, expand=False, fill=True, padding=0)
         self.pack_start(self.scrolledwindow, True, True, 0)
 
+        ## Signaux
         gobject.signal_new("update-team",DecryptBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING,gobject.TYPE_BOOLEAN])
-        
 
     def setTeams(self,team_list):
         self.team_list = team_list
@@ -177,6 +178,9 @@ class DecryptBox(gtk.VBox):
     def start(self):
         """ Lance la procédure de décryptage
         """
+        ## Set has_at_least_one_time
+        self.has_at_least_one_time = True
+
         ## Reset les variables
         self.text = ""
         self.continuer = True
@@ -259,6 +263,7 @@ class popupWindow(gtk.Window):
         gobject.threads_init()
         gobject.signal_new("ask-teams",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("update-team",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING, gobject.TYPE_BOOLEAN])
+        gobject.signal_new("decrypt-start", popupWindow, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
 
         ## Charge la fenêtre
         gtk.Window.__init__(self)
@@ -299,6 +304,9 @@ class popupWindow(gtk.Window):
     def quit(self, *parent):
         """ Fonction qui permet de quitter proprement
         """
+        ## Affichage des énigmes
+        self.emit("decrypt-start", 0)
+
         ## Ferme ScrollTextBox
         #self.decryptbox.quit()
         self.hide_all()
