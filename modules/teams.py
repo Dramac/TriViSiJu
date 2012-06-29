@@ -148,15 +148,17 @@ class teamBox(gtk.Label):
     def sendTeams(self, sender):
         # Vérifie que toutes les équipes on bien rentrées un passwd
         # et envoie à decrypt
-        go = True
-        for team in self.team_list:
-            if team.passwd == "":
-                go = False
-                msg = "Team: '%s' => Mot de passe manquant"%(team.name)
-        if go:
+        error = ""
+        if len(self.team_list):
+            for team in self.team_list:
+                if team.passwd == "":
+                    error = "Team: '%s' => Mot de passe manquant"%(team.name)
+        else:
+            error = "Team: aucune équipe enregistrée"
+        if error == "":
             self.emit("send-teams",self.team_list)
         else:
-            self.emit("message",msg)
+            self.emit("message",error)
 
     def updateTeam(self,sender,team_name,check):
         team = self.selectTeam(team_name)
