@@ -60,7 +60,7 @@ class MainWindow(gtk.Window):
         self.screen = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'], bgcolor=bgcolor)
 
         ## Compte à rebours
-        self.countdown = countdownBox(forcebutton=kwarg['forcebutton'])
+        self.countdown = countdownBox(forcebutton=kwarg['forcebutton'],size=kwarg['timer_size'])
         #self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
 
         ## Texte crypté
