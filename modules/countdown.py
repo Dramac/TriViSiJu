@@ -2,7 +2,7 @@
 # *-* coding:utf-8 *-*
 
 """ TriViSiJu: Graphical interface for the AstroJeune Festival
-    
+
 	Copyright (C) 2012  Jules DAVID, Tristan GREGOIRE, Simon NICOLAS and Vincent PRAT
 
 	This file is part of TriViSiJu.
@@ -116,10 +116,10 @@ class countdownBox(gtk.VBox):
         self.m = self.m_start
         self.s = self.s_start
         self.cs = self.cs_start
-        
+
         self.way = 0
         self.writeDigits()
-        
+
     def buttonToggle(self):
         """ Toggle le gtk.Stock du boutton play/pause
         """
@@ -141,7 +141,7 @@ class countdownBox(gtk.VBox):
             self.timer = None
             if self.forcebutton:
                 self.buttonToggle()
-            
+
     def toggle(self, sender=None):
         """
         Play/Pause
@@ -183,9 +183,9 @@ class countdownBox(gtk.VBox):
         # Changement de couleur pour H-10 sec.
         if self.h == 0 and self.m == 0 and self.s == 10 and self.cs == 0 and self.way == 0:
             self.way = 1
-        
+
         self.writeDigits()
-        
+
         return True # Nécessaire pour le timeout_add
 
     def writeDigits(self):
@@ -200,9 +200,19 @@ class countdownBox(gtk.VBox):
             string += " foreground='red'>"
         else:
             string += " foreground='green'>"
-        string += "%02d:%02d:%02d:%02d</span>  " % (self.h,self.m,self.s,self.cs) 
+        string += "%02d:%02d:%02d:%02d</span>   " % (self.h,self.m,self.s,self.cs) 
 
         self.text.set_markup(string)
+
+    def resize(self,sender,newsize):
+        """Méthode de changement de taille à la volée"""
+        try:
+            self.size = int(newsize)
+            self.writeDigits()
+        except:
+            msg = "Cette taille doit être un entier"
+            print msg
+            self.emit("message",msg)
 
 if __name__ == "__main__":
     gobject.threads_init()
@@ -210,7 +220,7 @@ if __name__ == "__main__":
     a.set_default_size(400,100)
     a.set_position(gtk.WIN_POS_CENTER)
     a.connect("destroy", gtk.main_quit)
-    
+
     box = countdownBox("../images/")
     a.add(box)
     a.show_all()
