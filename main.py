@@ -162,8 +162,6 @@ class MainWindow(gtk.Window):
             else:
                 self.icon = False
 
-        self.countdown.onSizeChange(self.full)
-
     def loadmovie(self, videoPath):
         """ Charge la video si elle existe
         """
