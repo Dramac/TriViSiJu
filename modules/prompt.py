@@ -2,7 +2,7 @@
 # *-* coding:utf-8 *-*
 
 """ TriViSiJu: Graphical interface for the AstroJeune Festival
-    
+
 	Copyright (C) 2012  Jules DAVID, Tristan GREGOIRE, Simon NICOLAS and Vincent PRAT
 
 	This file is part of TriViSiJu.
@@ -63,12 +63,12 @@ class promptBox(gtk.VBox):
     """
     def __init__(self, promptCharacter = '>', **kwarg):
         """ Initialise le promt
-        
+
         - promptCharacter : Caractère utilisé pour le prompt (defaut '>')
         - kwarg           : Paramètres transmis par main.py -> fichier TriViSiJu.cfg
         """
         gtk.VBox.__init__(self)
-        
+
         # Initialisation des attributs
         self.kwarg = kwarg
         self.promptCharacter = promptCharacter
@@ -182,10 +182,10 @@ class promptBox(gtk.VBox):
 
     def history_navigate(self,way):
         """Navigation à travers l'historique
-        
+
         - way : -1 pour précédant, +1 pour suivant
         """
-        
+
         # Condition aux limites
         if (way == -1 and -self.history_cursor <= len(self.history)-1) or (way == +1 and self.history_cursor < -1):
             self.history_cursor += way
@@ -227,7 +227,7 @@ class promptBox(gtk.VBox):
 
         # gestion des commandes
         self.commands[args['command']](args['arguments'])
-        
+
         # on se place à la fin du texte
         self.result.scroll_to_iter(self.iter, 0)
 
@@ -354,6 +354,13 @@ class promptBox(gtk.VBox):
                 nargs = -1
             if nargs > 0:
                 self.emit("set-timer", h, m, s, cs)
+        elif subcommand == 'resize':
+            if nargs == 1:
+                nargs = 0
+            elif nargs == 2:
+                self.emit("resize",int(args[1]))
+            else:
+                nargs = -1
         else:
             self.buffer.insert(self.iter, "Erreur : sous-commande invalide\n")
             return
@@ -516,7 +523,7 @@ if __name__ == "__main__":
     a.set_default_size(400,100)
     a.set_position(gtk.WIN_POS_CENTER)
     a.connect("destroy", gtk.main_quit)
-    
+
     box = promptBox()
     a.add(box)
     a.show_all()

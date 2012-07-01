@@ -2,7 +2,7 @@
 # *-* coding:utf-8 *-*
 
 """ TriViSiJu: Graphical interface for the AstroJeune Festival
-    
+
 	Copyright (C) 2012  Jules DAVID, Tristan GREGOIRE, Simon NICOLAS and Vincent PRAT
 
 	This file is part of TriViSiJu.
@@ -27,59 +27,30 @@ import gtk
 import gobject
 
 class countdownBox(gtk.VBox):
-    def __init__(self,path_to_images="images/", forcebutton=True, width=29, height=50):
+    def __init__(self,forcebutton=True, size=40):
         ## Initialise gtk.VBox, gtk.HBox
         gtk.VBox.__init__(self)
         hbox = gtk.HBox()
 
         # Initialisation des variables
-        self.path_to_images = path_to_images
+        self.size = size
         self.forcebutton = forcebutton
         # Taille des images initiale
-        self.WDi = width
-        self.HGi = height
-        # Taille des images
-        self.WD = width
-        self.HG = height
 
         gobject.signal_new("message",countdownBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
 
         # Création des conteneurs d'images
-        self.img_10h = gtk.Image()       
-        self.img_h = gtk.Image()
-        self.img_col1 = gtk.Image()
-        self.img_10m = gtk.Image()
-        self.img_m = gtk.Image()
-        self.img_col2 = gtk.Image()
-        self.img_10s = gtk.Image()
-        self.img_s = gtk.Image()
-        self.img_col3 = gtk.Image()
-        self.img_10cs = gtk.Image()
-        self.img_cs = gtk.Image()
+        self.text = gtk.Label("00:00:40:00")
 
         # État de l'horloge (0 et 1 = décroissant, 2 = croissant)
         # Permet également le changement de couleur de l'horloge
         self.way = 0
 
-        # Chemins des différentes images
-        self.folder = [self.path_to_images+"orange_",self.path_to_images+"red_",self.path_to_images+"green_"]
-        self.digits = ["0.png","1.png","2.png","3.png","4.png","5.png","6.png","7.png","8.png","9.png","column.png"]
-
         # Affichage des chiffres
         self.setStartTime()
 
         # Insertion des chiffres dans le block hbox
-        hbox.pack_start(self.img_10h,False,False)
-        hbox.pack_start(self.img_h,False,False)
-        hbox.pack_start(self.img_col1,False,False)
-        hbox.pack_start(self.img_10m,False,False)
-        hbox.pack_start(self.img_m,False,False)
-        hbox.pack_start(self.img_col2,False,False)
-        hbox.pack_start(self.img_10s,False,False)
-        hbox.pack_start(self.img_s,False,False)
-        hbox.pack_start(self.img_col3,False,False)
-        hbox.pack_start(self.img_10cs,False,False)
-        hbox.pack_start(self.img_cs,False,False)
+        hbox.pack_start(self.text,False,False)
 
         # Alignement (permet de centrer le coutdown)
         align = gtk.Alignment(0.5, 0.5, 0, 0)
@@ -93,43 +64,6 @@ class countdownBox(gtk.VBox):
         # Show control
         if self.forcebutton:
             self.showControl()
-
-   
-
-    def onSizeChange(self, fullscreen):
-        """ Permet de redéfinir la taille des images en fonction de la taille allouée au widget
-        """
-        # Si fullscreen -> recupère la taille du widget
-        # sinon remet la taille par defaut
-        if fullscreen:
-            allocation = self.get_allocation()
-            widget_width = allocation.width
-            image_width = float(widget_width)/11.
-            self.set_image_size(width=image_width)
-        else:
-            self.HG = self.HGi 
-            self.WD = self.WDi
-        self.writeDigits()
-
-    def set_image_size(self, width=None, height=None):
-        """ Change la taille des images à la volée
-        """
-        # Estime la taille sans perdre le ratio
-        if width != None and height == None:
-            width = int(width)
-            ratio = float(self.WD)/float(width)
-            self.WD = width
-            self.HG = int(self.HG/ratio)
-        if width == None and height != None:
-            height = int(height)
-            ratio = float(self.HG)/float(height)
-            self.HG = height
-            self.WD = int(self.HG/ratio)
-        # Force une taille 
-        if width != None and height != None:
-            self.HG = int(height)
-            self.WD = int(width)
-
 
     def setStartTime(self, sender=None, h=0, m=0, s=20, cs=0):
         """Spécification de l'heure du timer"""
@@ -182,10 +116,10 @@ class countdownBox(gtk.VBox):
         self.m = self.m_start
         self.s = self.s_start
         self.cs = self.cs_start
-        
+
         self.way = 0
         self.writeDigits()
-        
+
     def buttonToggle(self):
         """ Toggle le gtk.Stock du boutton play/pause
         """
@@ -207,7 +141,7 @@ class countdownBox(gtk.VBox):
             self.timer = None
             if self.forcebutton:
                 self.buttonToggle()
-            
+
     def toggle(self, sender=None):
         """
         Play/Pause
@@ -249,9 +183,9 @@ class countdownBox(gtk.VBox):
         # Changement de couleur pour H-10 sec.
         if self.h == 0 and self.m == 0 and self.s == 10 and self.cs == 0 and self.way == 0:
             self.way = 1
-        
+
         self.writeDigits()
-        
+
         return True # Nécessaire pour le timeout_add
 
     def writeDigits(self):
@@ -259,35 +193,26 @@ class countdownBox(gtk.VBox):
         Méthode de modification de l'affichage des digits
         """
         # Isolation des différents chiffres
-        tenh = self.h/10
-        h = self.h%10
-        tenm = self.m/10
-        m = self.m%10
-        tens = self.s/10
-        s = self.s%10
-        tencs = self.cs/10
-        cs = self.cs%10
-        # Changement d'image
-        self._changePixbuf(self.img_10h,tenh)
-        self._changePixbuf(self.img_h,h)
-        self._changePixbuf(self.img_col1,10)
-        self._changePixbuf(self.img_10m,tenm)
-        self._changePixbuf(self.img_m,m)
-        self._changePixbuf(self.img_col2,10)
-        self._changePixbuf(self.img_10s,tens)
-        self._changePixbuf(self.img_s,s)
-        self._changePixbuf(self.img_col3,10)
-        self._changePixbuf(self.img_10cs,tencs)
-        self._changePixbuf(self.img_cs,cs)
+        string = "<span font_desc='Digit "+str(self.size)+"'"
+        if self.way == 0:
+            string += " foreground='orange'>"
+        elif self.way == 1:
+            string += " foreground='red'>"
+        else:
+            string += " foreground='green'>"
+        string += "%02d:%02d:%02d:%02d</span>   " % (self.h,self.m,self.s,self.cs) 
 
-    def _changePixbuf(self,img,digit):
-        """Modification de l'image sélectionée (fonction privée)"""
-        # import de la nouvelle image et conversion en pixbuf
-        pixbuf = gtk.gdk.pixbuf_new_from_file(self.folder[self.way]+self.digits[digit])
-        # Correction de la taille
-        pixbuf = pixbuf.scale_simple(self.WD,self.HG,gtk.gdk.INTERP_BILINEAR)
-        # puis envoi vers le conteneur
-        img.set_from_pixbuf(pixbuf)
+        self.text.set_markup(string)
+
+    def resize(self,sender,newsize):
+        """Méthode de changement de taille à la volée"""
+        try:
+            self.size = int(newsize)
+            self.writeDigits()
+        except:
+            msg = "Cette taille doit être un entier"
+            print msg
+            self.emit("message",msg)
 
 if __name__ == "__main__":
     gobject.threads_init()
@@ -295,7 +220,7 @@ if __name__ == "__main__":
     a.set_default_size(400,100)
     a.set_position(gtk.WIN_POS_CENTER)
     a.connect("destroy", gtk.main_quit)
-    
+
     box = countdownBox("../images/")
     a.add(box)
     a.show_all()

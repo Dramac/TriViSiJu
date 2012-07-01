@@ -2,7 +2,7 @@
 # *-* coding:utf-8 *-*
 
 """ TriViSiJu: Graphical interface for the AstroJeune Festival
-    
+
 	Copyright (C) 2012  Jules DAVID, Tristan GREGOIRE, Simon NICOLAS and Vincent PRAT
 
     This program is free software: you can redistribute it and/or modify
@@ -60,7 +60,7 @@ class MainWindow(gtk.Window):
         self.screen = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'], bgcolor=bgcolor)
 
         ## Compte à rebours
-        self.countdown = countdownBox(forcebutton=kwarg['forcebutton'])
+        self.countdown = countdownBox(forcebutton=kwarg['forcebutton'],size=kwarg['timer_size'])
         #self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
 
         ## Texte crypté
@@ -71,7 +71,7 @@ class MainWindow(gtk.Window):
 
         ## Liste des équipes
         self.teamBox = teamBox()
-        
+
         ## Popup window de décryptage
         self.decrypt = popupWindow(passwd=kwarg['passwd'])
 
@@ -85,13 +85,13 @@ class MainWindow(gtk.Window):
 
         ## Ajout de self.grid sur la fenêtre principale
         self.add(self.grid)
-        
+
         ## Affichage général
         self.show_all()
-        
+
         ## Envoie de l'id à mplayer après l'avoir affiché
         self.screen.Screen.setwid(long(self.screen.Screen.get_id()))
-        
+
         # Signaux :
         self.teamBox.connect("message",self.prompt.onExternalInsert)
         self.countdown.connect("message",self.prompt.onExternalInsert)
@@ -114,6 +114,7 @@ class MainWindow(gtk.Window):
         self.prompt.connect("stop-timer", self.countdown.pause)
         self.prompt.connect("reset-timer", self.countdown.reset)
         self.prompt.connect("set-timer", self.countdown.setStartTime)
+        self.prompt.connect("resize", self.countdown.resize)
         ## de prompt vers video
         self.prompt.connect("load-video", self.screen.Screen.loadFile)
         self.prompt.connect("pause-video", self.screen.Screen.pause)
@@ -142,7 +143,6 @@ class MainWindow(gtk.Window):
         ## Règle le timer
         self.prompt.onTimer(['set']+kwarg['timer'].split(' '))
 
-        
     def on_fullscreen(self, sender):
         """ Slot de mise en plein écran """
         if self.full:
@@ -162,8 +162,6 @@ class MainWindow(gtk.Window):
                 self.icon = True
             else:
                 self.icon = False
-
-        self.countdown.onSizeChange(self.full)
 
     def loadmovie(self, videoPath):
         """ Charge la video si elle existe
@@ -200,7 +198,7 @@ class MainWindow(gtk.Window):
 
     def quit(self, *parent):
         """ Fonction quitter
-        
+
         Tue proprement l'application root
         """
         ## Envoie le signal à mplayer
@@ -224,7 +222,7 @@ if __name__=="__main__":
 
     ## Descrition
     description = """ Application Grand Jeu : TriViSiJu
-    
+
     Développé pour le Festival AstroJeune 2012
     """
     class Arg(object):
@@ -232,7 +230,7 @@ if __name__=="__main__":
         Voir http://docs.python.org/library/argparse.html#argparse.Namespace
         """
         pass
-    
+
     ## Parse  les arguments
     args = Arg() # Conteneur pour les arguments
     parser = argparse.ArgumentParser(description=description)
@@ -243,7 +241,7 @@ if __name__=="__main__":
                         default='Default', action='store',\
                         help="Section de paramètres à charger")
     parser.parse_args(sys.argv[1:], namespace=args) # Parse les arguments dans la classe conteneur
-    
+
     ## Charge les paramètres
     if args.config != None and os.path.isfile(args.config):
         config = ConfigParser.RawConfigParser()
@@ -254,7 +252,7 @@ if __name__=="__main__":
             print "ATTENTION : la secion '%s' n'existe pas dans le fichier de configuration '%s'"%(args.section, args.config)
             kwarg = conf2dict(config.items('Default'))
 
-    
+
     ## Convertit les string True/False en booléen
     for key, val in kwarg.iteritems():
         if val in ['True', 'False', 'true', 'false']:
@@ -267,7 +265,7 @@ if __name__=="__main__":
 
     ## Charge gobject (Important pour ScrollTextBox
     gobject.threads_init()
-    
+
     ## arg et kwarg
     MainWindow(**kwarg)
     gtk.main()
