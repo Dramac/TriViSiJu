@@ -58,6 +58,12 @@ class caractBox(gtk.VBox):
             gobject.source_remove(self.timer)
             self.timer = None
 
+    def changeMaxLine(self,sender,new_max_line):
+        self.max_line = int(new_max_line)
+
+    def changeWidth(self,sender,new_width):
+        self.width = int(new_width)
+
     def changePhase(self,sender=None):
         if self.phase == "init":
             self.phase = "clear"

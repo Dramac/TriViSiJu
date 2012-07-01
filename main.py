@@ -133,6 +133,9 @@ class MainWindow(gtk.Window):
         self.prompt.connect("scroll-file", self.scrolltextbox.set_filename)
         ## de prompt vers caract
         self.prompt.connect("caract-start",self.caractBox.start)
+        self.prompt.connect("caract-max-line",self.caractBox.changeMaxLine)
+        self.prompt.connect("caract-width",self.caractBox.changeWidth)
+
         ## de decrypt vers les autres
         self.decrypt.connect("team-ask-teams",self.teamBox.sendTeams)
         self.decrypt.connect("team-update",self.teamBox.updateTeam)

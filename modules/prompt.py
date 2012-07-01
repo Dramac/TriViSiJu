@@ -142,6 +142,8 @@ class promptBox(gtk.VBox):
         gobject.signal_new("scroll-file", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
         ## Caract
         gobject.signal_new("caract-start", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("caract-max-line", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
+        gobject.signal_new("caract-width", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -465,8 +467,17 @@ class promptBox(gtk.VBox):
         nargs = len(args)
         if nargs == 0:
             self.emit("caract-start")
+        elif nargs == 2:
+            subcommand = args[0]
+            if subcommand == "max":
+                self.emit("caract-max-line",int(args[1]))
+            elif subcommand == "width":
+                self.emit("caract-width",int(args[1]))
+            else:
+                self.buffer.insert(self.iter,"Sous commande invalide\n")
         else:
-            self.buffer.insert(self.iter,"Pas de sous commandes\n")
+            self.buffer.insert(self.iter,"Sous commande invalide\n")
+
 
     def onInit(self, args):
         """ Méthode de traitement de la commande "init" """
