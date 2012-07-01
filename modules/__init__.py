@@ -26,3 +26,4 @@ from prompt import *
 from teams import *
 from scrolltext import *
 from decrypt import *
+from caract import *

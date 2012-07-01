@@ -133,6 +133,8 @@ class promptBox(gtk.VBox):
         gobject.signal_new("scroll-file", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
         gobject.signal_new("minimize", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("start", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("resize", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
+        gobject.signal_new("start-caract", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -142,7 +144,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll, 'init':self.onInit, 'minimize':self.onMinimize, 'reset':self.onReset, 'start':self.onStart}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll, 'init':self.onInit, 'minimize':self.onMinimize, 'reset':self.onReset, 'start':self.onStart, 'caract':self.onCaract}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -444,6 +446,14 @@ class promptBox(gtk.VBox):
         elif nargs == -1:
             self.buffer.insert(self.iter, "Erreur : Trop d'arguments\n")
 
+    def onCaract(self, args):
+        """méthode de traitement de la commande caract"""
+        nargs = len(args)
+        if nargs == 0:
+            self.emit("start-caract")
+        else:
+            self.buffer.insert(self.iter,"Pas de sous commandes\n")
+
     def onInit(self, args):
         """ Méthode de traitement de la commande "init" """
         if len(args) > 0:
@@ -459,6 +469,8 @@ class promptBox(gtk.VBox):
         self.emit("start-timer")
         # Charge la vidéo
         self.emit("load-video", self.kwarg['videopath'])
+        # Lance les caractéristiques techniques
+        self.emit("start-caract")
 
     def onMinimize(self, args):
         """ Méthode de traitement de la commande "minimize" """

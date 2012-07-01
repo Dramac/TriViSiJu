@@ -22,7 +22,7 @@
 import pygtk
 pygtk.require("2.0")
 import gtk
-from modules import promptBox, countdownBox, ScrollTextBox, PlayerFrame, teamBox, popupWindow
+from modules import *
 from fonction import conf2dict, str2bool
 import time
 import os
@@ -67,8 +67,7 @@ class MainWindow(gtk.Window):
         self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'], speed=kwarg['speed'], crypt=kwarg['crypt'])
 
         ## Caractéristiques techniques
-        text6 = gtk.Label("<b>Panneau haut droite</b>\nCaractéristiques techniques")
-        text6.set_use_markup(True)
+        self.caractBox = caractBox()
 
         ## Liste des équipes
         self.teamBox = teamBox()
@@ -76,16 +75,13 @@ class MainWindow(gtk.Window):
         ## Popup window de décryptage
         self.decrypt = popupWindow(passwd=kwarg['passwd'])
 
-        ## Affichage des textes provisoires
-        rightBox.pack_start(text6,True,True)
-
         ## Table
-        self.grid.attach(self.screen,   0, 4, 0, 2, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
-        self.grid.attach(self.teamBox,   0, 2, 2, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
-        self.grid.attach(rightBox,       2, 4, 2, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
-        self.grid.attach(self.countdown, 4, 7, 0, 1, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.screen,        0, 4, 0, 2, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.teamBox,       0, 2, 2, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.caractBox,     2, 4, 2, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.countdown,     4, 7, 0, 1, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
         self.grid.attach(self.scrolltextbox, 4, 7, 1, 3, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
-        self.grid.attach(self.prompt, 4, 7, 3, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.prompt,        4, 7, 3, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
 
         ## Ajout de self.grid sur la fenêtre principale
         self.add(self.grid)
@@ -129,10 +125,15 @@ class MainWindow(gtk.Window):
         self.prompt.connect("scroll-crypt", self.scrolltextbox.toggle_crypt)
         self.prompt.connect("scroll-speed", self.scrolltextbox.set_speed)
         self.prompt.connect("scroll-file", self.scrolltextbox.set_filename)
+        ## de prompt vers caract
+        self.prompt.connect("start-caract",self.caractBox.start)
         ## de prompt vers main
         self.prompt.connect("minimize", self.onMinimize)
         self.prompt.connect("fullscreen", self.on_fullscreen)
         self.prompt.connect("quit", self.quit)
+        ## Changement de phase
+        self.decrypt.connect("decrypted",self.caractBox.changePhase)
+        self.decrypt.connect("decrypted",self.scrolltextbox.toggle_crypt)
         ## Connexion de destroy à la fonction quit
         self.connect("destroy", self.quit)
         ## Connexion du signal de changement d'état de la fenêtre

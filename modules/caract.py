@@ -38,20 +38,31 @@ class caractBox(gtk.VBox):
         gtk.VBox.__init__(self)
 
         self.lines = codecs.open(fichier, encoding="utf-8").readlines()
-        self.delay = 1000
-        self.max_line = 30
-        self.width = 50
+        self.delay = 1000           # Temps en ms entre deux appels de la fonction onTimeout
+        self.max_line = 15          # Nombre de lignes à afficher au maximum
+        self.width = 35             # Nombre de caractères par lignes
+        self.phase = "init"         # si init, affiche des NO rouges, sinon affiche des OK verts
         self.timer = None
         self.cursor = 0
 
-        gobject.signal_new("message",caractBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
-
         self.text = gtk.Label()
+        self.text.set_alignment(0,0)
         self.add(self.text)
 
     def start(self,sender=None):
         if self.timer is None:
-            self.timer = gobject.timeout_add(self.delay,self.on_timeout)
+            self.timer = gobject.timeout_add(self.delay,self.onTimeout)
+
+    def pause(self,sender=None):
+        if self.timer:
+            gobject.source_remove(self.timer)
+            self.timer = None
+
+    def changePhase(self,sender=None):
+        if self.phase == "init":
+            self.phase = "clear"
+        else:
+            self.phase = "init"
 
     def append(self,text_to_append):
         """Ajouter du texte à la fin du texte déjà écrit"""
@@ -64,30 +75,31 @@ class caractBox(gtk.VBox):
 
         # On supprime la mise en forme générale, qui vient perturber l'insertion
         ## d'abord le début
-        previous_text = previous_text.replace("<span font_desc='Monospace'>","",1)
+        previous_text = previous_text.replace("<span foreground='white' font_desc='Monospace'>","",1)
         ## puis la fin
         previous_text = rreplace(previous_text,"</span>","",1)
 
         # On comble en points jusqu'à obtenir la taille de ligne désirée
         if len(text_to_append) <= self.width - 4:
             dots = "".join(["." for i in range(self.width - len(text_to_append) - 4)])
-            text_to_append = text_to_append.replace("\n","") + dots + "[<span foreground='green'>OK</span>]\n"
+            if self.phase == "init":
+                text_to_append = text_to_append.replace("\n","") + dots + "[<span foreground='red'>NO</span>]\n"
+            else:
+                text_to_append = text_to_append.replace("\n","") + dots + "[<span foreground='green'>OK</span>]\n"
 
         # Puis on met le tout en forme (police à chasse fixe)
-        next_text = "<span font_desc='Monospace'>"+previous_text+str(text_to_append)+"</span>"
+        next_text = "<span foreground='white' font_desc='Monospace'>"+previous_text+str(text_to_append)+"</span>"
         # et on affiche !
         self.text.set_markup(next_text)
 
-    def on_timeout(self, *args):
+    def onTimeout(self, *args):
+        """Fonction appelée toutes les self.delay ms"""
         line = self.lines[self.cursor]
         self.append(line)
         self.cursor += 1
         if self.cursor >= len(self.lines):
             self.cursor = 0
-        return True         #Nécessaire pour le timeout_add
-
-
-
+        return True         # Si True, continue
 
 if __name__ == "__main__":
     gobject.threads_init()

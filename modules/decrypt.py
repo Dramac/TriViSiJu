@@ -37,7 +37,7 @@ class DecryptBox(gtk.VBox):
         """
         ## Initialise la fenetre
         gtk.VBox.__init__(self)
-        
+
         ## Charge les variables
         self.has_at_least_one_time = False
         self.passwd = passwd
@@ -70,6 +70,7 @@ class DecryptBox(gtk.VBox):
 
         ## Signaux
         gobject.signal_new("update-team",DecryptBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING,gobject.TYPE_BOOLEAN])
+        gobject.signal_new("decrypted",DecryptBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
     def setTeams(self,team_list):
         self.team_list = team_list
@@ -83,10 +84,10 @@ class DecryptBox(gtk.VBox):
 
         ## Nombre de lignes / équipe
         nligne = float(len(self.get_template().split('\n')))
-        
+
         ## Nombre total d'action
         total = nligne*self.nteam
-        
+
         ## Compteur
         count = 0
         num = 0
@@ -101,13 +102,13 @@ class DecryptBox(gtk.VBox):
             if self.passwd == team.passwd:
                 at_least_one_passwd = True
                 passwd_check = True
-            
+
             ## Met à jour le texte de la barre
             self.update_pbar(team_data=(team.name, num+1))
 
             ## Génère le texte de l'équipe
             text = self.team_text(team).split('\n')
-        
+
             ## Boucle sur les lignes
             for line in text:
                 time.sleep(1)
@@ -193,11 +194,13 @@ class DecryptBox(gtk.VBox):
         ## Test la réussite
         if win:
             msg = self.msg_from_file(self.data_folder+'decrypt_msg_phase1win.txt')
+            self.emit("decrypted")
             self.show_warning_and_continue(msg)
         else:
             self.continuer = True
             self.phase2()
             msg = self.msg_from_file(self.data_folder+'decrypt_msg_phase2win.txt')
+            self.emit("decrypted")
             self.show_warning_and_continue(msg)
 
     def msg_from_file(self, filename):
@@ -264,6 +267,7 @@ class popupWindow(gtk.Window):
         gobject.signal_new("ask-teams",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("update-team",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING, gobject.TYPE_BOOLEAN])
         gobject.signal_new("decrypt-start", popupWindow, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
+        gobject.signal_new("decrypted", popupWindow, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         ## Charge la fenêtre
         gtk.Window.__init__(self)
@@ -272,10 +276,11 @@ class popupWindow(gtk.Window):
 
         ## Boutton
         button = gtk.Button(label="start")
-        
+
         ## DecryptBox
         self.decryptbox = DecryptBox(data_folder=dataf, passwd=passwd)
         self.decryptbox.connect("update-team",self.onUpdateTeam)
+        self.decryptbox.connect("decrypted",self.onDecrypted)
 
         ## Affichage
         if showcontrol:
@@ -293,6 +298,14 @@ class popupWindow(gtk.Window):
     def onUpdateTeam(self,sender,team_name,check):
         self.emit("update-team",team_name,check)
 
+    def onDecrypted(self,sender):
+        """Fonction appelée lorsqu'une des deux phases a réussi
+        
+        phase 1: décryptage des mots de passes entrés
+        phase 2: Recherche du mot de passe par 'algorithme intelligent'
+        """
+        self.emit("decrypted")
+
     def start(self, *parent):
         self.emit("ask-teams")
 
@@ -300,7 +313,7 @@ class popupWindow(gtk.Window):
         self.decryptbox.setTeams(team_list)
         self.show_all()
         self.decryptbox.start()
-    
+
     def quit(self, *parent):
         """ Fonction qui permet de quitter proprement
         """
