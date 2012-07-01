@@ -258,7 +258,7 @@ class ScrollText(gtk.ScrolledWindow):
 
 class ScrollTextBox(gtk.VBox):
     """ Conteneur pour la classe ScrollText (gtk.VBox)
-        
+
     - filename : Fichier à faire défiler (defaut le code lui même)
     - speed    : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
     """
@@ -271,7 +271,7 @@ class ScrollTextBox(gtk.VBox):
         gtk.VBox.__init__(self)
 
         ## Signaux
-        gobject.signal_new("decrypt-suite", ScrollTextBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
+        gobject.signal_new("main-decrypt-suite", ScrollTextBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
 
         ## Affichage optionnel des bouttons
         if forcebutton:

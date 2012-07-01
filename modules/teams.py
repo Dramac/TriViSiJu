@@ -61,12 +61,12 @@ class teamBox(gtk.Label):
         self.team_list = []
         self.fichier = fichier
         self.prompt = prompt
-        gobject.signal_new("message",teamBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
-        gobject.signal_new("send-teams",teamBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_PYOBJECT])
+        gobject.signal_new("prompt-message",teamBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
+        gobject.signal_new("decrypt-send-teams",teamBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_PYOBJECT])
 
     def toPrompt(self,message):
         """Affiche les messages dans le prompt"""
-        self.emit("message",message)
+        self.emit("prompt-message",message)
 
     def addTeam(self, sender=None, name=None):
         """Ajouter une équipe à la liste"""
@@ -74,7 +74,7 @@ class teamBox(gtk.Label):
             try:
                 self.selectTeam(name)
                 print "Cette équipe existe déjà"
-                self.emit("message", "Cette équipe existe déjà")
+                self.emit("prompt-message", "Cette équipe existe déjà")
             except TeamError:
                 newTeam = team(name)
                 self.team_list.append(newTeam)
@@ -87,7 +87,7 @@ class teamBox(gtk.Label):
             team.passwd = passwd
         except TeamError as err:
             print err
-            self.emit("message", str(err))
+            self.emit("prompt-message", str(err))
         self.printTeams()
 
     def deleteTeam(self,sender,name):
@@ -97,7 +97,7 @@ class teamBox(gtk.Label):
             self.team_list.remove(team)
         except TeamError as err:
             print err
-            self.emit("message", str(err))
+            self.emit("prompt-message", str(err))
         finally:
             self.printTeams()
 
@@ -156,9 +156,9 @@ class teamBox(gtk.Label):
         else:
             error = "Team: aucune équipe enregistrée"
         if error == "":
-            self.emit("send-teams",self.team_list)
+            self.emit("decrypt-send-teams",self.team_list)
         else:
-            self.emit("message",error)
+            self.emit("prompt-message",error)
 
     def updateTeam(self,sender,team_name,check):
         team = self.selectTeam(team_name)

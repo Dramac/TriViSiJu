@@ -37,7 +37,7 @@ class countdownBox(gtk.VBox):
         self.forcebutton = forcebutton
         # Taille des images initiale
 
-        gobject.signal_new("message",countdownBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
+        gobject.signal_new("prompt-message",countdownBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
 
         # Création des conteneurs d'images
         self.text = gtk.Label("00:00:40:00")

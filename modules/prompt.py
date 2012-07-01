@@ -109,32 +109,39 @@ class promptBox(gtk.VBox):
         self.buffer = self.result.get_buffer()
 
         # Création de signaux personnalisés
-        gobject.signal_new("add-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
-        gobject.signal_new("delete-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
-        gobject.signal_new("passwd-team", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING, gobject.TYPE_STRING])
-        gobject.signal_new("clear-teams", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("fullscreen", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("quit", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("start-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("stop-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("reset-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("set-timer", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT])
-        gobject.signal_new("load-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
-        gobject.signal_new("pause-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("forward-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("backward-video", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        ## Généraux
+        gobject.signal_new("main-fullscreen", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("main-quit", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("main-minimize", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("main-start", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        ## Teams
+        gobject.signal_new("team-add", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
+        gobject.signal_new("team-delete", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
+        gobject.signal_new("team-passwd", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING, gobject.TYPE_STRING])
+        gobject.signal_new("team-clear", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("team-load", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("team-save", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        ## Countdown
+        gobject.signal_new("timer-start", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("timer-stop", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("timer-reset", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("timer-set", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT])
+        gobject.signal_new("timer-resize", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
+        ## Video
+        gobject.signal_new("video-load", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
+        gobject.signal_new("video-pause", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("video-forward", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        gobject.signal_new("video-backward", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        ## Decrypt
         gobject.signal_new("decrypt", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("load-teams", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("save-teams", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        ## Scroll
         gobject.signal_new("scroll", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("scroll-on", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("scroll-crypt", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("scroll-speed", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_FLOAT])
         gobject.signal_new("scroll-file", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
-        gobject.signal_new("minimize", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("start", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
-        gobject.signal_new("resize", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
-        gobject.signal_new("start-caract", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        ## Caract
+        gobject.signal_new("caract-start", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -255,7 +262,7 @@ class promptBox(gtk.VBox):
         if len(args) > 0:
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
             return
-        self.emit("fullscreen")
+        self.emit("main-fullscreen")
 
     def onTeam(self, args):
         """ Méthode de traitement de la commande "team" """
@@ -266,7 +273,7 @@ class promptBox(gtk.VBox):
         subcommand = args[0]
         if subcommand == 'add':
             if nargs == 2:
-                self.emit("add-team", args[1])
+                self.emit("team-add", args[1])
             elif nargs < 2:
                 # code qui indique qu'il n'y a pas assez d'arguments
                 nargs = 0
@@ -275,7 +282,7 @@ class promptBox(gtk.VBox):
                 nargs = -1
         elif subcommand == 'delete':
             if nargs == 2:
-                self.emit("delete-team", args[1])
+                self.emit("team-delete", args[1])
             elif nargs < 2:
                 nargs = 0
             else:
@@ -283,19 +290,19 @@ class promptBox(gtk.VBox):
         elif subcommand == 'passwd':
             if nargs == 2:
                 passwd = getPasswd(teamname=args[-1])
-                self.emit("passwd-team", args[1], passwd)
+                self.emit("team-passwd", args[1], passwd)
             elif nargs < 3:
                 nargs = 0
             else:
                 nargs = -1
         elif subcommand == 'load':
             if nargs == 1:
-                self.emit("load-teams")
+                self.emit("team-load")
             else:
                 nargs = -1
         elif subcommand == 'save':
             if nargs == 1:
-                self.emit("save-teams")
+                self.emit("team-save")
             else:
                 nargs = -1
         else:
@@ -316,18 +323,18 @@ class promptBox(gtk.VBox):
         subcommand = args[0]
         if subcommand == 'start':
             if nargs == 1:
-                self.emit("start-timer")
+                self.emit("timer-start")
             else:
                 # code qui indique qu'il y a trop d'arguments
                 nargs = -1
         elif subcommand == 'stop':
             if nargs == 1:
-                self.emit("stop-timer")
+                self.emit("timer-stop")
             else:
                 nargs = -1
         elif subcommand == 'reset':
             if nargs == 1:
-                self.emit("reset-timer")
+                self.emit("timer-reset")
             else:
                 nargs = -1
         elif subcommand == 'set':
@@ -353,12 +360,12 @@ class promptBox(gtk.VBox):
             if nargs > 5:
                 nargs = -1
             if nargs > 0:
-                self.emit("set-timer", h, m, s, cs)
+                self.emit("timer-set", h, m, s, cs)
         elif subcommand == 'resize':
             if nargs == 1:
                 nargs = 0
             elif nargs == 2:
-                self.emit("resize",int(args[1]))
+                self.emit("timer-resize",int(args[1]))
             else:
                 nargs = -1
         else:
@@ -379,7 +386,7 @@ class promptBox(gtk.VBox):
         subcommand = args[0]
         if subcommand == 'load':
             if nargs == 2:
-                self.emit("load-video", args[1])
+                self.emit("video-load", args[1])
             elif nargs < 2:
                 # code qui indique qu'il n'y a pas assez d'arguments
                 nargs = 0
@@ -388,17 +395,17 @@ class promptBox(gtk.VBox):
                 nargs = -1
         elif subcommand == 'pause':
             if nargs == 1:
-                self.emit("pause-video")
+                self.emit("video-pause")
             else:
                 nargs = -1
         elif subcommand == 'forward':
             if nargs == 1:
-                self.emit("forward-video")
+                self.emit("video-forward")
             else:
                 nargs = -1
         elif subcommand == 'backward':
             if nargs == 1:
-                self.emit("backward-video")
+                self.emit("video-backward")
             else:
                 nargs = -1
         else:
@@ -457,7 +464,7 @@ class promptBox(gtk.VBox):
         """méthode de traitement de la commande caract"""
         nargs = len(args)
         if nargs == 0:
-            self.emit("start-caract")
+            self.emit("caract-start")
         else:
             self.buffer.insert(self.iter,"Pas de sous commandes\n")
 
@@ -473,11 +480,11 @@ class promptBox(gtk.VBox):
         self.emit("scroll-on")
         # Set & start timer
         self.onTimer(['set']+self.kwarg['timer'].split(' '))
-        self.emit("start-timer")
+        self.emit("timer-start")
         # Charge la vidéo
-        self.emit("load-video", self.kwarg['videopath'])
+        self.emit("video-load", self.kwarg['videopath'])
         # Lance les caractéristiques techniques
-        self.emit("start-caract")
+        self.emit("caract-start")
 
     def onMinimize(self, args):
         """ Méthode de traitement de la commande "minimize" """
@@ -485,7 +492,7 @@ class promptBox(gtk.VBox):
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
             return
         ## Minimize
-        self.emit("minimize")
+        self.emit("main-minimize")
 
     def onReset(self, args):
         """ Méthode de traitement de la commande "reset" """
@@ -493,7 +500,7 @@ class promptBox(gtk.VBox):
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
             return
         # suppression des équipes
-        self.emit("clear-teams")
+        self.emit("team-clear")
         # réinitialisation
         self.onInit(args)
 
@@ -508,7 +515,7 @@ class promptBox(gtk.VBox):
             return
         ## Lance la fusée !
         self.buffer.insert(self.iter, "Lancement de la fusée A FAIRE\n")
-        self.emit("start")
+        self.emit("main-start")
 
 
     def onQuit(self, args):
@@ -516,7 +523,7 @@ class promptBox(gtk.VBox):
         if len(args) > 0:
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
             return
-        self.emit("quit")
+        self.emit("main-quit")
 
 if __name__ == "__main__":
     a = gtk.Window()

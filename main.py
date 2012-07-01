@@ -93,33 +93,38 @@ class MainWindow(gtk.Window):
         self.screen.Screen.setwid(long(self.screen.Screen.get_id()))
 
         # Signaux :
-        self.teamBox.connect("message",self.prompt.onExternalInsert)
-        self.countdown.connect("message",self.prompt.onExternalInsert)
-        self.decrypt.connect("ask-teams",self.teamBox.sendTeams)
-        self.decrypt.connect("update-team",self.teamBox.updateTeam)
-        self.decrypt.connect("decrypt-start", self.onStart)
-        self.scrolltextbox.connect("decrypt-suite", self.onStart)
-        self.teamBox.connect("send-teams",self.decrypt.getTeams)
+        ## vers main
+        self.prompt.connect("main-minimize", self.onMinimize)
+        self.prompt.connect("main-fullscreen", self.on_fullscreen)
+        self.prompt.connect("main-quit", self.quit)
+        self.scrolltextbox.connect("main-decrypt-suite", self.onStart)
+        self.decrypt.connect("main-decrypted",self.caractBox.changePhase)
+        self.decrypt.connect("main-decrypted",self.scrolltextbox.toggle_crypt)
+        self.decrypt.connect("main-enigme", self.onStart)
+        ## vers prompt
+        self.teamBox.connect("prompt-message",self.prompt.onExternalInsert)
+        self.teamBox.connect("decrypt-send-teams",self.decrypt.getTeams)
+        self.countdown.connect("prompt-message",self.prompt.onExternalInsert)
         ## de prompt vers teambox
-        self.prompt.connect("add-team", self.teamBox.addTeam)
-        self.prompt.connect("delete-team", self.teamBox.deleteTeam)
-        self.prompt.connect("passwd-team", self.teamBox.addPasswd)
-        self.prompt.connect("load-teams", self.teamBox.load)
-        self.prompt.connect("save-teams", self.teamBox.save)
-        self.prompt.connect("clear-teams", self.teamBox.clearTeams)
+        self.prompt.connect("team-add", self.teamBox.addTeam)
+        self.prompt.connect("team-delete", self.teamBox.deleteTeam)
+        self.prompt.connect("team-passwd", self.teamBox.addPasswd)
+        self.prompt.connect("team-load", self.teamBox.load)
+        self.prompt.connect("team-save", self.teamBox.save)
+        self.prompt.connect("team-clear", self.teamBox.clearTeams)
         ## de prompt vers decrypt
         self.prompt.connect("decrypt",self.decrypt.start)
         ## de prompt vers countdown
-        self.prompt.connect("start-timer", self.countdown.start)
-        self.prompt.connect("stop-timer", self.countdown.pause)
-        self.prompt.connect("reset-timer", self.countdown.reset)
-        self.prompt.connect("set-timer", self.countdown.setStartTime)
-        self.prompt.connect("resize", self.countdown.resize)
+        self.prompt.connect("timer-start", self.countdown.start)
+        self.prompt.connect("timer-stop", self.countdown.pause)
+        self.prompt.connect("timer-reset", self.countdown.reset)
+        self.prompt.connect("timer-set", self.countdown.setStartTime)
+        self.prompt.connect("timer-resize", self.countdown.resize)
         ## de prompt vers video
-        self.prompt.connect("load-video", self.screen.Screen.loadFile)
-        self.prompt.connect("pause-video", self.screen.Screen.pause)
-        self.prompt.connect("forward-video", self.screen.Screen.forward)
-        self.prompt.connect("backward-video", self.screen.Screen.backward)
+        self.prompt.connect("video-load", self.screen.Screen.loadFile)
+        self.prompt.connect("video-pause", self.screen.Screen.pause)
+        self.prompt.connect("video-forward", self.screen.Screen.forward)
+        self.prompt.connect("video-backward", self.screen.Screen.backward)
         ## de prompt vers scrolltext
         self.prompt.connect("scroll", self.scrolltextbox.scroll)
         self.prompt.connect("scroll-on", self.scrolltextbox.scroll_on)
@@ -127,14 +132,10 @@ class MainWindow(gtk.Window):
         self.prompt.connect("scroll-speed", self.scrolltextbox.set_speed)
         self.prompt.connect("scroll-file", self.scrolltextbox.set_filename)
         ## de prompt vers caract
-        self.prompt.connect("start-caract",self.caractBox.start)
-        ## de prompt vers main
-        self.prompt.connect("minimize", self.onMinimize)
-        self.prompt.connect("fullscreen", self.on_fullscreen)
-        self.prompt.connect("quit", self.quit)
-        ## Changement de phase
-        self.decrypt.connect("decrypted",self.caractBox.changePhase)
-        self.decrypt.connect("decrypted",self.scrolltextbox.toggle_crypt)
+        self.prompt.connect("caract-start",self.caractBox.start)
+        ## de decrypt vers les autres
+        self.decrypt.connect("team-ask-teams",self.teamBox.sendTeams)
+        self.decrypt.connect("team-update",self.teamBox.updateTeam)
         ## Connexion de destroy à la fonction quit
         self.connect("destroy", self.quit)
         ## Connexion du signal de changement d'état de la fenêtre
