@@ -33,14 +33,14 @@ def rreplace(s, old, new, occurrence):
     return new.join(li)
 
 class caractBox(gtk.VBox):
-    def __init__(self,fichier="data/caract.txt"):
+    def __init__(self,file="data/caract.txt",delay=1000,max_line=15,width=35):
         ## Initialise gtk.VBox, gtk.HBox
         gtk.VBox.__init__(self)
 
-        self.lines = codecs.open(fichier, encoding="utf-8").readlines()
-        self.delay = 1000           # Temps en ms entre deux appels de la fonction onTimeout
-        self.max_line = 15          # Nombre de lignes à afficher au maximum
-        self.width = 35             # Nombre de caractères par lignes
+        self.lines = codecs.open(file, encoding="utf-8").readlines()
+        self.delay = int(delay)          # Temps en ms entre deux appels de la fonction onTimeout
+        self.max_line = int(max_line)    # Nombre de lignes à afficher au maximum
+        self.width = int(width)          # Nombre de caractères par lignes
         self.phase = "init"         # si init, affiche des NO rouges, sinon affiche des OK verts
         self.timer = None
         self.cursor = 0

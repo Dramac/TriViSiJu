@@ -67,7 +67,7 @@ class MainWindow(gtk.Window):
         self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'], speed=kwarg['speed'], crypt=kwarg['crypt'])
 
         ## Caractéristiques techniques
-        self.caractBox = caractBox()
+        self.caractBox = caractBox(delay=kwarg['caract_delay'],max_line=kwarg['caract_max_line'],width=kwarg['caract_width'])
 
         ## Liste des équipes
         self.teamBox = teamBox()
