@@ -70,7 +70,6 @@ class DecryptBox(gtk.VBox):
 
         ## Signaux
         gobject.signal_new("team-update",DecryptBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING,gobject.TYPE_BOOLEAN])
-        gobject.signal_new("main-decrypted",DecryptBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
     def setTeams(self,team_list):
         self.team_list = team_list
@@ -194,13 +193,11 @@ class DecryptBox(gtk.VBox):
         ## Test la réussite
         if win:
             msg = self.msg_from_file(self.data_folder+'decrypt_msg_phase1win.txt')
-            self.emit("main-decrypted")
             self.show_warning_and_continue(msg)
         else:
             self.continuer = True
             self.phase2()
             msg = self.msg_from_file(self.data_folder+'decrypt_msg_phase2win.txt')
-            self.emit("main-decrypted")
             self.show_warning_and_continue(msg)
 
     def msg_from_file(self, filename):
@@ -267,7 +264,6 @@ class popupWindow(gtk.Window):
         gobject.signal_new("team-ask-teams",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("team-update",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING, gobject.TYPE_BOOLEAN])
         gobject.signal_new("main-enigme", popupWindow, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
-        gobject.signal_new("main-decrypted", popupWindow, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         ## Charge la fenêtre
         gtk.Window.__init__(self)
@@ -280,7 +276,6 @@ class popupWindow(gtk.Window):
         ## DecryptBox
         self.decryptbox = DecryptBox(data_folder=dataf, passwd=passwd)
         self.decryptbox.connect("team-update",self.onUpdateTeam)
-        self.decryptbox.connect("main-decrypted",self.onDecrypted)
 
         ## Affichage
         if showcontrol:
@@ -297,14 +292,6 @@ class popupWindow(gtk.Window):
 
     def onUpdateTeam(self,sender,team_name,check):
         self.emit("team-update",team_name,check)
-
-    def onDecrypted(self,sender):
-        """Fonction appelée lorsqu'une des deux phases a réussi
-
-        phase 1: décryptage des mots de passes entrés
-        phase 2: Recherche du mot de passe par 'algorithme intelligent'
-        """
-        self.emit("main-decrypted")
 
     def start(self, *parent):
         self.emit("team-ask-teams")

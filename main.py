@@ -98,8 +98,6 @@ class MainWindow(gtk.Window):
         self.prompt.connect("main-fullscreen", self.on_fullscreen)
         self.prompt.connect("main-quit", self.quit)
         self.scrolltextbox.connect("main-decrypt-suite", self.onStart)
-        self.decrypt.connect("main-decrypted",self.caractBox.changePhase)
-        self.decrypt.connect("main-decrypted",self.scrolltextbox.toggle_crypt)
         self.decrypt.connect("main-enigme", self.onStart)
         ## vers prompt
         self.teamBox.connect("prompt-message",self.prompt.onExternalInsert)
@@ -184,13 +182,14 @@ class MainWindow(gtk.Window):
     def onStart(self, sender=None, step=0):
         """ Commence la phase de lancement """
         #if self.decrypt.decryptbox.has_at_least_one_time:
-        print "onStart, step =", step
+        print "onStart, step =", step, sender
         if step == 0:
             ## Fait ralentir le défilement du texte jusqu'à totalement s'arrêter
             gobject.timeout_add(1000, self.scrolltextbox.reduce2stop)
         elif step == 1:
+            ## Caractéristique no->ok
+            gobject.timeout_add(2000, self.onSchedule, self.caractBox.changePhase)
             ## Decrypte le texte
-            self.scrolltextbox.crypt_off()
             gobject.timeout_add(2000, self.onSchedule, self.scrolltextbox.show_clear_text)
 
     def onSchedule(self, function=None):

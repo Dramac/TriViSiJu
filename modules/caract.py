@@ -73,7 +73,7 @@ class caractBox(gtk.VBox):
     def append(self,text_to_append):
         """Ajouter du texte à la fin du texte déjà écrit"""
 
-        # On ne garde que le N dernières lignes
+        # On ne garde que les N dernières lignes
         previous_text = self.text.get_label().split("\n")
         if len(previous_text) > self.max_line:
             previous_text = previous_text[-self.max_line:]

@@ -333,9 +333,15 @@ class ScrollTextBox(gtk.VBox):
         """
         self.scrolltext.scroll()
 
-    def scroll_on(self, sender):
+    def scroll_on(self, sender=None):
         """ Lance le défilement et ne l'arrête pas s'il est lancé """
         self.scrolltext.scroll(toggle = False)
+
+    def scroll_off(self, sender=None):
+        """ Arrête le défilement s'il est lancé """
+        if self.scrolltext.launch:
+            self.scrolltext.scroll()
+
 
     def toggle_crypt(self, *parent):
         """ Cypte le texte s'il est clair ou decrypt s'il est crypté
@@ -414,8 +420,8 @@ class ScrollTextBox(gtk.VBox):
                 return True ## Continue à réduire
             else:
                 if stop:
-                    self.scroll()
-                self.emit("decrypt-suite", 1)
+                    self.scroll_off()
+                    self.emit("main-decrypt-suite", 1)
                 return False ## On arrète de réduire
         else:
             return False
