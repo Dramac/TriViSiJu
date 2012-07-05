@@ -43,6 +43,7 @@ class MainWindow(gtk.Window):
         self.set_title("TriViSiJu")
         self.set_default_size(800,600)
         self.set_position(gtk.WIN_POS_CENTER)
+        self.all_is_fine = False
 
         # Definition d'une couleur
         bgcolor = gtk.gdk.color_parse("#000000")
@@ -97,8 +98,9 @@ class MainWindow(gtk.Window):
         self.prompt.connect("main-minimize", self.onMinimize)
         self.prompt.connect("main-fullscreen", self.on_fullscreen)
         self.prompt.connect("main-quit", self.quit)
-        self.scrolltextbox.connect("main-decrypt-suite", self.onStart)
-        self.decrypt.connect("main-enigme", self.onStart)
+        self.scrolltextbox.connect("main-decrypt-suite", self.onDecrypt)
+        self.decrypt.connect("main-enigme", self.onDecrypt)
+        self.prompt.connect("main-start", self.onStart, kwarg['videoend'])
         ## vers prompt
         self.teamBox.connect("prompt-message",self.prompt.onExternalInsert)
         self.teamBox.connect("decrypt-send-teams",self.decrypt.getTeams)
@@ -145,7 +147,7 @@ class MainWindow(gtk.Window):
         ## Règle le timer
         self.prompt.onTimer(['set']+kwarg['timer'].split(' '))
 
-    def on_fullscreen(self, sender):
+    def on_fullscreen(self, sender=None):
         """ Slot de mise en plein écran """
         if self.full:
             self.unfullscreen()
@@ -172,17 +174,15 @@ class MainWindow(gtk.Window):
         if os.path.isfile(videoPath):
             self.screen.Screen.loadFile(filename = videoPath.replace(' ', '\ '))
 
-    def onMinimize(self, sender):
+    def onMinimize(self, sender=None):
         """ Minimise la fenêtre principale """
         if self.icon:
             self.deiconify()
         else:
             self.iconify()
 
-    def onStart(self, sender=None, step=0):
+    def onDecrypt(self, sender=None, step=0):
         """ Commence la phase de lancement """
-        #if self.decrypt.decryptbox.has_at_least_one_time:
-        print "onStart, step =", step, sender
         if step == 0:
             ## Fait ralentir le défilement du texte jusqu'à totalement s'arrêter
             gobject.timeout_add(1000, self.scrolltextbox.reduce2stop)
@@ -191,6 +191,26 @@ class MainWindow(gtk.Window):
             gobject.timeout_add(2000, self.onSchedule, self.caractBox.changePhase)
             ## Decrypte le texte
             gobject.timeout_add(2000, self.onSchedule, self.scrolltextbox.show_clear_text)
+            ## Set all_is_fine -> True (self.onStart)
+            self.all_is_fine = True
+
+    def onStart(self, sender=None, video=None):
+        """ Lance le décollage de la fusée """
+        print "onStart", sender
+        if self.all_is_fine:
+            ## Sortie du plein écran et réduction de la fenêtre
+            self.on_fullscreen()
+            self.onMinimize()
+            ## Mplayer
+            if video == None:
+                video = ''
+            print "Chargement de la video '%s'"%(video)
+            os.system("mplayer -really-quiet -fs %s &"%(video))
+            ## Timer
+            runtimer = lambda : os.system("python modules/countdown.py &")
+            gobject.timeout_add(2000, self.onSchedule, runtimer)
+        else:
+            print "Le texte n'est pas décrypté..."
 
     def onSchedule(self, function=None):
         """ Permet de lancer un fonction avec gobject.timeout_add après le délais de timeout_add

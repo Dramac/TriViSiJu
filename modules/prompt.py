@@ -525,7 +525,7 @@ class promptBox(gtk.VBox):
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
             return
         ## Lance la fusée !
-        self.buffer.insert(self.iter, "Lancement de la fusée A FAIRE\n")
+        self.buffer.insert(self.iter, "Lancement de la fusée\n")
         self.emit("main-start")
 
 

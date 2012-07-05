@@ -270,15 +270,15 @@ class popupWindow(gtk.Window):
         self.set_title("Décryptage")
         self.ready = False
 
-        ## Boutton
-        button = gtk.Button(label="start")
-
         ## DecryptBox
         self.decryptbox = DecryptBox(data_folder=dataf, passwd=passwd)
         self.decryptbox.connect("team-update",self.onUpdateTeam)
 
         ## Affichage
         if showcontrol:
+            ## Boutton
+            button = gtk.Button(label="start")
+
             vbox = gtk.VBox()
             vbox.pack_start(self.decryptbox, True, True, 0)
             vbox.pack_start(button, True, True, 0)
@@ -288,7 +288,8 @@ class popupWindow(gtk.Window):
 
         ## Connexion
         self.connect("destroy", self.quit)
-        button.connect("clicked", self.start)
+        if showcontrol:
+            button.connect("clicked", self.start)
 
     def onUpdateTeam(self,sender,team_name,check):
         self.emit("team-update",team_name,check)

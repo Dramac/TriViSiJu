@@ -217,6 +217,7 @@ class countdownBox(gtk.VBox):
 if __name__ == "__main__":
     gobject.threads_init()
     a = gtk.Window()
+    #a.set_decorated(False) ## Permet d'enlever la bordure -> impossible à détruire !
     a.set_default_size(400,100)
     a.set_position(gtk.WIN_POS_CENTER)
     a.connect("destroy", gtk.main_quit)
