@@ -214,24 +214,34 @@ class countdownBox(gtk.VBox):
             print msg
             self.emit("message",msg)
 
+class Root(gtk.Window):
+    """ Fenêtre principale du compte à rebours
+    """
+    def __init__(self):
+        """ Charge la fenêtre
+        """
+        ## gtk.Window
+        gtk.Window.__init__(self)
+
+        #self..set_decorated(False) ## Permet d'enlever la bordure -> impossible à détruire !
+        self.set_default_size(400,100)
+        self.connect("destroy", gtk.main_quit)
+
+        ## Ajout du timer
+        box = countdownBox("../images/")
+        self.add(box)
+        self.show_all()
+
+        ## Permet de placer la fenêtre en haut à droite
+        width, height = self.get_size()
+        self.move(gtk.gdk.screen_width() - width, 0)
+
 if __name__ == "__main__":
     ## gobject
     gobject.threads_init()
 
-    ## gtk.Window
-    a = gtk.Window()
-    #a.set_decorated(False) ## Permet d'enlever la bordure -> impossible à détruire !
-    a.set_default_size(400,100)
-    a.connect("destroy", gtk.main_quit)
-
-    ## Ajout du timer
-    box = countdownBox("../images/")
-    a.add(box)
-    a.show_all()
-
-    ## Permet de placer la fenêtre en haut à droite
-    width, height = a.get_size()
-    a.move(gtk.gdk.screen_width() - width, 0)
+    ## Creation de la fenêtre
+    root = Root()
 
     ## Main loop
     gtk.main()
