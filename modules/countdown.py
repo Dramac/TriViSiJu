@@ -200,7 +200,7 @@ class countdownBox(gtk.VBox):
             string += " foreground='red'>"
         else:
             string += " foreground='green'>"
-        string += "%02d:%02d:%02d:%02d</span>   " % (self.h,self.m,self.s,self.cs) 
+        string += "%02d:%02d:%02d:%02d</span>   " % (self.h,self.m,self.s,self.cs)
 
         self.text.set_markup(string)
 
@@ -215,16 +215,24 @@ class countdownBox(gtk.VBox):
             self.emit("message",msg)
 
 if __name__ == "__main__":
+    ## gobject
     gobject.threads_init()
+
+    ## gtk.Window
     a = gtk.Window()
     #a.set_decorated(False) ## Permet d'enlever la bordure -> impossible à détruire !
     a.set_default_size(400,100)
-    a.set_position(gtk.WIN_POS_CENTER)
     a.connect("destroy", gtk.main_quit)
 
+    ## Ajout du timer
     box = countdownBox("../images/")
     a.add(box)
     a.show_all()
 
+    ## Permet de placer la fenêtre en haut à droite
+    width, height = a.get_size()
+    a.move(gtk.gdk.screen_width() - width, 0)
+
+    ## Main loop
     gtk.main()
 
