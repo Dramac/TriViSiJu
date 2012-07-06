@@ -196,11 +196,10 @@ class MainWindow(gtk.Window):
 
     def onStart(self, sender=None, video=None):
         """ Lance le décollage de la fusée """
-        print "onStart", sender
         if self.all_is_fine:
             ## Sortie du plein écran et réduction de la fenêtre
             self.on_fullscreen()
-            self.onMinimize()
+            gobject.timeout_add(500, self.onSchedule, self.onMinimize)
             ## Mplayer
             if video == None:
                 video = ''
