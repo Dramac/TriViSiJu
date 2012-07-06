@@ -228,8 +228,8 @@ class Root(gtk.Window):
         self.connect("destroy", gtk.main_quit)
 
         ## Ajout du timer
-        box = countdownBox("../images/")
-        self.add(box)
+        self.box = countdownBox("../images/")
+        self.add(self.box)
         self.show_all()
 
         ## Permet de placer la fenêtre en haut à droite
@@ -237,11 +237,27 @@ class Root(gtk.Window):
         self.move(gtk.gdk.screen_width() - width, 0)
 
 if __name__ == "__main__":
+    import argparse
+    import sys
+
+    ## parser
+    parser = argparse.ArgumentParser("Process command-line for countdown.py")
+    parser.add_argument("h", type = int, help = "hours", nargs = "?", default = 0)
+    parser.add_argument("m", type = int, help = "minutes", nargs = "?", default = 0)
+    parser.add_argument("s", type = int, help = "seconds", nargs = "?", default = 0)
+    parser.add_argument("cs", type = int, help = "second hundredths", nargs = "?", default = 0)
+    parser.add_argument("-l", help = "Launch on startup", action = "store_true")
+    args = vars(parser.parse_args(sys.argv[1:]))
+
     ## gobject
     gobject.threads_init()
 
     ## Creation de la fenêtre
     root = Root()
+    # initialisation
+    root.box.setStartTime(None, args['h'], args['m'], args['s'], args['cs'])
+    if args['l']:
+        root.box.start(None)
 
     ## Main loop
     gtk.main()
