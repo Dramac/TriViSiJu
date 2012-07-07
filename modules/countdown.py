@@ -232,8 +232,6 @@ class Root(gtk.Window):
         ## Couleur de fond
         bgcolor = gtk.gdk.color_parse("#000000")
         self.modify_bg(gtk.STATE_NORMAL, bgcolor)
-        ## Décoration
-        self.set_decorated(False)
 
         ## Ajout du timer
         self.box = countdownBox(forcebutton=forcebutton)
