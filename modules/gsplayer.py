@@ -27,7 +27,7 @@ import gtk
 import pygst
 pygst.require("0.10")
 import gst
-import time
+import os
 
 
 class SongPlayer():
@@ -55,11 +55,12 @@ class SongPlayer():
         """ Permet de récupérer les messages de Gstreamer """
         t = message.type
         if t == gst.MESSAGE_EOS:
+            print "Fin du fichier"
             self.player.set_state(gst.STATE_NULL)
         elif t == gst.MESSAGE_ERROR:
             self.player.set_state(gst.STATE_NULL)
             err, debug = message.parse_error()
-            print "Error: %s" % err, debug
+            print "Erreur: %s" % err, debug
 
 def open():
     """ Explorateur de fichier """
@@ -68,15 +69,24 @@ def open():
     dialog.connect("destroy", lambda w: dialog.destroy())
     statut = dialog.run()
     if statut == gtk.RESPONSE_OK:
+        ## On a un fichier
         filename = dialog.get_filename()
         dialog.destroy()
         return filename.replace(' ', '\ ')
     else:
+        ## Annulation
         dialog.destroy()
 
 if __name__ == "__main__":
     """ Attention joue le fichier jusqu'à la fin... """
+    ## Charge la classe SongPlayer
     gsplayer = SongPlayer()
+
+    ## Choix d'un fichier
     filename = open()
-    gsplayer.play(file=filename)
-    gtk.main()
+    
+    ## Si on a un fichier on le joue
+    if filename:
+        if os.path.isfile(filename):
+            gsplayer.play(file=filename)
+            gtk.main() ## Obligatoire pour que gstreamer puisse fonctionner
