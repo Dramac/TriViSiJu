@@ -27,7 +27,7 @@ import gtk
 import gobject
 
 class countdownBox(gtk.VBox):
-    def __init__(self,forcebutton=True, size=40):
+    def __init__(self,forcebutton=False, size=50):
         ## Initialise gtk.VBox, gtk.HBox
         gtk.VBox.__init__(self)
         hbox = gtk.HBox()
@@ -227,14 +227,24 @@ class Root(gtk.Window):
         self.set_default_size(400,100)
         self.connect("destroy", gtk.main_quit)
 
+        # Mise en forme
+        ## Couleur de fond
+        bgcolor = gtk.gdk.color_parse("#000000")
+        self.modify_bg(gtk.STATE_NORMAL, bgcolor)
+        ## Décoration
+        self.set_decorated(False)
+
         ## Ajout du timer
-        self.box = countdownBox("../images/")
+        self.box = countdownBox()
         self.add(self.box)
         self.show_all()
 
         ## Permet de placer la fenêtre en haut à droite
         width, height = self.get_size()
         self.move(gtk.gdk.screen_width() - width, 0)
+
+        # Lancement du décompte
+        self.box.start()
 
 if __name__ == "__main__":
     import argparse
