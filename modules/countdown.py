@@ -217,13 +217,14 @@ class countdownBox(gtk.VBox):
 class Root(gtk.Window):
     """ Fenêtre principale du compte à rebours
     """
-    def __init__(self, forcebutton=True):
+    def __init__(self, forcebutton=True, decoration=True):
         """ Charge la fenêtre
         """
         ## gtk.Window
         gtk.Window.__init__(self)
 
-        #self..set_decorated(False) ## Permet d'enlever la bordure -> impossible à détruire !
+        if not decoration:
+            self.set_decorated(False) ## Permet d'enlever la bordure -> impossible à détruire !
         self.set_default_size(400,100)
         self.connect("destroy", gtk.main_quit)
 
@@ -258,6 +259,7 @@ if __name__ == "__main__":
     parser.add_argument("-cs", type = int, help = "centièmes de seconde", nargs = "?", default = 0)
     parser.add_argument("-l", help = "Démarre au lancement", action = "store_true")
     parser.add_argument("-c", help = "Cache les bouttons de contrôle", action = "store_false")
+    parser.add_argument("-f", help = "Cahche la bordure de la fenêtre", action = "store_false")
     args = vars(parser.parse_args(sys.argv[1:]))
 
     ## gobject
@@ -265,9 +267,10 @@ if __name__ == "__main__":
 
     ## Init
     forcebutton = args['H']
+    decoration = args['f']
 
     ## Creation de la fenêtre
-    root = Root(forcebutton=forcebutton)
+    root = Root(forcebutton=forcebutton, decoration=decoration)
     # initialisation
     root.box.setStartTime(None, args['H'], args['m'], args['s'], args['cs'])
 
