@@ -1,6 +1,6 @@
 TriViSiJu
 =========
-Logiciel d'animation pour le festival AstroJeune 2012
+Logiciel d'animation pour le festival AstroJeune 2012 v1.0
 
     TriViSiJu: Graphical interface for the AstroJeune Festival
     
