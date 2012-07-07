@@ -200,8 +200,10 @@ class MainWindow(gtk.Window):
     def onStart(self, sender=None, video=None):
         """ Lance le décollage de la fusée """
         if self.all_is_fine:
-            ## Sortie du plein écran et réduction de la fenêtre
-            self.on_fullscreen()
+            ## Sortie du plein écran
+            if self.full:
+                self.on_fullscreen()
+            ## Réduction de la fenêtre
             gobject.timeout_add(500, self.onSchedule, self.onMinimize)
             ## Mplayer
             if video == None:
@@ -209,7 +211,7 @@ class MainWindow(gtk.Window):
             print "Chargement de la video '%s'"%(video)
             os.system("mplayer -really-quiet -fs %s &"%(video))
             ## Timer
-            runtimer = lambda : os.system("python modules/countdown.py &")
+            runtimer = lambda : os.system("python modules/countdown.py -cl -s 10 &")
             gobject.timeout_add(2000, self.onSchedule, runtimer)
         else:
             print "Le texte n'est pas décrypté..."

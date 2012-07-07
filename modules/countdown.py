@@ -217,7 +217,7 @@ class countdownBox(gtk.VBox):
 class Root(gtk.Window):
     """ Fenêtre principale du compte à rebours
     """
-    def __init__(self):
+    def __init__(self, forcebutton=True):
         """ Charge la fenêtre
         """
         ## gtk.Window
@@ -235,7 +235,7 @@ class Root(gtk.Window):
         self.set_decorated(False)
 
         ## Ajout du timer
-        self.box = countdownBox()
+        self.box = countdownBox(forcebutton=forcebutton)
         self.add(self.box)
         self.show_all()
 
@@ -251,24 +251,30 @@ if __name__ == "__main__":
     import sys
 
     ## parser
-    parser = argparse.ArgumentParser("Process command-line for countdown.py")
-    parser.add_argument("h", type = int, help = "hours", nargs = "?", default = 0)
-    parser.add_argument("m", type = int, help = "minutes", nargs = "?", default = 0)
-    parser.add_argument("s", type = int, help = "seconds", nargs = "?", default = 0)
-    parser.add_argument("cs", type = int, help = "second hundredths", nargs = "?", default = 0)
-    parser.add_argument("-l", help = "Launch on startup", action = "store_true")
+    parser = argparse.ArgumentParser("Traitement des paramètres de '%s'"%(__file__))
+    parser.add_argument("-H", type = int, help = "heures", nargs = "?", default = 0)
+    parser.add_argument("-m", type = int, help = "minutes", nargs = "?", default = 0)
+    parser.add_argument("-s", type = int, help = "secondes", nargs = "?", default = 0)
+    parser.add_argument("-cs", type = int, help = "centièmes de seconde", nargs = "?", default = 0)
+    parser.add_argument("-l", help = "Démarre au lancement", action = "store_true")
+    parser.add_argument("-c", help = "Cache les bouttons de contrôle", action = "store_false")
     args = vars(parser.parse_args(sys.argv[1:]))
 
     ## gobject
     gobject.threads_init()
 
+    ## Init
+    forcebutton = args['H']
+
     ## Creation de la fenêtre
-    root = Root()
+    root = Root(forcebutton=forcebutton)
     # initialisation
-    root.box.setStartTime(None, args['h'], args['m'], args['s'], args['cs'])
+    root.box.setStartTime(None, args['H'], args['m'], args['s'], args['cs'])
+
+    ## Lancement
     if args['l']:
         root.box.start(None)
-
+    
     ## Main loop
     gtk.main()
 
