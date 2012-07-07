@@ -257,7 +257,7 @@ if __name__ == "__main__":
     parser.add_argument("-cs", type = int, help = "centièmes de seconde", nargs = "?", default = 0)
     parser.add_argument("-l", help = "Démarre au lancement", action = "store_true")
     parser.add_argument("-c", help = "Cache les bouttons de contrôle", action = "store_false")
-    parser.add_argument("-f", help = "Cahche la bordure de la fenêtre", action = "store_false")
+    parser.add_argument("-f", help = "Cache la bordure de la fenêtre", action = "store_false")
     args = vars(parser.parse_args(sys.argv[1:]))
 
     ## gobject
