@@ -60,6 +60,9 @@ class MainWindow(gtk.Window):
         ## Charge la classe Player
         self.screen = PlayerFrame(self, 1, quitb=kwarg['quitb'], forcebutton=kwarg['forcebutton'], bgcolor=bgcolor)
 
+        # Gstreamer
+        self.gsplayer = SongPlayer(filename=kwarg['alarm_file'])
+
         ## Compte à rebours
         self.countdown = countdownBox(forcebutton=kwarg['forcebutton'],size=kwarg['timer_size'])
         #self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
@@ -101,6 +104,7 @@ class MainWindow(gtk.Window):
         self.scrolltextbox.connect("main-decrypt-suite", self.onDecrypt)
         self.decrypt.connect("main-enigme", self.onDecrypt)
         self.prompt.connect("main-start", self.onStart, kwarg['videoend'])
+        self.prompt.connect("gsplayer-play", self.onAlarm)
         ## vers prompt
         self.teamBox.connect("prompt-message",self.prompt.onExternalInsert)
         self.teamBox.connect("decrypt-send-teams",self.decrypt.getTeams)
@@ -135,7 +139,6 @@ class MainWindow(gtk.Window):
         self.prompt.connect("caract-start",self.caractBox.start)
         self.prompt.connect("caract-max-line",self.caractBox.changeMaxLine)
         self.prompt.connect("caract-width",self.caractBox.changeWidth)
-
         ## de decrypt vers les autres
         self.decrypt.connect("team-ask-teams",self.teamBox.sendTeams)
         self.decrypt.connect("team-update",self.teamBox.updateTeam)
@@ -217,6 +220,17 @@ class MainWindow(gtk.Window):
         if function != None:
             function()
         return False
+
+    def onAlarm(self, sender=None):
+        """ Joue une alarm """
+        if isinstance(self.gsplayer.filename, str):
+            if os.path.isfile(self.gsplayer.filename):
+                self.gsplayer.play()
+            else:
+                self.prompt.onExternalInsert(None, "Pas de fichier son")
+        else:
+            self.prompt.onExternalInsert(None, "Pas de fichier son")
+
 
     def quit(self, *parent):
         """ Fonction quitter

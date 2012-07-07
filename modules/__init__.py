@@ -27,3 +27,4 @@ from teams import *
 from scrolltext import *
 from decrypt import *
 from caract import *
+from gsplayer import SongPlayer

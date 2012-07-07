@@ -144,6 +144,8 @@ class promptBox(gtk.VBox):
         gobject.signal_new("caract-start", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("caract-max-line", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
         gobject.signal_new("caract-width", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
+        ## Gsplayer
+        gobject.signal_new("gsplayer-play", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -153,7 +155,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll, 'init':self.onInit, 'minimize':self.onMinimize, 'reset':self.onReset, 'start':self.onStart, 'caract':self.onCaract}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll, 'init':self.onInit, 'minimize':self.onMinimize, 'reset':self.onReset, 'start':self.onStart, 'caract':self.onCaract, 'alarm':self.onAlarm}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -478,6 +480,11 @@ class promptBox(gtk.VBox):
         else:
             self.buffer.insert(self.iter,"Sous commande invalide\n")
 
+    def onAlarm(self, args):
+        """ Méthode de traitement de la commande "alarm" """
+        if len(args) > 1:
+            self.buffer.insert(self.iter,"Erreur : Trop d'arguments\n")
+        self.emit("gsplayer-play")
 
     def onInit(self, args):
         """ Méthode de traitement de la commande "init" """
