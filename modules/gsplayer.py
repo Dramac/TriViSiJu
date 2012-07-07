@@ -33,7 +33,7 @@ import os
 class SongPlayer():
     """ Classe permettant de lire un fichier audio """
 
-    def __init__(self):
+    def __init__(self, filename=None):
         """ Chargement du lecteur """
         self.player = gst.element_factory_make("playbin2", "player")
         fakesink = gst.element_factory_make("fakesink", "fakesink")
@@ -41,11 +41,24 @@ class SongPlayer():
         bus = self.player.get_bus()
         bus.add_signal_watch()
         bus.connect("message", self.on_message)
+        self.filename = None
+        if filename:
+            self.loadfile(filename)
 
-    def play(self, file=None):
+    def loadfile(self, filename):
+        """ Charge un fichier """
+        if os.path.isfile(filename):
+            self.filename = filename
+            self.player.set_property("uri", "file://"+filename)
+        else:
+            self.filename = None
+
+    def play(self, sender=None, file=None):
         """ Lit le fichier """
-        self.player.set_property("uri", "file://" + file)
-        self.player.set_state(gst.STATE_PLAYING)
+        if isinstance(file, str):
+            self.loadfile(file)
+        if self.filename:
+            self.player.set_state(gst.STATE_PLAYING)
 
     def stop(self):
         """ Stop la lecture en cours """
