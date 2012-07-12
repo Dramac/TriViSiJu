@@ -100,6 +100,7 @@ class Player(gtk.Socket):
         if not self.start:
             raise self.MplayerIdError()
         else:
+            filename = os.path.expanduser(filename).replace(" ","\ ")
             self.cmdplayer("loadfile %s"%(filename))
             self.cmdplayer("change_resctangle w=100:h=100")
 
