@@ -286,23 +286,20 @@ class promptBox(gtk.VBox):
             if nargs >= 2:
                 team_name = " ".join(args[1:])
                 self.emit("team-delete", team_name)
-            elif nargs < 2:
-                nargs = 0
             else:
-                nargs = -1
+                nargs = 0
         elif subcommand == 'passwd':
             if nargs >= 2:
                 team_name = " ".join(args[1:])
                 passwd = getPasswd(team_name)
                 self.emit("team-passwd", team_name, passwd)
-            elif nargs < 3:
-                nargs = 0
             else:
-                nargs = -1
+                nargs = 0
         elif subcommand == 'load':
             if nargs == 1:
                 self.emit("team-load")
             else:
+                # code qui indique qu'il y a trop d'arguments
                 nargs = -1
         elif subcommand == 'save':
             if nargs == 1:
@@ -389,14 +386,12 @@ class promptBox(gtk.VBox):
             return
         subcommand = args[0]
         if subcommand == 'load':
-            if nargs == 2:
-                self.emit("video-load", args[1])
-            elif nargs < 2:
+            if nargs >= 2:
+                file_name = " ".join(args[1:])
+                self.emit("video-load", file_name)
+            else:
                 # code qui indique qu'il n'y a pas assez d'arguments
                 nargs = 0
-            else:
-                # code qui indique qu'il y a trop d'arguments
-                nargs = -1
         elif subcommand == 'pause':
             if nargs == 1:
                 self.emit("video-pause")
