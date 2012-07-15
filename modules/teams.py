@@ -54,14 +54,13 @@ class team():
         return "Équipe {}".format(self.name)
 
 class teamBox(gtk.Label):
-    def __init__(self,fichier=os.path.join(os.path.dirname(__file__), "teams.dat"),prompt=None):
+    def __init__(self,fichier=os.path.join(os.path.dirname(__file__), "teams.dat"),color="white"):
         gtk.Label.__init__(self)
         self.set_text("Vide")
         self.set_use_markup(True)   # Mise en forme Markup
         self.team_list = []
         self.fichier = fichier
-        self.prompt = prompt
-        self.foreground = "white"
+        self.foreground = color
         gobject.signal_new("prompt-message",teamBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
         gobject.signal_new("decrypt-send-teams",teamBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_PYOBJECT])
 
