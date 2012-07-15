@@ -61,6 +61,7 @@ class teamBox(gtk.Label):
         self.team_list = []
         self.fichier = fichier
         self.prompt = prompt
+        self.foreground = "white"
         gobject.signal_new("prompt-message",teamBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING])
         gobject.signal_new("decrypt-send-teams",teamBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_PYOBJECT])
 
@@ -107,7 +108,7 @@ class teamBox(gtk.Label):
             self.set_alignment(0,0)     # Alignement à gauche
             self.set_padding(5,5)       # Marge de 5px avec les bords
             ## Mise en forme de la sortie
-            tmp = "<span foreground='green' size='large'>"
+            tmp = "<span foreground='"+self.foreground+"' size='large'>"
             for team in self.team_list:
                 if team.passwd is "":
                     tmp += u"<span foreground='red'>\u25CB</span> "
