@@ -27,12 +27,140 @@ import gtk
 import gobject
 import teams
 import time
+import fnmatch
+
+
+class ScrolledLabelBox(gtk.VBox):
+    def __init__(self,delay=1000,max_line=15,width=50,lines=[]):
+        ## Initialise gtk.VBox, gtk.HBox
+        gtk.VBox.__init__(self)
+        self.lines = lines
+        self.delay = int(delay)          # Temps en ms entre deux appels de la fonction onTimeout
+        self.max_line = int(max_line)    # Nombre de lignes à afficher au maximum
+        self.width = int(width)          # Nombre de caractères par lignes
+        self.phase = "init"         # si init, affiche des NO rouges, sinon affiche des OK verts
+        self.timer = None
+        self.cursor = 0
+        self.team = ""
+        self.updated_team = []
+
+        self.text = gtk.Label()
+        self.text.set_alignment(0,0)
+        self.add(self.text)
+        gobject.signal_new("team-update",DecryptBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING,gobject.TYPE_BOOLEAN])
+        gobject.signal_new("interne-stop", ScrolledLabelBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+
+    def start(self,sender=None):
+        if self.timer is None:
+            self.timer = gobject.timeout_add(self.delay,self.onTimeout)
+
+    def pause(self,sender=None):
+        if self.timer:
+            gobject.source_remove(self.timer)
+            self.timer = None
+
+    def changeMaxLine(self,sender,new_max_line):
+        self.max_line = int(new_max_line)
+
+    def changeWidth(self,sender,new_width):
+        self.width = int(new_width)
+
+    def changePhase(self,sender=None):
+        if self.phase == "init":
+            self.phase = "clear"
+        else:
+            self.phase = "init"
+
+    def append(self,text_to_append, root="équipe "):
+        """Ajouter du texte à la fin du texte déjà écrit"""
+
+        # On ne garde que les N dernières lignes
+        previous_text = self.text.get_label().split("\n")
+        if len(previous_text) > self.max_line:
+            previous_text = previous_text[-self.max_line:]
+        previous_text = "\n".join(previous_text)
+
+        # On supprime la mise en forme générale, qui vient perturber l'insertion
+        ## d'abord le début
+        previous_text = previous_text.replace("<span foreground='white' font_desc='Monospace'>","",1)
+        ## puis la fin
+        previous_text = self.rreplace(previous_text,"</span>","",1)
+
+        # On comble en points jusqu'à obtenir la taille de ligne désirée
+        if text_to_append == "":
+            text_to_append = text_to_append+"\n"
+        if not text_to_append[-1] == "\n":
+            text_to_append = text_to_append+"\n"
+        text_to_append, phase = self.cleanText2append(text_to_append)
+        ## Update team
+        if root in text_to_append:
+            self.team = text_to_append.split(root)[1].replace("'", "").replace("\n", "")
+        if not text_to_append == '\n' and not root in text_to_append and phase != None:
+            if len(text_to_append) <= self.width - 4:
+                dots = "".join(["." for i in range(self.width - len(text_to_append) - 4)])
+                if phase:
+                    text_to_append = text_to_append.replace("\n","") + dots + "[<span foreground='green'>OK</span>]\n"
+                else:
+                    text_to_append = text_to_append.replace("\n","") + dots + "[<span foreground='red'>NO</span>]\n"
+
+        # Puis on met le tout en forme (police à chasse fixe)
+        next_text = "<span foreground='white' font_desc='Monospace'>"+previous_text+str(text_to_append)+"</span>"
+        # et on affiche !
+        self.text.set_markup(next_text)
+    
+    def cleanText2append(self, text_to_append):
+        if fnmatch.fnmatch(text_to_append, "*OK*"):
+            passwd = True
+            text_to_append = text_to_append.replace("[OK]", "")
+        elif fnmatch.fnmatch(text_to_append, "*KO*"):
+            text_to_append = text_to_append.replace("[KO]", "")
+            passwd = False
+        else:
+            passwd = None
+        text_to_append = text_to_append.replace("\t", "")
+        if passwd != None and not self.team in self.updated_team:
+            self.emit("team-update", self.team, passwd)
+            self.updated_team.append(self.team)
+        return text_to_append, passwd
+
+
+    def onTimeout(self, *args):
+        """Fonction appelée toutes les self.delay ms"""
+        if self.lines != []:
+            line = self.lines[self.cursor]
+            self.append(line)
+            self.cursor += 1
+            if self.cursor >= len(self.lines):
+                self.emit("interne-stop")
+                return False
+            return True         # Si True, continue
+        else:
+            print "WARNING: self.lines = '%s'"%(self.lines)
+            return False        # Stop scroll
+
+    def rreplace(self, s, old, new, occurrence):
+        li = s.rsplit(old, occurrence)
+        return new.join(li)
+
+def update_pbar(self, percent=None, team_data=None):
+    """ Met à jour le texte de la barre de progression
+    """
+    ## Met à jour percent
+    if percent == None:
+        percent = self.percent
+    if percent > 1.0:
+        percent = 1.0
+    ## Met à jour le texte et la valeur de la barre
+    self.pbar.set_fraction(percent)
+    if team_data == None:
+        team_data = self.team
+    self.pbar.set_text("Équipe '%s' (%d/%d)"%(team_data[0], team_data[1], self.nteam))
 
 class DecryptBox(gtk.VBox):
     """ Fenêtre de décryptage
     """
 
-    def __init__(self, passwd="passwd", team_list=[teams.team("Orion1", passwd="asswd"), teams.team("Pegase2", passwd="Passwd"), teams.team("Ariane3", passwd="")],data_folder="data/"):
+    def __init__(self, passwd="passwd", team_list=[teams.team("Orion1", passwd="passwd"), teams.team("Pegase2", passwd="Passwd"), teams.team("Ariane3", passwd="")],data_folder="data/"):
         """ Initialisation
         """
         ## Initialise la fenetre
@@ -41,37 +169,26 @@ class DecryptBox(gtk.VBox):
         ## Charge les variables
         self.has_at_least_one_time = False
         self.passwd = passwd
-        self.team_list = team_list
-        self.nteam = len(self.team_list)
+        self.setTeams(team_list)
+        self.team = ("", 0)
         self.percent = 0.0
         self.data_folder = data_folder
+        self.win = None
 
-        ## Initialise la barre de progression
-        self.pbar = gtk.ProgressBar()
-        self.pbar.set_size_request(500, 50)
-        self.update_pbar(team_data=("", 0))
-        self.continuer=True
+        ## Label
+        self.scrolledlabel = ScrolledLabelBox()
 
-        ## Scroll text
-        self.textview = gtk.TextView()
-        self.textview.set_editable(False)
-        self.textview.set_cursor_visible(False)
-        self.scrolledwindow = gtk.ScrolledWindow()
-        self.scrolledwindow.add(self.textview)
-        self.scrolledwindow.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
-        self.set_size_request(500, 300)
-
-        ## Buffer
-        self.buffer = self.textview.get_buffer()
+        ## Size request
+        self.scrolledlabel.set_size_request(800, 300)
 
         ## Affichage sur self
-        self.pack_start(self.pbar, expand=False, fill=True, padding=0)
-        self.pack_start(self.scrolledwindow, True, True, 0)
+        self.pack_start(self.scrolledlabel, True, True, 0)
 
         ## Signaux
-        gobject.signal_new("team-update",DecryptBox,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING,gobject.TYPE_BOOLEAN])
+        self.scrolledlabel.connect("interne-stop", self.onStop)
 
     def setTeams(self,team_list):
+        """ Initialize les equipe """
         self.team_list = team_list
         self.nteam = len(self.team_list)
 
@@ -93,52 +210,19 @@ class DecryptBox(gtk.VBox):
         if self.nteam == 0:
             self.continuer = False
 
+        text = []
         ## Boucle sur toutes les équipes
-        while self.continuer:
-            ## Recupere la classe de l'équipe
-            team = self.team_list[num]
+        for num, team in enumerate(self.team_list):
             passwd_check = False
             if self.passwd == team.passwd:
                 at_least_one_passwd = True
                 passwd_check = True
 
-            ## Met à jour le texte de la barre
-            self.update_pbar(team_data=(team.name, num+1))
-
             ## Génère le texte de l'équipe
-            text = self.team_text(team).split('\n')
-
-            ## Boucle sur les lignes
-            for line in text:
-                time.sleep(1)
-                count = count + 1
-                self.update_pbar(percent=float(count)/total)
-                self.text = self.text + '\n' + line
-                self.update_buffer(self.text)
-
-            self.emit("team-update",team.name,passwd_check)
-
-            ## Incrémente le compteur
-            num = num + 1
-
-            ## Arrêt de la boucle while
-            if num >= self.nteam:
-                self.continuer = False
-            time.sleep(2)
+            text = text + self.team_text(team).split('\n')
 
         ## Renvoie at_least_one_passwd
-        return at_least_one_passwd
-
-    def update_buffer(self, text):
-        """ Met à jour le buffer et fait défiler le texte
-        """
-        ## Met à jour le buffer
-        self.buffer.set_text(text)
-        ## Fait défiler le text
-        adj = self.scrolledwindow.get_vadjustment()
-        adj.set_value( adj.upper - adj.page_size )
-        while gtk.events_pending():
-            gtk.main_iteration()
+        return text, at_least_one_passwd
 
     def show_warning_and_continue(self, msg):
         """ Montre que le mot de passe a été trouvé et valide le décryptage
@@ -157,23 +241,7 @@ class DecryptBox(gtk.VBox):
         ## Lecture du fichier 'phase2'
         with open(self.data_folder+'decrypt_msg_phase2.txt') as f:
             lines = f.readlines()
-
-        ## Activation de la barre de progression en mode activité
-        self.pbar.set_text("")
-        self.pbar.set_orientation(gtk.PROGRESS_RIGHT_TO_LEFT)
-
-        ## Affichage du fichier 'phase2'
-        nlines = len(lines)
-        n = 0
-        while self.continuer:
-            line = lines[n]
-            time.sleep(0.1)
-            self.update_pbar(percent=float(n+1)/float(nlines))
-            self.text = self.text + line
-            self.update_buffer(self.text)
-            n = n + 1
-            if n >= nlines:
-                self.continuer = False
+        return lines
 
     def start(self):
         """ Lance la procédure de décryptage
@@ -181,22 +249,27 @@ class DecryptBox(gtk.VBox):
         ## Set has_at_least_one_time
         self.has_at_least_one_time = True
 
-        ## Reset les variables
-        self.text = ""
-        self.continuer = True
-        self.update_pbar(team_data=("", 0))
-        self.pbar.set_orientation(gtk.PROGRESS_LEFT_TO_RIGHT)
+        ## Génération du texte à faire défiler
+        text1, self.win = self.phase1()
+        if not self.win:
+            text2 = self.phase2()
+        else:
+            text2 = []
+        lines = text1 + text2
 
-        ## Lancement de la phase 1
-        win = self.phase1()
+        ## Faire défiler le texte
+        self.scrolledlabel.lines = lines
+        self.scrolledlabel.start()
 
+    def onStop(self, sender=None):
+        """ Affiche le message final"""
         ## Test la réussite
-        if win:
+        if self.win == None:
+            print "Lancer start avant"
+        if self.win:
             msg = self.msg_from_file(self.data_folder+'decrypt_msg_phase1win.txt')
             self.show_warning_and_continue(msg)
         else:
-            self.continuer = True
-            self.phase2()
             msg = self.msg_from_file(self.data_folder+'decrypt_msg_phase2win.txt')
             self.show_warning_and_continue(msg)
 
@@ -207,22 +280,6 @@ class DecryptBox(gtk.VBox):
             msg = f.readlines()
         msg = "".join(msg)
         return msg
-
-    def update_pbar(self, percent=None, team_data=None):
-        """ Met à jour le texte de la barre de progression
-        """
-        ## Met à jour percent
-        if percent != None:
-            if percent > 1.0:
-                percent = 1.0
-            self.percent = percent
-        ## Met à jour le texte et la valeur de la barre
-        self.pbar.set_fraction(self.percent)
-        if team_data != None:
-            self.pbar.set_text("Équipe '%s' (%d/%d)"%(team_data[0], team_data[1], self.nteam))
-        ## On fordce la mise à jour de la fenêtre
-        while gtk.events_pending():
-            gtk.main_iteration(False)
 
     def get_template(self):
         """ Charge le template du texte
@@ -249,18 +306,11 @@ class DecryptBox(gtk.VBox):
         ## Renvoie
         return lines
 
-    def quit(self, *parent):
-        """ Fonction qui permet de quitter proprement
-        """
-        if self.continuer:
-            self.continuer = False
-
 class popupWindow(gtk.Window):
     """ Fenêtre principale pour tester le module
     """
     def __init__(self,showcontrol=False,dataf="data/", passwd="passwd"):
         ## Charge gobject (Important pour ScrollTextBox)
-        gobject.threads_init()
         gobject.signal_new("team-ask-teams",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("team-update",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING, gobject.TYPE_BOOLEAN])
         gobject.signal_new("main-enigme", popupWindow, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
@@ -270,9 +320,13 @@ class popupWindow(gtk.Window):
         self.set_title("Décryptage")
         self.ready = False
 
+        # Definition d'une couleur
+        bgcolor = gtk.gdk.color_parse("#000000")
+        self.modify_bg(gtk.STATE_NORMAL, bgcolor)
+
         ## DecryptBox
         self.decryptbox = DecryptBox(data_folder=dataf, passwd=passwd)
-        self.decryptbox.connect("team-update",self.onUpdateTeam)
+        self.decryptbox.scrolledlabel.connect("team-update",self.onUpdateTeam)
 
         ## Affichage
         if showcontrol:
@@ -296,6 +350,7 @@ class popupWindow(gtk.Window):
 
     def start(self, *parent):
         self.emit("team-ask-teams")
+        self.decryptbox.start()
 
     def getTeams(self,sender,team_list):
         self.decryptbox.setTeams(team_list)
@@ -319,3 +374,4 @@ if __name__ == "__main__":
     r = popupWindow(showcontrol=True,dataf="../data/")
     r.show_all()
     r.main()
+
