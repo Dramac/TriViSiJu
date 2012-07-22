@@ -153,9 +153,9 @@ class ScrollText(gtk.ScrolledWindow):
     """ Classe permettant de faire défiler du text indéfiniment
     """
     def __init__(self, filename=os.path.join(os.getcwd(), __file__.replace('.pyc', '.py')), speed=1.0,\
-                crypt=True, lines=None, autostop_at_end=False):
+                crypt=True, lines=None, autostop_at_end=False, foreground='white', background='black'):
         """ Initialisation de la classe
-        
+
         - filename        : Fichier à faire défiler (defaut le code lui même)
         - speed           : Vitesse de défilement (temps entre chaque ligne en milliseseconde : (defaut 1.0))
         - crypt           : Si True, crypte le text (defaut True)
@@ -173,32 +173,31 @@ class ScrollText(gtk.ScrolledWindow):
 
         ## Initialisation de gtk.ScrolledWindow
         gtk.ScrolledWindow.__init__(self)
-        
+
         ## Suppresssion de barre de défilement
         self.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
-        
+
         ## Initialisation de gtk.TextView()
         self.textview = gtk.TextView()
         self.textview.set_editable(False)       # TextView inéditable
         self.textview.set_cursor_visible(False) # Curseur invible
-        colour = gtk.gdk.color_parse("black")
-        colour2 = gtk.gdk.color_parse("green")
+        colour = gtk.gdk.color_parse(background)
+        colour2 = gtk.gdk.color_parse(foreground)
         style = self.textview.get_style().copy()
         style.bg[gtk.STATE_NORMAL] = colour
         style.base[gtk.STATE_NORMAL] = colour
         style.text[gtk.STATE_NORMAL] = colour2
         self.textview.set_style(style)
-        
+
         ## Récupération de gtk.Buffer
         self.buffer = self.textview.get_buffer()
-        
+
         ## Ajout de TextView à ScrolledWindow
         self.add(self.textview)
 
         ## Init ScrollBuffer
         self.scroll_buffer = ScrollBuffer(self, self.buffer) # Necessaire pour pouvoir connecter la fonction set_speed
 
-        
     def loadfile(self, *parent):
         """ Charge un fichier et fait défiler son contenu
         """
@@ -228,7 +227,7 @@ class ScrollText(gtk.ScrolledWindow):
             ## Stop le défilement et du coup le thread et récupère le numéro de ligne actuel
             self.buffertext = self.scroll_buffer.quit()
             self.launch = False
-        
+
     def set_speed(self, speed):
         """ Change la vitesse de défilement
 
@@ -264,7 +263,7 @@ class ScrollTextBox(gtk.VBox):
     """
 
     def __init__(self, filename=os.path.join(os.getcwd(), __file__.replace('.pyc', '.py')), speed=1.0, forcebutton=True,\
-                crypt=True, lines=None):
+                crypt=True, lines=None, foreground="white", background="black"):
         """ Initialisation de la classe
         """
         ## Inititalisation de la class gtk.VBox (conteneur)
@@ -291,7 +290,7 @@ class ScrollTextBox(gtk.VBox):
 
             ## Ajustement
             adj = gtk.Adjustment(speed, 0.01, 10.0, 0.01, 0.1, 1.0)
-            
+
             ## HScale
             hscale = gtk.HScale(adj)
             hscale.set_digits(2)                # Change la précision (defaut: 1)
@@ -311,9 +310,9 @@ class ScrollTextBox(gtk.VBox):
 
             ## Pack hbox
             self.pack_start(hbox, True, True, 0)
-        
+
         ## Charge ScrollText
-        self.scrolltext = ScrollText(filename=filename, speed=speed, crypt=crypt, lines=lines)
+        self.scrolltext = ScrollText(filename=filename, speed=speed, crypt=crypt, lines=lines, foreground=foreground, background=background)
         self.scrolltext.set_size_request(10,300) ## Requête de taille obligatoire pour fixer la scrollbox sinon sans les barres de défilement la scrollbox s'agrandi
         self.pack_start(self.scrolltext, expand=False, fill=False, padding=0)
 

@@ -88,8 +88,8 @@ class promptBox(gtk.VBox):
         self.result.set_editable(False)
         self.result.set_cursor_visible(False)
 
-        colour = gtk.gdk.color_parse("black")
-        colour2 = gtk.gdk.color_parse("green")
+        colour = gtk.gdk.color_parse(kwarg['background'])
+        colour2 = gtk.gdk.color_parse(kwarg['foreground'])
         style = self.entry.get_style().copy()
         style.bg[gtk.STATE_NORMAL] = colour
         style.base[gtk.STATE_NORMAL] = colour

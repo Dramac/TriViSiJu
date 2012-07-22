@@ -46,7 +46,7 @@ class MainWindow(gtk.Window):
         self.all_is_fine = False
 
         # Definition d'une couleur
-        bgcolor = gtk.gdk.color_parse("#000000")
+        bgcolor = gtk.gdk.color_parse(kwarg['background'])
         self.modify_bg(gtk.STATE_NORMAL, bgcolor)
 
         ## Table
@@ -68,13 +68,13 @@ class MainWindow(gtk.Window):
         #self.countdown.setStartTime(h=0,m=0,s=48,cs=0)
 
         ## Texte crypté
-        self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'], speed=kwarg['speed'], crypt=kwarg['crypt'])
+        self.scrolltextbox = ScrollTextBox(forcebutton=kwarg['forcebutton'], speed=kwarg['speed'], crypt=kwarg['crypt'], foreground=kwarg['foreground'], background=kwarg['background'])
 
         ## Caractéristiques techniques
-        self.caractBox = caractBox(delay=kwarg['caract_delay'],max_line=kwarg['caract_max_line'],width=kwarg['caract_width'])
+        self.caractBox = caractBox(delay=kwarg['caract_delay'],max_line=kwarg['caract_max_line'],width=kwarg['caract_width'],foreground=kwarg['foreground'])
 
         ## Liste des équipes
-        self.teamBox = teamBox()
+        self.teamBox = teamBox(foreground=kwarg['foreground'])
 
         ## Popup window de décryptage
         self.decrypt = popupWindow(passwd=kwarg['passwd'])

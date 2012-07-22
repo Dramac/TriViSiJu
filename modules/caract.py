@@ -33,7 +33,7 @@ def rreplace(s, old, new, occurrence):
     return new.join(li)
 
 class caractBox(gtk.VBox):
-    def __init__(self,file="data/caract.txt",delay=1000,max_line=15,width=35):
+    def __init__(self,file="data/caract.txt",delay=1000,max_line=15,width=35,foreground="white"):
         ## Initialise gtk.VBox, gtk.HBox
         gtk.VBox.__init__(self)
 
@@ -44,6 +44,7 @@ class caractBox(gtk.VBox):
         self.phase = "init"         # si init, affiche des NO rouges, sinon affiche des OK verts
         self.timer = None
         self.cursor = 0
+        self.foreground = foreground
 
         self.text = gtk.Label()
         self.text.set_alignment(0,0)
@@ -81,7 +82,7 @@ class caractBox(gtk.VBox):
 
         # On supprime la mise en forme générale, qui vient perturber l'insertion
         ## d'abord le début
-        previous_text = previous_text.replace("<span foreground='white' font_desc='Monospace'>","",1)
+        previous_text = previous_text.replace("<span foreground='"+self.foreground+"' font_desc='Monospace'>","",1)
         ## puis la fin
         previous_text = rreplace(previous_text,"</span>","",1)
 
@@ -94,7 +95,7 @@ class caractBox(gtk.VBox):
                 text_to_append = text_to_append.replace("\n","") + dots + "[<span foreground='green'>OK</span>]\n"
 
         # Puis on met le tout en forme (police à chasse fixe)
-        next_text = "<span foreground='white' font_desc='Monospace'>"+previous_text+str(text_to_append)+"</span>"
+        next_text = "<span foreground='"+self.foreground+"' font_desc='Monospace'>"+previous_text+str(text_to_append)+"</span>"
         # et on affiche !
         self.text.set_markup(next_text)
 
