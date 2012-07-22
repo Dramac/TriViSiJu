@@ -279,6 +279,8 @@ class promptBox(gtk.VBox):
             if nargs >= 2:
                 team_name = " ".join(args[1:])
                 self.emit("team-add", team_name)
+                passwd = getPasswd(team_name)
+                self.emit("team-passwd", team_name, passwd)
             else:
                 # code qui indique qu'il n'y a pas assez d'arguments
                 nargs = 0
