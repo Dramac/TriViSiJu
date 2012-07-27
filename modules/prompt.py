@@ -477,7 +477,7 @@ class promptBox(gtk.VBox):
 
     def onAlarm(self, args):
         """ Méthode de traitement de la commande "alarm" """
-        if len(args) > 1:
+        if len(args) > 0:
             self.buffer.insert(self.iter,"Erreur : Trop d'arguments\n")
         self.emit("gsplayer-play")
 
@@ -523,13 +523,19 @@ class promptBox(gtk.VBox):
 
     def onStart(self, args):
         """ Méthode de traitement de la commande "start" """
-        if len(args) > 0:
+        nargs = len(args)
+        if nargs == 0:
+            self.buffer.insert(self.iter, "Erreur : pas assez d'arguments\n")
+            return
+        elif nargs > 1:
             self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
             return
-        ## Lance la fusée !
-        self.buffer.insert(self.iter, "Lancement de la fusée\n")
-        self.emit("main-start")
-
+        if args[0] == self.kwarg['launchkey']:
+            ## Lance la fusée !
+            self.buffer.insert(self.iter, "Lancement de la fusée\n")
+            self.emit("main-start")
+        else:
+            self.buffer.insert(self.iter, "Erreur : clé invalide\n")
 
     def onQuit(self, args):
         """ Méthode de traitement de la commande "quit" """
