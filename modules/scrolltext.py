@@ -313,7 +313,7 @@ class ScrollTextBox(gtk.VBox):
 
         ## Charge ScrollText
         self.scrolltext = ScrollText(filename=filename, speed=speed, crypt=crypt, lines=lines, foreground=foreground, background=background)
-        self.scrolltext.set_size_request(10,300) ## Requête de taille obligatoire pour fixer la scrollbox sinon sans les barres de défilement la scrollbox s'agrandi
+        self.scrolltext.set_size_request(10,500) ## Requête de taille obligatoire pour fixer la scrollbox sinon sans les barres de défilement la scrollbox s'agrandi
         self.pack_start(self.scrolltext, expand=False, fill=False, padding=0)
 
         ## Connexion

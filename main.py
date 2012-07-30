@@ -50,7 +50,7 @@ class MainWindow(gtk.Window):
         self.modify_bg(gtk.STATE_NORMAL, bgcolor)
 
         ## Table
-        self.grid = gtk.Table(rows=4, columns=7, homogeneous=True)
+        self.grid = gtk.Table(rows=6, columns=7, homogeneous=True)
         rightBox = gtk.VBox(homogeneous=False,spacing=0)
 
         ## Prompt
@@ -83,12 +83,12 @@ class MainWindow(gtk.Window):
         self.enigme = PopupWindow(forcebutton=kwarg['forcebutton'], foreground=kwarg['foreground'], background=kwarg['background'])
 
         ## Table
-        self.grid.attach(self.screen,        0, 4, 0, 2, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
-        self.grid.attach(self.teamBox,       0, 2, 2, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
-        self.grid.attach(self.caractBox,     2, 4, 2, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.screen,        0, 4, 0, 3, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.teamBox,       0, 1, 3, 6, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.caractBox,     2, 4, 3, 6, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
         self.grid.attach(self.countdown,     4, 7, 0, 1, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
-        self.grid.attach(self.scrolltextbox, 4, 7, 1, 3, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
-        self.grid.attach(self.prompt,        4, 7, 3, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.scrolltextbox, 4, 7, 1, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+        self.grid.attach(self.prompt,        4, 7, 4, 6, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
 
         ## Ajout de self.grid sur la fenêtre principale
         self.add(self.grid)
