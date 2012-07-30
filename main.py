@@ -77,7 +77,7 @@ class MainWindow(gtk.Window):
         self.teamBox = teamBox(foreground=kwarg['foreground'])
 
         ## Popup window de décryptage
-        self.decrypt = popupWindow(passwd=kwarg['passwd'])
+        self.decrypt = popupWindow(passwd=kwarg['passwd'], imagefile=kwarg['imagefile'], background=kwarg['background'], foreground=kwarg['foreground'])
 
         ## Poup window des énigmes
         self.enigme = PopupWindow(forcebutton=kwarg['forcebutton'], foreground=kwarg['foreground'], background=kwarg['background'])

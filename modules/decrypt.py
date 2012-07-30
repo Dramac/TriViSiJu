@@ -28,10 +28,11 @@ import gobject
 import teams
 import time
 import fnmatch
+import os
 
 
 class ScrolledLabelBox(gtk.VBox):
-    def __init__(self,delay=1000,max_line=15,width=50,lines=[]):
+    def __init__(self,delay=1000,max_line=15,width=50,lines=[], foreground="white"):
         ## Initialise gtk.VBox, gtk.HBox
         gtk.VBox.__init__(self)
         self.lines = lines
@@ -43,6 +44,7 @@ class ScrolledLabelBox(gtk.VBox):
         self.cursor = 0
         self.team = ""
         self.updated_team = []
+        self.foreground = foreground
 
         self.text = gtk.Label()
         self.text.set_alignment(0,0)
@@ -82,7 +84,7 @@ class ScrolledLabelBox(gtk.VBox):
 
         # On supprime la mise en forme générale, qui vient perturber l'insertion
         ## d'abord le début
-        previous_text = previous_text.replace("<span foreground='white' font_desc='Monospace'>","",1)
+        previous_text = previous_text.replace("<span foreground='%s' font_desc='Monospace'>"%(self.foreground),"",1)
         ## puis la fin
         previous_text = self.rreplace(previous_text,"</span>","",1)
 
@@ -104,7 +106,7 @@ class ScrolledLabelBox(gtk.VBox):
                     text_to_append = text_to_append.replace("\n","") + dots + "[<span foreground='red'>NO</span>]\n"
 
         # Puis on met le tout en forme (police à chasse fixe)
-        next_text = "<span foreground='white' font_desc='Monospace'>"+previous_text+str(text_to_append)+"</span>"
+        next_text = "<span foreground='%s' font_desc='Monospace'>"%(self.foreground)+previous_text+str(text_to_append)+"</span>"
         # et on affiche !
         self.text.set_markup(next_text)
     
@@ -160,7 +162,7 @@ class DecryptBox(gtk.VBox):
     """ Fenêtre de décryptage
     """
 
-    def __init__(self, passwd="passwd", team_list=[teams.team("Orion1", passwd="passwd"), teams.team("Pegase2", passwd="Passwd"), teams.team("Ariane3", passwd="")],data_folder="data/"):
+    def __init__(self, passwd="passwd", team_list=[teams.team("Orion1", passwd="passwd"), teams.team("Pegase2", passwd="Passwd"), teams.team("Ariane3", passwd="")],data_folder="data/", imagefile=None, background="black", foreground="white"):
         """ Initialisation
         """
         ## Initialise la fenetre
@@ -174,9 +176,12 @@ class DecryptBox(gtk.VBox):
         self.percent = 0.0
         self.data_folder = data_folder
         self.win = None
+        self.imagefile = imagefile
+        self.background = background
+        self.foreground = foreground
 
         ## Label
-        self.scrolledlabel = ScrolledLabelBox()
+        self.scrolledlabel = ScrolledLabelBox(foreground=self.foreground)
 
         ## Size request
         self.scrolledlabel.set_size_request(800, 300)
@@ -224,13 +229,37 @@ class DecryptBox(gtk.VBox):
         ## Renvoie at_least_one_passwd
         return text, at_least_one_passwd
 
-    def show_warning_and_continue(self, msg):
+    def show_warning_and_continue(self, msg, root=None):
         """ Montre que le mot de passe a été trouvé et valide le décryptage
         """
-        label = gtk.Label(msg.decode('utf-8'))
-        dialog = gtk.Dialog("Décryptage réussi")
-        dialog.vbox.pack_start(label)
-        label.show()
+        ## Message : Image + Texte
+        hbox = gtk.HBox()
+        # Image
+        image = gtk.Image()
+        if self.imagefile != None:
+            if os.path.isfile(self.imagefile):
+                pixbuf = gtk.gdk.pixbuf_new_from_file(self.imagefile)
+                scaled_buf = pixbuf.scale_simple(150,150,gtk.gdk.INTERP_BILINEAR)
+                image.set_from_pixbuf(scaled_buf)
+            else:
+                print "'%s' does not exist"%(self.imagefile)
+        else:
+            image.set_from_stock(gtk.STOCK_DIALOG_INFO, gtk.ICON_SIZE_DIALOG)
+        # Texte
+        label = gtk.Label()
+        text = "<span foreground='%s' font_desc='Monospace'>"%(self.foreground)+msg.decode('utf-8')+"</span>"
+        label.set_markup(text)
+        label.set_line_wrap(True)
+        # Pack_start
+        hbox.pack_start(image, True, True, 5)
+        hbox.pack_start(label, True, True, 5)
+
+        ## Affiche la fenêtre
+        dialog = gtk.Dialog("Décryptage réussi", root, gtk.DIALOG_DESTROY_WITH_PARENT|gtk.DIALOG_NO_SEPARATOR)
+        bgcolor = gtk.gdk.color_parse(self.background)
+        dialog.modify_bg(gtk.STATE_NORMAL, bgcolor)
+        dialog.vbox.pack_start(hbox)
+        dialog.show_all()
         dialog.run()
         dialog.destroy()
 
@@ -309,7 +338,7 @@ class DecryptBox(gtk.VBox):
 class popupWindow(gtk.Window):
     """ Fenêtre principale pour tester le module
     """
-    def __init__(self,showcontrol=False,dataf="data/", passwd="passwd"):
+    def __init__(self,showcontrol=False,dataf="data/", passwd="passwd", imagefile=None, background="black", foreground="white"):
         ## Charge gobject (Important pour ScrollTextBox)
         gobject.signal_new("team-ask-teams",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
         gobject.signal_new("team-update",popupWindow,gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_STRING, gobject.TYPE_BOOLEAN])
@@ -321,11 +350,11 @@ class popupWindow(gtk.Window):
         self.ready = False
 
         # Definition d'une couleur
-        bgcolor = gtk.gdk.color_parse("#000000")
+        bgcolor = gtk.gdk.color_parse(background)
         self.modify_bg(gtk.STATE_NORMAL, bgcolor)
 
         ## DecryptBox
-        self.decryptbox = DecryptBox(data_folder=dataf, passwd=passwd)
+        self.decryptbox = DecryptBox(data_folder=dataf, passwd=passwd, imagefile=imagefile, background=background, foreground=foreground)
         self.decryptbox.scrolledlabel.connect("team-update",self.onUpdateTeam)
 
         ## Affichage
