@@ -1,7 +1,7 @@
 # To get sub-modules
 
 """ TriViSiJu: Graphical interface for the AstroJeune Festival
-    
+
 	Copyright (C) 2012  Jules DAVID, Tristan GREGOIRE, Simon NICOLAS and Vincent PRAT
 
 	This file is part of TriViSiJu.
@@ -28,3 +28,4 @@ from scrolltext import *
 from decrypt import *
 from caract import *
 from gsplayer import SongPlayer
+from enigme import PopupWindow

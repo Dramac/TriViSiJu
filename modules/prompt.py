@@ -146,6 +146,8 @@ class promptBox(gtk.VBox):
         gobject.signal_new("caract-width", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [gobject.TYPE_INT])
         ## Gsplayer
         gobject.signal_new("gsplayer-play", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
+        ## Enigme
+        gobject.signal_new("indice", promptBox, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, [])
 
         # Connexion des signaux
         self.entry.connect("activate", self.parseEntry)
@@ -155,7 +157,7 @@ class promptBox(gtk.VBox):
 
         # Gestion des commandes
         self.parser = argparse.ArgumentParser("Process command-line")
-        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll, 'init':self.onInit, 'minimize':self.onMinimize, 'reset':self.onReset, 'start':self.onStart, 'caract':self.onCaract, 'alarm':self.onAlarm}
+        self.commands = {'bip': self.onBip, 'fullscreen': self.onFullscreen, 'team': self.onTeam, 'quit': self.onQuit, 'timer': self.onTimer, 'video': self.onVideo, 'decrypt': self.onDecrypt, 'scroll':self.onScroll, 'init':self.onInit, 'minimize':self.onMinimize, 'reset':self.onReset, 'start':self.onStart, 'caract':self.onCaract, 'alarm':self.onAlarm, 'indice':self.onIndice}
         self.parser.add_argument("command", help = "Command to launch", choices = self.commands.keys())
         self.parser.add_argument("arguments", help = "Arguments", nargs = "*")
 
@@ -536,6 +538,14 @@ class promptBox(gtk.VBox):
             self.emit("main-start")
         else:
             self.buffer.insert(self.iter, "Erreur : clé invalide\n")
+
+    def onIndice(self, args):
+        """ Méthode de traitement de la commande "indice" """
+        print args
+        if len(args) != 0:
+            self.buffer.insert(self.iter, "Erreur : trop d'arguments\n")
+        else:
+            self.emit("indice")
 
     def onQuit(self, args):
         """ Méthode de traitement de la commande "quit" """

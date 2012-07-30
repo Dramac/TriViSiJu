@@ -79,6 +79,9 @@ class MainWindow(gtk.Window):
         ## Popup window de décryptage
         self.decrypt = popupWindow(passwd=kwarg['passwd'])
 
+        ## Poup window des énigmes
+        self.enigme = PopupWindow(forcebutton=kwarg['forcebutton'], foreground=kwarg['foreground'], background=kwarg['background'])
+
         ## Table
         self.grid.attach(self.screen,        0, 4, 0, 2, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
         self.grid.attach(self.teamBox,       0, 2, 2, 4, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
@@ -139,6 +142,8 @@ class MainWindow(gtk.Window):
         self.prompt.connect("caract-start",self.caractBox.start)
         self.prompt.connect("caract-max-line",self.caractBox.changeMaxLine)
         self.prompt.connect("caract-width",self.caractBox.changeWidth)
+        ## de prompt vers enigme
+        self.prompt.connect("indice", self.onIndice)
         ## de decrypt vers les autres
         self.decrypt.connect("team-ask-teams",self.teamBox.sendTeams)
         self.decrypt.connect("team-update",self.teamBox.updateTeam)
@@ -233,6 +238,13 @@ class MainWindow(gtk.Window):
         else:
             self.prompt.onExternalInsert(None, "Pas de fichier son")
 
+    def onIndice(self, sender):
+        """ Affiche les énigmes
+        """
+        if self.all_is_fine:
+            self.enigme.start()
+        else:
+            self.prompt.onExternalInsert(None, "Erreur: commande non disponible pour l'instant")
 
     def quit(self, *parent):
         """ Fonction quitter
