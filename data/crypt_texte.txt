@@ -1,0 +1,8 @@
+L'accès à l'ordinateur central est maintenant possible.
+Début de la séquence de lancement.
+Première phase de tests terminée => Résultats optimaux.
+Seconde phase de tests terminée => Résultats optimaux.
+Initialisation des commandes de lancement
+Veuillez entrer le mot de passe du commandant après la commande 'start' :
+(En cas d'oublis du mot de passe des indices peuvent être affichés
+avec la commande 'indice')

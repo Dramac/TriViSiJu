@@ -2,7 +2,7 @@
 #-*-coding: utf8 -*-
 
 """ TriViSiJu: Graphical interface for the AstroJeune Festival
-    
+
 	Copyright (C) 2012  Jules DAVID, Tristan GREGOIRE, Simon NICOLAS and Vincent PRAT
 
 	This file is part of TriViSiJu.
@@ -77,10 +77,10 @@ class ScrollBuffer(threading.Thread):
         ## Fait défiler le text
         adj = self.root.get_vadjustment()
         adj.set_value( adj.upper - adj.page_size )
-        
+
         ## Retourne False pour gobject (évite que la fonction soit rappeller automatiquement)
         return False
-    
+
     def cryptage(self, texte):
         """ Fonction de cryptage
 
@@ -116,7 +116,7 @@ class ScrollBuffer(threading.Thread):
 
             ## Incrémente self.n
             self.incremente()
-            
+
             ## Ajout de la ligne suivante
             if self.crypt:
                 ajout = ""
@@ -128,7 +128,7 @@ class ScrollBuffer(threading.Thread):
                 self.line = self.line + '\n' + ajout
             else:
                 self.line = self.line + self.lines[self.n]
-            
+
             ## Attend avant la ligne suivante
             time.sleep(self.speed/10.)
 
@@ -152,7 +152,7 @@ class ScrollBuffer(threading.Thread):
 class ScrollText(gtk.ScrolledWindow):
     """ Classe permettant de faire défiler du text indéfiniment
     """
-    def __init__(self, filename=os.path.join(os.getcwd(), __file__.replace('.pyc', '.py')), speed=1.0,\
+    def __init__(self, filename="data/crypt_texte.txt", speed=1.0,\
                 crypt=True, lines=None, autostop_at_end=False, foreground='white', background='black'):
         """ Initialisation de la classe
 
@@ -262,7 +262,7 @@ class ScrollTextBox(gtk.VBox):
     - speed    : Vitesse de défilement (temps entre chaque ligne en seconde : (defaut 0.1))
     """
 
-    def __init__(self, filename=os.path.join(os.getcwd(), __file__.replace('.pyc', '.py')), speed=1.0, forcebutton=True,\
+    def __init__(self, filename="data/crypt_texte.txt", speed=1.0, forcebutton=True,\
                 crypt=True, lines=None, foreground="white", background="black"):
         """ Initialisation de la classe
         """
@@ -420,6 +420,7 @@ class ScrollTextBox(gtk.VBox):
             else:
                 if stop:
                     self.scroll_off()
+                    self.scrolltext.show_text()
                     self.emit("main-decrypt-suite", 1)
                 return False ## On arrète de réduire
         else:
@@ -430,7 +431,7 @@ class ScrollTextBox(gtk.VBox):
         """
         ## Arrêt du défilement et du thread associé
         self.scrolltext.quit()
- 
+
 
 if __name__ == "__main__":
     # Fenêtre principale pour tester ScrollText
@@ -448,13 +449,13 @@ if __name__ == "__main__":
     root.set_default_size(500, 400)
     root.set_position(gtk.WIN_POS_CENTER)
     root.connect("destroy", quit)
-    
+
     ## ScrollTextBox
-    scrolltextbox = ScrollTextBox()
-    
+    scrolltextbox = ScrollTextBox(filename="../data/crypt_texte.txt")
+
     ## On attache le tout à root
     root.add(scrolltextbox)
-    
+
     ## On affiche tout
     root.show_all()
     gtk.main()
