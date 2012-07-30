@@ -93,7 +93,7 @@ class Player(gtk.Socket):
         ## Déclare mplayer comme étant lancé
         self.start = True
 
-    def loadFile(self, sender=None, filename=""):
+    def loadFile(self, sender=None, filename="", loop=True):
         """ Charge un fichier
         """
         ## wid non déclarée
@@ -101,6 +101,8 @@ class Player(gtk.Socket):
             raise self.MplayerIdError()
         else:
             filename = os.path.expanduser(filename).replace(" ","\ ")
+            if loop:
+                self.cmdplayer("set_property loop 0")
             self.cmdplayer("loadfile %s"%(filename))
             self.cmdplayer("change_resctangle w=100:h=100")
 
