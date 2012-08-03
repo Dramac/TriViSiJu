@@ -1,24 +1,21 @@
-Eng1:
-Pour moi, l’accouchement vient avant la grossesse,
-l’enfance avant la naissance,
-l’adolescence avant l’enfance, la mort avant la vie.
-Que suis-je ?
-
-Eng2:
-Au fond d’un puits de 12 m se trouve un escargot.
-Pendant la journée, il grimpe de 3 mètres.
-Mais chaque nuit, il glisse de 2 mètres.
-En combien de jours sortira l'escargot du puits?
-
-Eng3:
-Un avocat serait bien utile pour déchiffrer ceci : UJ FEKHJQDJ UBBU JEKHDU
-
-Eng4:
-Je suis un satellite observant les transits planétaires.
-Mon nom vient d'un célèbre astronome allemand qui démontra trois lois célèbres en se basant sur les travaux de Nicolas Copernic.
+Eng1 Personne ne peut se passer de moi,
+Certains rougissent en me voyant.
+Nécessaire à la vie je peux aussi être dangereux.
 Qui suis-je ?
 
-Eng5:
-Amerigo Vespucci, célèbre navigateur, est le premier à observer ces objets.
-La confirmation viendra d'un second navigateur, portugais cette fois.
-Quel est le nom de ces deux objets célestes ?
+Eng2 Je peux être belge ou allemand.
+Les brebis m'aiment et me suivent.
+Qui suis-je ?
+
+Eng3 Terrain de jeux favori des marins,
+Souvent calme, régulièrement en mouvement, on me connaît aussi
+déchaînée.
+Qui suis-je ?
+
+Eng4 Je suis souvent appelée petit rat,
+Et connais par cœur le fantôme de l'opéra.
+Qui suis-je ?
+
+Eng5 J'ai donné mon nom à une académie,
+On peut aussi me trouver en grande quantité à Hollywood.
+Qui suis-je ? 
