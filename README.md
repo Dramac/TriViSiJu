@@ -2,6 +2,14 @@ TriViSiJu
 =========
 Logiciel d'animation pour le festival AstroJeune 2012 v1.0
 
+## Réalisé par :
+* Jules DAVID ([galactics](https://github.com/galactics))
+* Tristan GRÉGOIRE ([abject](https://github.com/abject))
+* Simon NICOLAS ([Dramac](https://github.com/Dramac))
+* Vincent PRAT ([ViviCoder](https://github.com/ViviCoder))
+
+## Licence
+
     TriViSiJu: Graphical interface for the AstroJeune Festival
     
     Copyright (C) 2012  Jules DAVID, Tristan GREGOIRE, Simon NICOLAS and Vincent PRAT
