@@ -1,15 +1,13 @@
-Évacutation pas de tir
-Remplissage des réservoirs
-Pression réservoirs
-Localisation GPS
-Météo
-Charge utile
-Synchronisation Houston
-Synchronisation Moscou
+État du pas de tir
+Niveau des réservoirs
+Pression des réservoirs
+Température des résevoirs
+Préchauffage des boosters
+Contrôle des systèmes de bord
+Signal opérateur
 Synchronisation Toulouse
-Aviation Civile
-Pression réservoirs
-Ça va sinon ?
-En fait tu dis toujours ok?
-hum
-Paré au décollage
+Synchronisation Fleurance
+Synchronisation Kourou
+Synchronisation Houston
+Autorisation de l'aviation civile
+Localisation GPS

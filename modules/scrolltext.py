@@ -121,7 +121,7 @@ class ScrollBuffer(threading.Thread):
             if self.crypt:
                 ajout = ""
                 ## Ajoute des lignes cryptées pour remplir la boîte
-                while len(ajout) < 32.*5:
+                while len(ajout) < 32.*3:
                     ajout = ajout + self.cryptage(self.lines[self.n])
                     ## Incrémente self.n
                     self.incremente()

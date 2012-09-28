@@ -1,13 +1,15 @@
-Aucune clef n'a permis de décrypter le code.
+Aucune clef n'est valide.
 Enclenchement de la procédure de recherche à partir des fausses clefs.
 Tentative 1/3:
-	Recherche d'un indice commun
+	Recherche d'un indice commun à partir des solutions proposées
+	Aucun indice commun
 	Échec de la méthode
 Tentative 2/3:
 	Utilisation d'un algorithme intelligent
+	Intelligence artificielle mise en échec
 	Échec de la méthode
 Tentative 3/3:
-	Utilisation d'un algorithme quantique de la théorie des cordes
+	Utilisation d'un algorithme quantique basé sur la théorie des cordes
 	Premier indice trouvé
 	Seconde indice trouvé
 	Troisième indice NON trouvé

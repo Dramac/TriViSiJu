@@ -1,3 +1,4 @@
 Sélection de l'équipe 'NOM'
-Test de la clef de décryptage TABTAB [OK/KO]
-Clef acceptée/rejetée TABTABTAB [OK/KO]
+Mise en place du test [OK/KO]
+Test de la clef de décryptage [OK/KO]
+Clef acceptée/rejetée [OK/KO]
