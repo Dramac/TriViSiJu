@@ -261,6 +261,9 @@ class MainWindow(gtk.Window):
         gtk.main_quit()
 
 if __name__=="__main__":
+    ## Python change curent repertory
+    os.chdir(os.path.dirname(__file__))
+
     ## Licence
     licence = """
     TriViSiJu  Copyright (C) 2012 Jules DAVID, Tristan GREGOIRE, Simon NICOLAS and Vincent PRAT
@@ -280,7 +283,7 @@ if __name__=="__main__":
         Voir http://docs.python.org/library/argparse.html#argparse.Namespace
         """
         pass
-
+    
     ## Parse  les arguments
     args = Arg() # Conteneur pour les arguments
     parser = argparse.ArgumentParser(description=description)
