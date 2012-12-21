@@ -43,7 +43,7 @@ pydoc.writedoc(fonction)
 pydoc.writedoc(modules)
 
 # Liste des fichiers du dossier modules
-print ">> Documentation 2cd niveau :"
+print ">> Documentation 2nd niveau :"
 modules = os.listdir('./modules') 
 # Création de la documentation de deuxième niveau
 for item in modules:
